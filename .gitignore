@@ -1,0 +1,52 @@
+# Node / package managers
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# Build artifacts
+dist/
+build/
+lib/
+out/
+temp/
+.tmp/
+.cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# Docs (generated)
+docs/
+
+# Logs
+logs/
+*.log
+*.log.*
+.log/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Misc
+*.tgz
+*.gz
+*.zip

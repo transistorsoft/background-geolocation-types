@@ -1,0 +1,46 @@
+# Ignore development directories
+node_modules/
+src/
+tools/
+templates/
+docs/
+temp/
+.tmp/
+.cache/
+
+# Build system / config files
+tsconfig.json
+typedoc.json
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Git / VCS
+.git/
+.gitignore
+.gitattributes
+
+# IDE / OS clutter
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+
+# Tests
+test/
+tests/
+__tests__/
+coverage/
+.nyc_output/
+
+# Misc
+*.tgz
+*.zip
+*.gz
+*.map
