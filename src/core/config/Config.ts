@@ -5,7 +5,7 @@ import { AppConfig } from './AppConfig';
 import { PersistenceConfig } from './PersistenceConfig';
 import { ActivityConfig } from './ActivityConfig';
 import { AuthorizationConfig } from './AuthorizationConfig';
-
+import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationService';
 /**
  * Configuration API.
  *
@@ -147,4 +147,50 @@ export interface Config {
    * Authorization configuration.
    */
   authorization?: AuthorizationConfig;
+  /**
+    * *Convenience* option to automatically configures the SDK to upload locations to the Transistor Software demo server 
+    * at http://tracker.transistorsoft.com (or your own local instance of [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console))
+    *
+    * See {@link TransistorAuthorizationService}.  This option will **automatically configure** the {@link HttpConfig.url} 
+    * to point at the Demo server as well as well as the required {@link AuthorizationConfig} configuration.
+    *
+    * @example
+    * ```typescript
+    * const token = await
+    *   BackgroundGeolocation.findOrCreateTransistorAuthorizationToken("my-company-name", "my-username");
+    *
+    * BackgroundGeolocation.ready({
+    *   transistorAuthorizationToken: token
+    * });
+    * ```
+    *
+    * This *convenience* option merely performs the following [[Authorization]] configuration *automatically* for you:
+    *
+    * @example
+    * ```typescript
+    * // Base url to Transistor Demo Server.
+    * const url = "http://tracker.transistorsoft.com";
+    *
+    * // Register for an authorization token from server.
+    * const token = await
+    *   BackgroundGeolocation.findOrCreateTransistorAuthorizationToken("my-company-name", "my-username");
+    *
+    * BackgroundGeolocation.ready({
+    *   url: url + "/api/locations",
+    *   authorization: {
+    *     strategy: "JWT",
+    *     accessToken: token.accessToken,
+    *     refreshToken: token.refreshToken,
+    *     refreshUrl: url + "/v2/refresh_token",
+    *     refreshPayload: {
+    *       refresh_token: "{refreshToken}"
+    *     },
+    *     expires: token.expires
+    *   }
+    * });
+    * ```
+    *
+    */
+  transistorAuthorization?: TransistorAuthorizationToken;
+
 }

@@ -1,6 +1,17 @@
-/** 
- * Controls the verbosity of plugin logging. 
- * 
+/**
+ * Controls the verbosity of plugin logging.
+ *
+ * | Level   | Value | Description                     |
+ * |---------|:-----:|---------------------------------|
+ * | Off     |   0   | Disable all logging.            |
+ * | Error   |   1   | Log only critical failures.     |
+ * | Warning |   2   | Log warnings + errors.          |
+ * | Info    |   3   | Operational information.        |
+ * | Debug   |   4   | Developer-level debug output.   |
+ * | Verbose |   5   | Maximum detail.                 |
+ *
+ * Mirrors native logging constants on iOS & Android.
+ *
  * @category Config
  */
 export const LogLevel = {
@@ -9,8 +20,11 @@ export const LogLevel = {
   Warning: 2,
   Info: 3,
   Debug: 4,
-  Verbose: 5
+  Verbose: 5,
 } as const;
 
-/** @internal @hidden */
-export type LogLevel = typeof LogLevel[keyof typeof LogLevel];
+/**
+ * Type union of all LogLevel values.
+ * @internal @hidden
+ */
+export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel];

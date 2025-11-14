@@ -535,7 +535,7 @@ export interface PersistenceConfig {
    * Disable the automatic insertion of a synthetic “provider-change” location
    * into the SDK’s SQLite database (and its subsequent HTTP upload).
    *
-   * By default, when an {@link onProviderChange} event fires, the Android SDK
+   * By default, when an {@link BackgroundGeolocation.onProviderChange} event fires, the Android SDK
    * records a special location documenting *when* and *where* the device’s
    * location-services state changed (e.g., GPS disabled).  
    * This behavior historically existed to support platforms with limited or

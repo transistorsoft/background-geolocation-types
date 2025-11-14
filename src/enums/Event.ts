@@ -4,6 +4,8 @@
  * @category Events
  */
 export const Event = {
+  Boot: 'boot',
+  Terminate: 'terminate',
   Location: 'location',
   MotionChange: 'motionchange',
   ActivityChange: 'activitychange',
