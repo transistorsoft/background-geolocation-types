@@ -1788,5 +1788,13 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
    * @readonly
    */
   AuthorizationStatus: typeof import('../../enums/AuthorizationStatus').AuthorizationStatus;
+
+  /**
+   * __ActivityType__  
+   * iOS-only: Specifies the type of user activity (AutomotiveNavigation,
+   * Fitness, OtherNavigation, etc).  
+   * Used by {@link GeoConfig.activityType}.
+   */
+  ActivityType: typeof import('../../enums/ActivityType').ActivityType;
 }
 
