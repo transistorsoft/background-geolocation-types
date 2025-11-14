@@ -1,6 +1,6 @@
 {
   "name": "@transistorsoft/background-geolocation-types",
-  "version": "5.0.0-beta.2",
+  "version": "5.0.0-beta.3",
   "type": "commonjs",
   "description": "Shared TypeScript type definitions and documentation for Transistor Software's Background Geolocation SDKs (React Native, Capacitor, Cordova)",
   "author": "Transistor Software <info@transistorsoft.com>",
