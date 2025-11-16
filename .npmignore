@@ -14,8 +14,6 @@ temp/
 .cache/
 
 # Build system / config files
-tsconfig.json
-typedoc.json
 pnpm-lock.yaml
 package-lock.json
 yarn.lock

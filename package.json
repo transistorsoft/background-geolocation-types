@@ -1,6 +1,6 @@
 {
   "name": "@transistorsoft/background-geolocation-types",
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.6",
   "type": "commonjs",
   "description": "Shared TypeScript type definitions and documentation for Transistor Software's Background Geolocation SDKs (React Native, Capacitor, Cordova)",
   "author": "Transistor Software <info@transistorsoft.com>",
@@ -11,6 +11,13 @@
     "url": "git+https://github.com/transistorsoft/background-geolocation.git",
     "directory": "packages/background-geolocation-types"
   },
+  "files": [
+    "dist",
+    "tools",
+    "assets",
+    "typedoc.json",
+    "tsconfig.json"
+  ],
   "keywords": [
     "typescript",
     "types",
@@ -30,15 +37,13 @@
     }
   },
   "sideEffects": false,
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -p tsconfig.json -w",
     "prepare": "pnpm run build",
-    "docs": "typedoc --options typedoc.json"
+    "docs": "typedoc --options typedoc.json",
+    "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
