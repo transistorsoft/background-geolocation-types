@@ -191,6 +191,6 @@ export interface Config {
     * ```
     *
     */
-  transistorAuthorization?: TransistorAuthorizationToken;
+  transistorAuthorizationToken?: TransistorAuthorizationToken;
 
 }

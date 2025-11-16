@@ -43,6 +43,7 @@ import type { HttpMethod } from '../../enums/HttpMethod';
 import type { TriggerActivity } from '../../enums/TriggerActivity';
 import type { NotificationPriority } from '../../enums/NotificationPriority';
 import type { AccuracyAuthorization } from '../../enums/AccuracyAuthorization';
+import type { TransistorAuthorizationToken } from './TransistorAuthorizationService';
 
 /** 
  * Payloads for strongly-typed event listeners. 
@@ -1399,6 +1400,24 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * __[Android-only]__ Signals completion of an Android headless-task (see [[Config.enableHeadless]])
    */
   finishHeadlessTask(taskId: string): Promise<number>;
+
+  // ------------------------------------------------------------------------------------------------
+  // TransistorAuthorizationService API
+  // ------------------------------------------------------------------------------------------------
+
+  /**
+   * Find or create a Transistor authorization token.
+   * 
+   * See {@link TransistorAuthorizationService} for more information.
+   */
+  findOrCreateTransistorAuthorizationToken(orgname:string, username:string, url?:string): Promise<TransistorAuthorizationToken>;
+
+  /**
+   * Destroy a Transistor authorization token.
+   *
+   * See {@link TransistorAuthorizationService} for more information.
+   */
+  destroyTransistorAuthorizationToken(url:string): Promise<void>;
 
 }
 
