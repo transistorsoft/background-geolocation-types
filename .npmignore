@@ -2,10 +2,8 @@
 node_modules/
 src/
 
-##
-# don't ignore tools, so that when installed from devDependencies, we can generate docs from each plugin it's installed into.
-#tools/
-#
+tools/
+assets/
 
 templates/
 docs/
