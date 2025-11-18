@@ -757,6 +757,48 @@ export interface GeoConfig {
   geofenceProximityRadius?: number;
 
   /**
+  * __`[Android only]`__ Enable high-accuracy for **geofence-only** mode (See {@link BackgroundGeolocation.startGeofences}).
+  *
+  * __⚠️ Warning: Will consume more power.__
+  *
+  * Defaults to `false`. Runs Android's {@link BackgroundGeolocation.startGeofences} with a *foreground service* (along with its corresponding persistent {@link AppConfig.notification}).
+  *
+  * Configuring `geofenceModeHighAccuracy: true` will make Android geofence triggering **far more responsive**. In this mode, the usual config options to control location-services will be applied:
+  *
+  * - {@link GeoConfig.desiredAccuracy} ({@link DesiredAccuracy.Medium} works well).
+  * - {@link GeoConfig.locationUpdateInterval}
+  * - {@link GeoConfig.distanceFilter}
+  * - {@link GeoConfig.deferTime}
+  *
+  * With the default `geofenceModeHighAccuracy: false`, a device will have to move farther *into* a geofence before the *ENTER* event fires and farther *out of* a geofence before
+  * the *EXIT* event fires.
+  *
+  * The more aggressive you configure the location-update params above (at the cost of power consumption), the more responsive will be your geofence-triggering.
+  *
+  * @example
+  * ```typescript
+  * BackgroundGeolocation.ready({
+  *   geolocation: {
+  *     geofenceModeHighAccuracy: true,
+  *     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
+  *     locationUpdateInterval: 5000,
+  *     distanceFilter: 50,
+  *   }
+  * }).then((state) => {
+  *   BackgroundGeolocation.startGeofences();
+  * });
+  * ```
+  *
+  * @example **`geofenceModeHighAccuracy: false`** (Default) &mdash; Transition events **are delayed**.
+  * ![](https://dl.dropboxusercontent.com/s/6nxbuersjcdqa8b/geofenceModeHighAccuracy-false.png?dl=1)
+  *
+  * @example **`geofenceModeHighAccuracy: true`** &mdash; Transition events are **nearly instantaneous**.
+  * ![](https://dl.dropbox.com/s/w53hqn7f7n1ug1o/geofenceModeHighAccuracy-true.png?dl=1)
+  *
+  */
+  geofenceModeHighAccuracy?:boolean;
+
+  /**
    * Disable the motion-activity–based stop-detection system.
    *
    * When enabled (`true`), the SDK ignores platform motion-activity signals when
