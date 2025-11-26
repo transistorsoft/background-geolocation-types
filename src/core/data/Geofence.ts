@@ -339,19 +339,19 @@ export interface Geofence {
    * 
    * ⚠️ Readonly
    */
-  readonly entryState: number;          // 0=unknown, 1=inside, 2=outside
+  readonly entryState?: number;          // 0=unknown, 1=inside, 2=outside
   /**
    * Runtime state:  Number of times this geofence has been triggered.
    * 
    * ⚠️ Readonly
    */
-  readonly hits: number;                // number of triggers
+  readonly hits?: number;                // number of triggers
   /**   
    * Runtime state:  Epoch timestamp (seconds) of last geofence transition.
    * 
    * ⚠️ Readonly
    */
-  readonly stateUpdatedAt: number;      // epoch timestamp (seconds)
+  readonly stateUpdatedAt?: number;      // epoch timestamp (seconds)
 
 }
 
