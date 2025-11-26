@@ -43,6 +43,7 @@ import type { HttpMethod } from '../../enums/HttpMethod';
 import type { TriggerActivity } from '../../enums/TriggerActivity';
 import type { NotificationPriority } from '../../enums/NotificationPriority';
 import type { AccuracyAuthorization } from '../../enums/AccuracyAuthorization';
+import type { TransistorAuthorizationToken } from './TransistorAuthorizationService';
 
 /** 
  * Payloads for strongly-typed event listeners. 
@@ -517,6 +518,7 @@ export interface BackgroundGeolocationEvents {
  * @internal @hidden
  */
 export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
+  
   /**
    * {@link DeviceSettings} API
    */
@@ -1399,34 +1401,419 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    */
   finishHeadlessTask(taskId: string): Promise<number>;
 
+  // ------------------------------------------------------------------------------------------------
+  // TransistorAuthorizationService API
+  // ------------------------------------------------------------------------------------------------
+
+  /**
+   * Find or create a Transistor authorization token.
+   * 
+   * See {@link TransistorAuthorizationService} for more information.
+   */
+  findOrCreateTransistorAuthorizationToken(orgname:string, username:string, url?:string): Promise<TransistorAuthorizationToken>;
+
+  /**
+   * Destroy a Transistor authorization token.
+   *
+   * See {@link TransistorAuthorizationService} for more information.
+   */
+  destroyTransistorAuthorizationToken(url:string): Promise<void>;
+
 }
 
 
 /** 
- * Main SDK API used by consumers. 
+ * Primary BackgroundGeolocation API
+ *
+ * __Overview__
+ *
+ * The `BackgroundGeolocation` interface defines the **complete, strongly-typed API surface**
+ * for Transistor Software’s Background Geolocation SDK.  
+ * This is the main entry-point used by all JavaScript adapters:
+ *
+ * - React Native (`{{pluginName}}`)
+ * - Capacitor
+ * - Cordova
+ *
+ * The API provides:
+ *
+ * - **Configuration** via a single {@link Config} object composed of modular
+ *   sub-configs (`GeoConfig`, `HttpConfig`, `PersistenceConfig`, etc)
+ * - **Lifecycle control** (`ready`, `start`, `stop`, `setConfig`, `reset`)
+ * - **Location tracking** (motion-based tracking, `getCurrentPosition`,
+ *   `watchPosition`)
+ * - **Geofencing** (`addGeofence`, `onGeofence`, etc)
+ * - **Events subsystem** with fully-typed callbacks (`onLocation`,
+ *   `onMotionChange`, `onHttp`, `onProviderChange`, etc)
+ * - **Native services** such as background-tasks, authorization workflows,
+ *   scheduling, and device-capability checks
+ * - **Persistence + HTTP** via an internal SQLite buffer and optional
+ *   auto-upload system
+ *
+ * __Typed Configuration (Compound Config)__
+ *
+ * Instead of a large “flat” configuration object, the SDK uses a
+ * *compound-configuration model*:
+ *
+ * ```ts
+ * import BackgroundGeolocation, {
+ *   Config,
+ *   GeoConfig,
+ *   HttpConfig
+ * } from "{{pluginName}}";
+ *
+ * const config: Config = {
+ *   geolocation: {
+ *     desiredAccuracy: BackgroundGeolocation.DesiredAccuracy.High,
+ *     distanceFilter: 20
+ *   },
+ *   http: {
+ *     url: "https://example.com/locations",
+ *     autoSync: true
+ *   },
+ *   persistence: {
+ *     maxDaysToPersist: 7
+ *   }
+ * };
+ *
+ * BackgroundGeolocation.ready(config);
+ * ```
+ *
+ * This structure ensures:
+ *
+ * - **Clear separation of concerns**
+ * - **Type-safe configuration**
+ * - **Automatic backwards-compatibility** with legacy flat keys
+ *
+ * __Typed Enum Namespaces__
+ *
+ * All configuration flags that were previously “magic constants”  
+ * (e.g., `LOG_LEVEL_VERBOSE`, `DESIRED_ACCURACY_HIGH`) now live in  
+ * strongly-typed namespaces attached to the default export:
+ *
+ * - {@link BackgroundGeolocation.LogLevel}
+ * - {@link BackgroundGeolocation.DesiredAccuracy}
+ * - {@link BackgroundGeolocation.PersistMode}
+ * - {@link BackgroundGeolocation.NotificationPriority}
+ * - {@link BackgroundGeolocation.Event}
+ * - …and more
+ *
+ * These can also be imported individually:
+ *
+ * ```ts
+ * import BackgroundGeolocation, { LogLevel } from "{{pluginName}}";
+ *
+ * BackgroundGeolocation.ready({
+ *   logger: {
+ *     logLevel: LogLevel.Debug
+ *   }
+ * });
+ * ```
+ *
+ * __Event System__
+ *
+ * The SDK exposes a robust, typed event API:
+ *
+ * ```ts
+ * BackgroundGeolocation.onLocation((location) => {
+ *   console.log("New location:", location);
+ * });
+ *
+ * BackgroundGeolocation.onMotionChange((event) => {
+ *   console.log("Device is moving?", event.isMoving);
+ * });
+ * ```
+ *
+ * All events return **Subscription** objects which must be removed when no longer
+ * needed:
+ *
+ * ```ts
+ * const sub = BackgroundGeolocation.onHttp((e) => { ... });
+ * sub.remove();
+ * ```
+ *
+ * __Native Lifecycle Requirements__
+ *
+ * On both iOS and Android, `BackgroundGeolocation.ready(config)` must be called
+ * **exactly once per app launch**, before calling `start()`.  
+ * The SDK automatically restores its last-known configuration from persistent
+ * storage after first install.
+ *
+ * __Philosophy of Operation__
+ *
+ * Transistorsoft’s tracking engine is built around:
+ *
+ * - **Motion-based state transitions** (stationary ↔ moving)
+ * - **Aggressive tracking only when moving**
+ * - **Energy-efficient passive monitoring when stationary**
+ * - **Reliable persistence via SQLite**
+ * - **Automatic retries + batching** for HTTP uploads
+ *
+ * Combined, this enables *battery-efficient*, *high-quality* background tracking
+ * across iOS and Android.
+ *
+ * __Capabilities__
+ *
+ * - High-frequency tracking while the device is moving
+ * - Zero-movement battery preservation
+ * - Geofence monitoring at scale (thousands of geofences)
+ * - Offline storage + sync when network is restored
+ * - Background tasks for long-running operations
+ * - Authorization state + system diagnostics 
+ *
+ * __Getting Started__
+ *
+ * ```ts
+ * import BackgroundGeolocation from "{{pluginName}}";
+ *
+ * const state = await BackgroundGeolocation.ready({
+ *   geolocation: { distanceFilter: 10 },
+ *   http: { url: "https://example.com/locations", autoSync: true }
+ * });
+ *
+ * if (!state.enabled) {
+ *   await BackgroundGeolocation.start();
+ * }
+ * ```
+ *
+ * Once `start()` is called, the SDK begins operating according to your
+ * configuration and continues running—even in the background—until you call
+ * `stop()`.
+ *
  * @category Primary API
  */
-export interface BackgroundGeolocation extends BackgroundGeolocationAPI {}
-
-/** 
- * Shape of enum statics attached at runtime for ergonomics. 
- * @internal @hidden
- */
-export interface BackgroundGeolocationStatics {
+export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
+  /**
+   * __LogLevel__
+   * Controls verbosity of the SDK logger.  
+   * Used by LoggerConfig.logLevel.  
+   * Values range from silent (`Off`) to extremely verbose (`Verbose`).
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   logger: { 
+   *     logLevel: BackgroundGeolocation.LogLevel.Verbose
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
   LogLevel: typeof import('../../enums/LogLevel').LogLevel;
+
+  /**
+   * __DesiredAccuracy__
+   * Controls the native location engine’s target accuracy.  
+   * Higher accuracy consumes more battery.  
+   * Used by GeoConfig.desiredAccuracy.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   geolocation: {
+   *     desiredAccuracy: BackgroundGeolocation.DesiredAccuracy.High
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
   DesiredAccuracy: typeof import('../../enums/DesiredAccuracy').DesiredAccuracy;
+
+  /**
+   * __PersistMode__
+   * Controls which records the SDK persists to SQLite:  
+   * locations only, geofences only, both, or none.  
+   * Used by PersistenceConfig.persistMode.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   persistence: {
+   *     persistMode: BackgroundGeolocation.PersistMode.All
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
   PersistMode: typeof import('../../enums/PersistMode').PersistMode;
+
+  /**
+   * __AuthorizationStrategy__
+   * Defines how the HTTP service performs authorization.  
+   * Includes basic, JWT, and custom strategies.  
+   * Used by AuthorizationConfig.strategy.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   authorization: {
+   *     strategy: BackgroundGeolocation.AuthorizationStrategy.Jwt
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
   AuthorizationStrategy: typeof import('../../enums/AuthorizationStrategy').AuthorizationStrategy;
+
+  /**
+   * __LocationFilterPolicy__
+   * Selects the filtering engine policy for noise-reduction and smoothing.  
+   * Used by GeoConfig.locationFilter.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   geolocation: {
+   *     filter: {
+   *       policy: BackgroundGeolocation.LocationFilterPolicy.Adjust
+   *     }
+   * });
+   * ```
+   * @readonly
+   */
   LocationFilterPolicy: typeof import('../../enums/LocationFilterPolicy').LocationFilterPolicy;
+
+  /**
+   * __KalmanProfile__
+   * Selects a preset tuning profile for the Kalman filter used in the
+   * filtering engine (aggressive, moderate, or relaxed smoothing).
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   geolocation: {
+   *     kalmanProfile: BackgroundGeolocation.KalmanProfile.Aggressive
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
   KalmanProfile: typeof import('../../enums/KalmanProfile').KalmanProfile;
+
+  /**
+   * __HttpMethod__
+   * Defines the HTTP method used for uploads (POST, PUT, etc).  
+   * Used by HttpConfig.method.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   http: {
+   *     method: BackgroundGeolocation.HttpMethod.Post
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
   HttpMethod: typeof import('../../enums/HttpMethod').HttpMethod;
+
+  /**
+   * __TriggerActivity__
+   * Defines which physical motion activities can trigger motion-detection
+   * transitions (still → moving).  
+   * Used by ActivityConfig.triggerActivities.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   activity: {
+   *     triggerActivities: [
+   *       BackgroundGeolocation.TriggerActivity.InVehicle
+   *     ]
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
   TriggerActivity: typeof import('../../enums/TriggerActivity').TriggerActivity;
+
+  /**
+   * __NotificationPriority__  
+   * Controls Android foreground-service notification priority and icon
+   * placement (top, bottom, hidden).  
+   * Used by NotificationConfig.priority.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   notification: {
+   *     priority: BackgroundGeolocation.NotificationPriority.High
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
   NotificationPriority: typeof import('../../enums/NotificationPriority').NotificationPriority;
+
+  /**
+   * __Event__
+   * Enumerates all event names emitted by the SDK (location, geofence,
+   * motionchange, heartbeat, etc).  
+   * 
+   * @readonly
+   */
+  Event: typeof import('../../enums/Event').Event;
+
+  /**
+   * __LocationRequest__
+   * Defines the type of permission request made to iOS (Always, WhenInUse,
+   * or Any).  
+   * Used by GeoConfig.locationAuthorizationRequest.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   geolocation: {
+   *     locationAuthorizationRequest: BackgroundGeolocation.LocationRequest.Always
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
+  LocationRequest: typeof import('../../enums/LocationRequest').LocationRequest;
+
+  /**
+   * __AccuracyAuthorization__  
+   * iOS 14+: Indicates whether the user granted full or reduced accuracy.  
+   * Used by ProviderChangeEvent.accuracyAuthorization and
+   * requestTemporaryFullAccuracy.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.onProviderChange((event) => {
+   *   if (event.accuracyAuthorization ===
+   *       BackgroundGeolocation.AccuracyAuthorization.Reduced) {
+   *     // Handle reduced-accuracy case
+   *   }
+   * });
+   * ```
+   * @readonly
+   */
+  AccuracyAuthorization: typeof import('../../enums/AccuracyAuthorization').AccuracyAuthorization;
+
+  /**
+   * __AuthorizationStatus__  
+   * Represents OS-level authorization state for location-services  
+   * (Denied, Restricted, Always, WhenInUse).  
+   * Returned from requestPermission() and onProviderChange.
+   *
+   * @example
+   * ```ts
+   * const status = await BackgroundGeolocation.requestPermission();
+   * if (status === BackgroundGeolocation.AuthorizationStatus.Always) {
+   *   // Good to start tracking
+   * }
+   * ```
+   * @readonly
+   */
+  AuthorizationStatus: typeof import('../../enums/AuthorizationStatus').AuthorizationStatus;
+
+  /**
+   * __ActivityType__  
+   * iOS-only: Specifies the type of user activity (AutomotiveNavigation,
+   * Fitness, OtherNavigation, etc).  
+   * Used by {@link GeoConfig.activityType}.
+   */
+  ActivityType: typeof import('../../enums/ActivityType').ActivityType;
 }
 
-/** 
- * Combined type if adapters annotate the default export with statics. 
- * @internal @hidden
- */
-export type BackgroundGeolocationWithStatics =
-  BackgroundGeolocationAPI & { [K in keyof BackgroundGeolocationStatics]: BackgroundGeolocationStatics[K] };

@@ -82,11 +82,21 @@ function safeGetOption(app, key) {
 function resolvePluginName(app, project) {
   // 1) Prefer TypeDoc's built-in --name (you already set this)
   const nameOpt = safeGetOption(app, 'name');
-  if (nameOpt) return nameOpt;
+  if (nameOpt) {
+    // Strip "@version" for import examples
+    const baseName = nameOpt.split('@')[0];
+    return baseName;
+  }
 
   // 2) Fallbacks from package.json / project
-  if (project?.packageInfo?.name) return project.packageInfo.name;
-  if (project?.name) return project.name;
+  if (project?.packageInfo?.name) {
+    const baseName = project.packageInfo.name.split('@')[0];
+    return baseName;
+  }
+  if (project?.name) {
+    const baseName = project.name.split('@')[0];
+    return baseName;
+  }
 
   // 3) Env fallback (optional)
   if (process.env.DOCS_PLUGIN_NAME) return process.env.DOCS_PLUGIN_NAME;
@@ -123,7 +133,7 @@ function replaceTemplateVars(text, pluginName, repoUrl) {
 
   // Debug helper
   if (/{{\s*pluginName\s*}}/g.test(text)) {
-    console.log('*** Replacing {{pluginName}} with "', pluginName, '"');
+    console.log(`*** Replacing {{pluginName}} with "${pluginName}"`);
   }
 
   let out = text.replace(/{{\s*pluginName\s*}}/g, pluginName);

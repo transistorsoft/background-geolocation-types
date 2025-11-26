@@ -1,7 +1,10 @@
 # Ignore development directories
 node_modules/
 src/
+
 tools/
+assets/
+
 templates/
 docs/
 temp/
@@ -9,8 +12,6 @@ temp/
 .cache/
 
 # Build system / config files
-tsconfig.json
-typedoc.json
 pnpm-lock.yaml
 package-lock.json
 yarn.lock

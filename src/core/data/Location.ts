@@ -202,12 +202,100 @@ export interface Location {
   */
   age: number;
   /**
-  * Distance-traveled in meters.
-  * ℹ️
-  * - {@link BackgroundGeolocation.resetOdometer}
-  * - {@link BackgroundGeolocation.getOdometer}
-  */
+   * Total distance traveled, in meters, since the odometer was last set or reset.
+   *
+   * The SDK continuously integrates distance between recorded locations to maintain
+   * a running total. This value increases regardless of tracking mode and persists
+   * across app restarts (unless explicitly reset).
+   *
+   * __ℹ️ How it's calculated:__
+   * - Distance is computed between each pair of accepted locations.
+   * - The {@link LocationFilter} evaluates the accuracy and motion context of each sample.
+   * - Low-quality samples may be rejected or down-weighted depending on
+   *   {@link LocationFilter.odometerAccuracyThreshold}, reducing odometer pollution.
+   * - The accumulated drift is exposed via {@link Location.odometer_error}.
+   *
+   * __When the odometer increases:__
+   * - After the device moves and a new location is recorded.
+   * - During both moving and stationary states (if minor motion is detected).
+   * - In geofences-only mode, the odometer increases whenever a location is recorded
+   *   for a geofence transition or stationary exit.
+   *
+   * __When it does *not* increase:__
+   * - When a sample fails accuracy thresholds.
+   * - When {@link is_moving} is false *and* no sufficient movement occurs.
+   *
+   * __Resetting or setting the odometer:__
+   * - Use {@link BackgroundGeolocation.resetOdometer} to zero it out.
+   * - Use {@link BackgroundGeolocation.setOdometer} to force a new value manually.
+   *   This also resets {@link Location.odometer_error} to `0`.
+   *
+   * __Persistence:__
+   * - The odometer value is stored in `State` and is restored after app restart.
+   * - Only a user-initiated reset or explicit call to `setOdometer` clears it.
+   *
+   * __Best practices:__
+   * - Display the odometer directly to users (e.g., trip distance, workout distance).
+   * - Use {@link Location.odometer_error} to measure confidence in the odometer.
+   * - For fitness apps, consider resetting it at the beginning of each workout session.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.onLocation(location => {
+   *   console.log("Distance traveled:", location.odometer);
+   *
+   *   if (location.odometer_error > 25) {
+   *     console.warn("Odometer accuracy degraded");
+   *   }
+   * });
+   *
+   * // Reset at start of a trip
+   * await BackgroundGeolocation.resetOdometer();
+   * ```
+   *
+   * ℹ️
+   * - {@link LocationFilter}
+   * - {@link LocationFilter.odometerAccuracyThreshold}
+   * - {@link BackgroundGeolocation.resetOdometer}
+   * - {@link BackgroundGeolocation.getOdometer}
+   */
   odometer: number;
+  /**
+   * Accumulated **odometer drift**, in meters.
+   *
+   * __ℹ️ Why does this exist?__
+   * - The SDK maintains a continuously increasing {@link odometer} value by integrating distance between recorded locations.
+   * - When GNSS accuracy is degraded (tunnels, downtown canyons, indoor / underground environments), distance calculations can accumulate **drift**.
+   * - The `odometer_error` value tells you *how much uncertainty* has accumulated in the current odometer estimate.
+   *
+   * __How to use it:__
+   * - Treat this as a “confidence interval” for {@link odometer}.  
+   *   For example, if `odometer = 12000` and `odometer_error = 40`, the *true* travelled distance is likely within **±40 meters** of the reported value.
+   * - Resetting or setting a new {@link odometer} value automatically resets `odometer_error` to `0`.
+   * - Values typically remain low (e.g., < 10m) during good GPS conditions, but can grow during:
+   *   - long tunnels  
+   *   - heavy multipath environments  
+   *   - extended indoor tracking  
+   *
+   * __Best practice:__
+   * - Display `odometer` normally to end-users.
+   * - Use `odometer_error` internally for data-quality scoring, filtering, or highlighting low-accuracy segments.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.onLocation(location => {
+   *   console.log("Odometer:", location.odometer);
+   *   console.log("Odometer drift:", location.odometer_error);
+   *
+   *   if (location.odometer_error > 50) {
+   *     console.warn("High odometer drift — signal quality degraded");
+   *   }
+   * });
+   * ```
+   * ℹ️
+   * - {@link odometer}
+   */  
+  odometer_error: number;
   /**
   * `true` if location was recorded while plugin is in the *moving* state.
   */
