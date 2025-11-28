@@ -22,7 +22,9 @@ export interface CurrentPositionRequest {
   */
   samples?: number;
   /**
-  * Sets the desired accuracy of location you're attempting to fetch. When a location having `accuracy <= desiredAccuracy` is retrieved, the plugin will stop sampling and immediately return that location. Defaults to your configured [[Config.stationaryRadius]].
+  * Sets the desired accuracy of location you're attempting to fetch. When a location having `accuracy <= desiredAccuracy` is retrieved, the plugin will stop sampling and immediately return that location. Defaults to your configured {@link GeoConfig.stationaryRadius}.
+  * 
+  * __Note__:  This `desiredAccuracy` does not have the same meaning as {@link GeoConfig.desiredAccuracy}.  The `desiredAccuracy` in this context is a threshold which the plugin uses to determine when to stop sampling locations.  For example, if you set `desiredAccuracy: 10`, the plugin will continue to fetch locations until it retrieves one with an accuracy of `10` meters or better.  `getCurrentPosition` __always__ requests locations from the native location API using the highest possible accuracy ({@link DesiredAccuracy.High}).
   */
   desiredAccuracy?: number;
   /**
@@ -38,7 +40,7 @@ export interface CurrentPositionRequest {
   */
   maximumAge?: number;
   /**
-  * Optional meta-data to attach to the location. These `extras` will be merged to the configured [[Config.extras]] and persisted / POSTed to your server (if you've configured a [[Config.url]].
+  * Optional meta-data to attach to the location. These `extras` will be merged to the configured {@link PersistenceConfig.extras} and persisted / POSTed to your server (if you've configured a {@link HttpConfig.url}).
   */
   extras?: Record<string, any>;
 }

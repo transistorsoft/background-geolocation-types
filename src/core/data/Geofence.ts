@@ -258,7 +258,7 @@ export interface Geofence {
   * Set `true` to fire event when device *enters* this geofence.
   *
   * __ℹ️ See also:__
-  * - [[Config.geofenceInitialTriggerEntry]]
+  * - {@link GeoConfig.geofenceInitialTriggerEntry}
   */
   notifyOnEntry?: boolean;
   /**
