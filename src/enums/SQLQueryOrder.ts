@@ -1,5 +1,5 @@
 /**
- * Sort order for [[SQLQuery.order]].
+ * Sort order for {@link SQLQuery.order}.
  *
  * | Name          | Value |
  * |---------------|-------|

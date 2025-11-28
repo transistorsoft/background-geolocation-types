@@ -1,7 +1,7 @@
 import type { Logger } from './Logger';
 import type { DeviceSettings} from './DeviceSettings';
 import type { CurrentPositionRequest } from './CurrentPositionRequest';
-
+import type { WatchPositionRequest } from './WatchPositionRequest';
 import type { Config } from '../config/Config';
 import type { State } from './State';
 import type { GeoConfig } from '../config/GeoConfig';
@@ -75,7 +75,7 @@ export interface BackgroundGeolocationEvents {
   /**
   * Subscribe to location events.
   *
-  * Every location recorded by the SDK is provided to your `callback`, including those from [[onMotionChange]], [[getCurrentPosition]] and [[watchPosition]].
+  * Every location recorded by the SDK is provided to your `callback`, including those from {@link onMotionChange}, {@link getCurrentPosition} and {@link watchPosition}.
   *
   * @example
   * ```typescript
@@ -88,7 +88,7 @@ export interface BackgroundGeolocationEvents {
   *
   * __Error Codes__
   *
-  * If the native location API fails to return a location, the `failure` callback will be provided a [[LocationError]].
+  * If the native location API fails to return a location, the `failure` callback will be provided a {@link LocationError}.
   *
   * __⚠️ Note {@link Location.sample|`Location.sample`}:__
   *
@@ -120,7 +120,7 @@ export interface BackgroundGeolocationEvents {
   * ----------------------------------------------------------------------
   * __⚠️ Warning:  `autoSyncThreshold`__
   *
-  * If you've configured [[Config.autoSyncThreshold]], it **will be ignored** during a `onMotionChange` event &mdash; all queued locations will be uploaded, since:
+  * If you've configured {@link HttpConfig.autoSyncThreshold}, it **will be ignored** during a `onMotionChange` event &mdash; all queued locations will be uploaded, since:
   * - If an `onMotionChange` event fires **into the *moving* state**, the device may have been sitting dormant for a long period of time.  The plugin is *eager* to upload this state-change to the server as soon as possible.
   * - If an `onMotionChange` event fires **into the *stationary* state**, the device may be about to lie dormant for a long period of time.  The plugin is *eager* to upload all queued locations to the server before going dormant.
   * ----------------------------------------------------------------------
@@ -237,7 +237,7 @@ export interface BackgroundGeolocationEvents {
   * ```
   *
   * __ℹ️ See also:__ 
-  * - You can explicitly request the current state of location-services using [[getProviderState]].
+  * - You can explicitly request the current state of location-services using {@link getProviderState}.
   *
   * __⚠️ Note:__
   * - The plugin always force-fires an {@link onProviderChange} event whenever the app is launched (right after the {@link ready} method is executed), regardless of current state, so you can learn the the current state of location-services with each boot of your application.
@@ -320,10 +320,10 @@ export interface BackgroundGeolocationEvents {
   * Subscribe to changes in network connectivity.
   *
   * Fired when the state of the device's network-connectivity changes (enabled -> disabled and vice-versa).  By default, the plugin will automatically fire
-  * a `connectivitychange` event with the current state network-connectivity whenever the [[start]] method is executed.
+  * a `connectivitychange` event with the current state network-connectivity whenever the {@link start} method is executed.
   *
-  * ℹ️ The SDK subscribes internally to `connectivitychange` events &mdash; if you've configured the SDK's HTTP Service (See [[HttpEvent | HTTP Guide]]) and your app has queued locations,
-  * the SDK will automatically initiate uploading to your configured {{@link HttpConfig.url}} when network connectivity is detected.
+  * ℹ️ The SDK subscribes internally to `connectivitychange` events &mdash; if you've configured the SDK's HTTP Service (See {@link HttpEvent | HTTP Guide}) and your app has queued locations,
+  * the SDK will automatically initiate uploading to your configured {@link HttpConfig.url} when network connectivity is detected.
   *
   * @example
   * ```typescript
@@ -341,7 +341,7 @@ export interface BackgroundGeolocationEvents {
   * Fired when the state of the operating-system's "Power Saving" mode changes.  Your `callback` will be provided with a `bool` showing whether
   * "Power Saving" is **enabled** or **disabled**.  Power Saving mode can throttle certain services in the background, such as HTTP requests or GPS.
   *
-  * ℹ️ You can manually request the current-state of "Power Saving" mode with the method [[isPowerSaveMode]].
+  * ℹ️ You can manually request the current-state of "Power Saving" mode with the method {@link isPowerSaveMode}.
   *
   * __iOS__
   *
@@ -366,7 +366,7 @@ export interface BackgroundGeolocationEvents {
   onPowerSaveChange(cb: (enabled: boolean) => void): Subscription;
 
   /**
-  * Subscribe to changes in plugin [[State.enabled]].
+  * Subscribe to changes in plugin {@link State.enabled}.
   *
   * Fired when the SDK's {@link State.enabled} changes.  For example, executing {@link start} and {@link stop} will cause the `onEnabledChange` event to fire.
   *
@@ -421,7 +421,7 @@ export interface BackgroundGeolocationEvents {
   /**
   * Removes all event-listeners.
   *
-  * Calls [[Subscription.remove]] on all subscriptions.
+  * Calls {@link Subscription.remove} on all subscriptions.
   *
   * @example
   * ```typescript
@@ -724,8 +724,8 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   * Retrieves the current {@link Location}.
   *
   * This method instructs the native code to fetch exactly one location using maximum power & accuracy.  The native code will persist the fetched location to
-  * its SQLite database just as any other location in addition to POSTing to your configured [[Config.url]].
-  * If an error occurs while fetching the location, `catch` will be provided with an [[LocationError]].
+  * its SQLite database just as any other location in addition to POSTing to your configured {@link HttpConfig.url}.
+  * If an error occurs while fetching the location, `catch` will be provided with an {@link LocationError}.
   *
   *
   * ### Options
@@ -756,62 +756,70 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
 
   /**
   * Start a stream of continuous location-updates.  The native code will persist the fetched location to its SQLite database
-  * just as any other location (If the SDK is currently [[State.enabled]]) in addition to POSTing to your configured [[Config.url]] (if you've enabled the HTTP features).
+  * just as any other location (If the SDK is currently {@link State.enabled}) in addition to POSTing to your configured {@link HttpConfig.url} (if you've enabled the HTTP features).
   *
+  * `watchPosition` will return a {@link Subscription} which you must retain in order to later halt the location-stream.
+  * 
   * __⚠️ Warning:__
   * `watchPosition` is **not** recommended for **long term** monitoring in the background &mdash; It's primarily designed for use in the foreground **only**.  You might use it for fast-updates of the user's current position on the map, for example.
   * The SDK's primary [Philosophy of Operation](github:wiki/Philosophy-of-Operation) **does not require** `watchPosition`.
   *
   * __iOS:__
-  * `watchPosition` will continue to run in the background, preventing iOS from suspending your application.  Take care to listen to `suspend` event and call {@link stopWatchPosition} if you don't want your app to keep running in the background, consuming battery.
+  * `watchPosition` will continue to run in the background, preventing iOS from suspending your application.  Take care to listen to `suspend` event and call {@link Subscription.remove} if you don't want your app to keep running in the background, consuming battery.
   *
   * @example
   * ```typescript
-  * onResume() {
-  *   // Start watching position while app in foreground.
-  *   BackgroundGeolocation.watchPosition((location) => {
+  * onResume() async {
+  *   // Start watching position while app in foreground, retaining the return Subscription.
+  *   this.watchPositionSubscription = await BackgroundGeolocation.watchPosition({
+  *     interval: 1000,
+  *     extras: {foo: "bar"}
+  *   }, (location) => {
   *     console.log("[watchPosition] -", location);
   *   }, (errorCode) => {
   *     console.log("[watchPosition] ERROR -", errorCode);
-  *   }, {
-  *     interval: 1000
   *   })
   * }
   *
   * onSuspend() {
   *   // Halt watching position when app goes to background.
-  *   BackgroundGeolocation.stopWatchPosition();
+  *   this.watchPositionSubscription.remove();
+  *   this.watchPositionSubscription = null;
+  *
   * }
   * ```
   */
-  watchPosition(cb: (location: Location) => void, options?: CurrentPositionRequest): Subscription;
+  watchPosition(options: WatchPositionRequest, locationCallback: (location: Location) => void, errorCallback?: (errorCode: number) => void): Subscription;
 
   /**
   * Stop watch-position updates initiated from {@link watchPosition}.
   * 
   * @example
   * ```typescript
-  * onResume() {
+  * onResume() async {
   *   // Start watching position while app in foreground.
-  *   BackgroundGeolocation.watchPosition((location) => {
+  *   this.watchPositionSubscription = await BackgroundGeolocation.watchPosition({
+  *     interval: 1000,
+  *     extras: {foo: "bar"}
+  *   }, (location) => {
   *     console.log("[watchPosition] -", location);
   *   }, (errorCode) => {
   *     console.log("[watchPosition] ERROR -", errorCode);
-  *   }, {
-  *    interval: 1000
-  *   })
+  *   });
   * }
   *
   * onSuspend() {
   *   // Halt watching position when app goes to background.
-  *   BackgroundGeolocation.stopWatchPosition();
+  *   this.watchPositionSubscription.remove();
+  *   this.watchPositionSubscription = null;
   * }
   * ```
   * 
   * __ℹ️ See also:__
   * - {@link watchPosition}
+  * @internal
   */
-  stopWatchPosition?(sub?: Subscription): void;
+  stopWatchPosition?(watchId?:number): void;
 
   /**
     * Initialize the `odometer` to `0`.
@@ -949,7 +957,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   *
   * ![](https://dl.dropbox.com/s/8cc0sniv3pvpetl/ios-14-requestTemporaryFullAccuracy.png?dl=1)
   *
-  * __Note:__ Android and older versions of iOS `< 14` will return [[BackgroundGeolocation.ACCURACY_AUTHORIZATION_FULL]].
+  * __Note:__ Android and older versions of iOS `< 14` will return {@link AccuracyAuthorization.Full}.
   *
   * @example
   *
@@ -1306,7 +1314,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   * });
   *
   * ```
-  *  ℹ️ For more information, see the [[HttpEvent | HTTP Guide]]
+  *  ℹ️ For more information, see the {@link HttpConfig | HTTP Guide}
   */
   sync(): Promise<Array<Object>>;
 
@@ -1397,7 +1405,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /**
    * @private
    * @hidden
-   * __[Android-only]__ Signals completion of an Android headless-task (see [[Config.enableHeadless]])
+   * __[Android-only]__ Signals completion of an Android headless-task (see {@link AppConfig.enableHeadless})
    */
   finishHeadlessTask(taskId: string): Promise<number>;
 

@@ -314,7 +314,7 @@ export interface Location {
   */
   mock?: boolean;
   /**
-  * `true` if the plugin is currently waiting for the best possible location to arrive.  Samples are recorded when the plugin is transitioning between motion-states (*moving* vs *stationary*) or [[BackgroundGeolocation.getCurrentPosition]].
+  * `true` if the plugin is currently waiting for the best possible location to arrive.  Samples are recorded when the plugin is transitioning between motion-states (*moving* vs *stationary*) or {@link BackgroundGeolocation.getCurrentPosition}.
   * If you're manually posting location to your server, you should not persist these "samples".
   */
   sample?: boolean;
