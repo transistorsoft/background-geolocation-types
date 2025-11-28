@@ -4,7 +4,7 @@
   "type": "commonjs",
   "description": "Shared TypeScript type definitions and documentation for Transistor Software's Background Geolocation SDKs (React Native, Capacitor, Cordova)",
   "author": "Transistor Software <info@transistorsoft.com>",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "homepage": "https://github.com/transistorsoft/background-geolocation",
   "repository": {
     "type": "git",
