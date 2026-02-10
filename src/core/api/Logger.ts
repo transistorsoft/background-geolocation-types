@@ -7,7 +7,8 @@ import { SQLQueryOrder } from "../../enums/SQLQueryOrder";
  * - {@link Logger.getLog}
  * - {@link Logger.emailLog}
  * - {@link Logger.uploadLog}
- *
+ * 
+ * @example
  * ```ts
  * // Constrain results between optional start/end dates using an SQLQuery
  * const log = await BackgroundGeolocation.logger.getLog({

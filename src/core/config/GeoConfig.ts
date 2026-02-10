@@ -28,8 +28,7 @@ import { ActivityType } from '../../enums/ActivityType';
  * | **Geofencing** | Geofence proximity, accuracy mode, and initial triggers. |
  * | **Filtering** | Fine-grained denoising via {@link LocationFilter}. |
  *
- * **Example**
- *
+ * @example
  * ```ts
  * import BackgroundGeolocation, {
  *   Config,
@@ -114,6 +113,7 @@ import { ActivityType } from '../../enums/ActivityType';
  * Previously, geolocation options were configured directly on the root
  * {@link Config} object:
  *
+ * @example
  * ```ts
  * // Legacy (flat)
  * BackgroundGeolocation.ready({
@@ -126,7 +126,8 @@ import { ActivityType } from '../../enums/ActivityType';
  * ```
  *
  * These options now belong to this {@link GeoConfig} group:
- *
+ * 
+ * @example
  * ```ts
  * BackgroundGeolocation.ready({
  *   geolocation: {
@@ -197,7 +198,6 @@ export interface GeoConfig {
    * | {@link ActivityType.Airborne}                    |
    *
    * @example
-   *
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
@@ -225,7 +225,8 @@ export interface GeoConfig {
   * `distanceFilter` is auto-scaled by rounding speed to the nearest `5 m/s` and adding `distanceFilter` meters for each `5 m/s` increment.
   *
   * For example, at biking speed of 7.7 m/s with a configured `distanceFilter: 30`:
-  * @example
+  *
+  * ## Example
   * ```
   *   rounded_speed = round(7.7, 5)
   *   => 10
@@ -236,7 +237,8 @@ export interface GeoConfig {
   * ```
   *
   * At highway speed of `27 m/s` with a configured `distanceFilter: 50`:
-  * @example
+  *
+  * ## Example
   * ```
   *   rounded_speed = round(27, 5)
   *   => 30
@@ -538,6 +540,7 @@ export interface GeoConfig {
    *
    * ![](https://dl.dropbox.com/s/343nbrzpaavfser/android11-location-authorization-rn.gif?dl=1)
    *
+   * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: { locationAuthorizationRequest: "Always" },
@@ -677,8 +680,7 @@ export interface GeoConfig {
    *   {@link locationUpdateInterval}, the effective fastest interval becomes
    *   {@link locationUpdateInterval}.
    * 
-   * **Example**
-   *
+   * @example
    * ```ts
    * import BackgroundGeolocation from "react-native-background-geolocation";
    *
@@ -816,6 +818,7 @@ export interface GeoConfig {
    * you must also set {@link pausesLocationUpdatesAutomatically}
    * to `false`:
    *
+   * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {

@@ -16,7 +16,8 @@ export type Vertices = [number, number][];
 * __Adding Geofences__
 *
 * Adding a single geofence with {@link BackgroundGeolocation.addGeofence}.
-* @example
+* 
+* @example Single Geofence:
 * ```typescript
 * BackgroundGeolocation.addGeofence({
 *   identifier: "Home",
@@ -36,7 +37,8 @@ export type Vertices = [number, number][];
 * ```
 *
 * Adding multiple geofences with {@link BackgroundGeolocation.addGeofences}.
-* @example
+* 
+* @example Multiple Geofences
 * ```typescript
 * await BackgroundGeolocation.addGeofences([{
 *   identifier: "Home",
@@ -62,7 +64,7 @@ export type Vertices = [number, number][];
 *
 * Listen to geofence events with {@link BackgroundGeolocation.onGeofence}.
 *
-* @example
+* @example 
 * ```typescript
 * // Listen for geofence events.
 * BackgroundGeolocation.onGeofence(geofence => {

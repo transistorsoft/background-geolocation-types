@@ -1427,6 +1427,14 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    */
   destroyTransistorAuthorizationToken(url:string): Promise<void>;
 
+  /**
+   * Play a system sound.
+   *
+   * - **iOS**: provide a numeric SystemSoundID.
+   * - **Android**: provide a string sound-name.
+   */
+  playSound(soundId: number | string): void;
+
 }
 
 
@@ -1463,6 +1471,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  * Instead of a large “flat” configuration object, the SDK uses a
  * *compound-configuration model*:
  *
+ * @example Compound Configuration
  * ```ts
  * import BackgroundGeolocation, {
  *   Config,
@@ -1507,7 +1516,8 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  * - …and more
  *
  * These can also be imported individually:
- *
+ *  
+ * @example
  * ```ts
  * import BackgroundGeolocation, { LogLevel } from "{{pluginName}}";
  *
@@ -1521,7 +1531,8 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  * __Event System__
  *
  * The SDK exposes a robust, typed event API:
- *
+ *  
+ * @example Event Listeners
  * ```ts
  * BackgroundGeolocation.onLocation((location) => {
  *   console.log("New location:", location);
@@ -1535,6 +1546,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  * All events return **Subscription** objects which must be removed when no longer
  * needed:
  *
+ * @example Removing Event Listeners
  * ```ts
  * const sub = BackgroundGeolocation.onHttp((e) => { ... });
  * sub.remove();
@@ -1570,7 +1582,8 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  * - Authorization state + system diagnostics 
  *
  * __Getting Started__
- *
+ *  
+ * @eample
  * ```ts
  * import BackgroundGeolocation from "{{pluginName}}";
  *

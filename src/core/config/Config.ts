@@ -23,7 +23,6 @@ import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationServ
  * and {@link BackgroundGeolocation.setConfig}.
  *
  * @example
- *
  * ```ts
  * import BackgroundGeolocation, {
  *   Config,
