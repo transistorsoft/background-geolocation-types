@@ -199,6 +199,7 @@ import { PersistMode } from '../../enums/PersistMode';
  */
 export interface PersistenceConfig {
   /**
+   * <!-- doc-id: PersistenceConfig.locationTemplate -->
    * Optional custom template for rendering {@link Location} JSON request data
    * in HTTP uploads.
    *
@@ -327,6 +328,7 @@ export interface PersistenceConfig {
   locationTemplate?: string;
 
   /**
+   * <!-- doc-id: PersistenceConfig.geofenceTemplate -->
    * Optional custom template for rendering {@link GeofenceEvent}
    * JSON request data in HTTP uploads.
    *
@@ -427,6 +429,7 @@ export interface PersistenceConfig {
   geofenceTemplate?: string;
 
   /**
+   * <!-- doc-id: PersistenceConfig.maxDaysToPersist -->
    * Maximum number of days to retain a persisted geolocation record
    * in the plugin’s on-device SQLite database.
    *
@@ -439,6 +442,7 @@ export interface PersistenceConfig {
   maxDaysToPersist?: number;
 
   /**
+   * <!-- doc-id: PersistenceConfig.maxRecordsToPersist -->
    * Maximum number of records the SDK may retain in its on-device SQLite
    * database.
    *
@@ -451,12 +455,14 @@ export interface PersistenceConfig {
   maxRecordsToPersist?: number;
 
   /**
+   * <!-- doc-id: PersistenceConfig.locationsOrderDirection -->
    * Sort order for persisted locations.
    * `'ASC'` = oldest first; `'DESC'` = newest first.
    */
   locationsOrderDirection?: 'ASC' | 'DESC';
 
   /**
+   * <!-- doc-id: PersistenceConfig.persistMode -->
    * Controls which event types the SDK will persist into its internal SQLite
    * database: locations, geofences, or both.
    *
@@ -483,6 +489,7 @@ export interface PersistenceConfig {
   persistMode?: PersistMode;
 
   /**
+   * <!-- doc-id: PersistenceConfig.extras -->
    * Optional arbitrary key/value pairs merged into **each** recorded location.
    *
    * These values are persisted and included in all HTTP uploads, making them
@@ -529,6 +536,7 @@ export interface PersistenceConfig {
   extras?: Record<string, any>;
 
   /**
+   * <!-- doc-id: PersistenceConfig.disableProviderChangeRecord -->
    * __Android-only__  
    * Disable the automatic insertion of a synthetic “provider-change” location
    * into the SDK’s SQLite database (and its subsequent HTTP upload).

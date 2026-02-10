@@ -1,4 +1,5 @@
 /**
+ * <!-- doc-id: TriggerActivity -->
  * Allowed motion activity names that can trigger motion detection.
  * Mirrors Flutter's TriggerActivity set.
  * 

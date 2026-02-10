@@ -1,4 +1,5 @@
 /**
+ * <!-- doc-id: GeofenceAction -->
  * Geofence transition actions emitted by the SDK 
  * 
  * Used with {@link GeofenceEvent} from {@link BackgroundGeolocation.onGeofence}.   

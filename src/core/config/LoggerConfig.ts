@@ -1,6 +1,7 @@
 import { LogLevel } from '../../enums/LogLevel';
 
 /**
+ * <!-- doc-id: LoggerConfig -->
  * Logging & diagnostics configuration.
  *
  * The **{@link LoggerConfig}** group controls diagnostic logging for the SDK.
@@ -165,6 +166,7 @@ import { LogLevel } from '../../enums/LogLevel';
  */
 export interface LoggerConfig {
   /**
+  * <!-- doc-id: LoggerConfig.debug -->
   * Configure the plugin to emit sound effects and local-notifications during development.
   *
   * Defaults to **`false`**.  When set to **`true`**, the plugin will emit debugging sounds and notifications for life-cycle events of [[BackgroundGeolocation | BackgroundGeolocation]].
@@ -207,6 +209,7 @@ export interface LoggerConfig {
   */
   debug?: boolean;
   /**
+   * <!-- doc-id: LoggerConfig.logLevel -->
    * Controls the volume of recorded events in the plugin's logging database.
    *
    * {@link BackgroundGeolocation} contains powerful logging features. By default,
@@ -298,6 +301,7 @@ export interface LoggerConfig {
   logLevel?: LogLevel;
 
   /**
+   * <!-- doc-id: LoggerConfig.logMaxDays -->
    * Maximum number of days to persist a log-entry in database.
    *
    * Defaults to **`3`** days.

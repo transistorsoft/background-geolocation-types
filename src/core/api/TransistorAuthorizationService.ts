@@ -2,6 +2,7 @@
 import type { Config } from '../config/Config';
 
 /**
+ * <!-- doc-id: TransistorAuthorizationToken -->
  * Represents an authorization token issued by a Transistorsoft Tracking Server.
  *
  * Returned from {@link TransistorAuthorizationService.findOrCreate} and consumed by
@@ -10,23 +11,34 @@ import type { Config } from '../config/Config';
  * @category Demo / Debug Server
  */
 export interface TransistorAuthorizationToken {
-  /** JWT access token used for `Authorization: Bearer <token>`. */
+  /** 
+   * <!-- doc-id: TransistorAuthorizationToken.accessToken -->
+   * JWT access token used for `Authorization: Bearer <token>`. 
+   */ 
   accessToken: string;
 
-  /** JWT refresh token used at the `refreshUrl` endpoint. */
+  /** 
+   * <!-- doc-id: TransistorAuthorizationToken.refreshToken -->
+   * JWT refresh token used at the `refreshUrl` endpoint.    
+   */
   refreshToken: string;
 
   /**
+   * <!-- doc-id: TransistorAuthorizationToken.expires -->
    * Expiry time of the access token (epoch milliseconds).
    * Typically used to drive {@link AuthorizationConfig.expires}.
    */
   expires: number;
 
-  /** Base tracker server URL that issued this token. */
+  /** 
+   * <!-- doc-id: TransistorAuthorizationToken.url -->
+   * Base tracker server URL that issued this token. 
+   */ 
   url: string;
 }
 
 /**
+ * <!-- doc-id: TransistorAuthorizationService -->
  * Transistor Software hosts a demo server at [tracker.transistorsoft.com](http://tracker.transistorsoft.com) which is 
  * designed to consume location data from devices running the Background Geolocation SDK.
  *
@@ -64,6 +76,7 @@ export interface TransistorAuthorizationToken {
  */
 export interface TransistorAuthorizationService {
   /**
+   * <!-- doc-id: TransistorAuthorizationService.findOrCreate -->
    * Find or create a token for the given organization and username.
    *
    * @param orgName - Organization / company identifier.
@@ -95,6 +108,7 @@ export interface TransistorAuthorizationService {
   ): Promise<TransistorAuthorizationToken>;
 
   /**
+   * <!-- doc-id: TransistorAuthorizationService.destroy -->
    * Destroy the token associated with the given tracker base URL.
    *
    * @param url - Tracker base URL. Defaults to the SDK's built‑in value.

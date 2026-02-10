@@ -1,4 +1,5 @@
 /**
+ * <!-- doc-id: Vertices -->
  * A list of vertices defining a Polygon geofence
  * 
  * See {@link Geofence.vertices}
@@ -6,6 +7,7 @@
 export type Vertices = [number, number][];
 
 /**
+* <!-- doc-id: Geofence -->
 * The Background Geolocation SDK implements the native iOS and Android Geofencing APIs.
 *
 * __ℹ️ Note:__
@@ -236,18 +238,22 @@ export type Vertices = [number, number][];
 */
 export interface Geofence {
   /**
+  * <!-- doc-id: Geofence.identifier -->
   * Unique geofence identifier.
   */
   identifier: string;
   /**
+  * <!-- doc-id: Geofence.latitude -->
   * Latitude of geofence center
   */
   latitude: number;
   /**
+  * <!-- doc-id: Geofence.longitude -->
   * Longitude of geofence center
   */
   longitude: number;
   /**
+  * <!-- doc-id: Geofence.radius -->
   * Radius of the circular geofence.
   *
   * ⚠️ The minimum reliable `radius` is __`200`__ meters.  Anything less will likely not cause a geofence to trigger.  
@@ -257,6 +263,7 @@ export interface Geofence {
   */
   radius: number;
   /**
+  * <!-- doc-id: Geofence.notifyOnEntry -->
   * Set `true` to fire event when device *enters* this geofence.
   *
   * __ℹ️ See also:__
@@ -264,22 +271,27 @@ export interface Geofence {
   */
   notifyOnEntry?: boolean;
   /**
+  * <!-- doc-id: Geofence.notifyOnExit -->
   * Set `true` to fire event when device *exits* this geofence.
   */
   notifyOnExit?: boolean;
   /**
+  * <!-- doc-id: Geofence.notifyOnDwell -->
   * Set `true` to fire event when device "loiters" within this geofence for {@link loiteringDelay} milliseconds.
   */
   notifyOnDwell?: boolean;
   /**
+  * <!-- doc-id: Geofence.loiteringDelay -->
   * Minimum time in *milliseconds* the device must "loiter" within this geofence before {@link notifyOnDwell} event fires.
   */
   loiteringDelay?: number;
   /**
+  * <!-- doc-id: Geofence.extras -->
   * Arbitrary key-values appended to the geofence event and posted to your configured {@link HttpConfig.url}.
   */
   extras?: Record<string, unknown>;
   /**
+   * <!-- doc-id: Geofence.vertices -->
    * Optional: a list of vertices (`[ [lat, lng],...]`) defining a Polygon geofence.  By default, geofences are circular.
    * 
    * ℹ️ __*Polygon Geofencing*__ is [sold as a separate add-on](https://shop.transistorsoft.com/products/polygon-geofencing) (fully functional in *DEBUG* builds).
@@ -334,6 +346,7 @@ export interface Geofence {
   // Runtime fields
 
   /**   
+   * <!-- doc-id: Geofence.entryState -->
    * Runtime state:  The current entry-state of the geofence.
    * 
    * - 0 = OUTSIDE
@@ -343,12 +356,14 @@ export interface Geofence {
    */
   readonly entryState?: number;          // 0=unknown, 1=inside, 2=outside
   /**
+   * <!-- doc-id: Geofence.hits -->
    * Runtime state:  Number of times this geofence has been triggered.
    * 
    * ⚠️ Readonly
    */
   readonly hits?: number;                // number of triggers
   /**   
+   * <!-- doc-id: Geofence.stateUpdatedAt -->
    * Runtime state:  Epoch timestamp (seconds) of last geofence transition.
    * 
    * ⚠️ Readonly

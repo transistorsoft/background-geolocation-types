@@ -1,6 +1,7 @@
 import { TriggerActivity } from '../../enums/TriggerActivity';
 
 /**
+ * <!-- doc-id: ActivityConfig -->
  * Activity Recognition configuration.
  *
  * The {@link ActivityConfig} object defines options related to motion and activity detection
@@ -92,18 +93,21 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  */
 export interface ActivityConfig {
   /** 
+   * <!-- doc-id: ActivityConfig.activityRecognitionInterval -->
    * Interval (ms) between motion-activity updates.
    * Default: `10000`
    */
   activityRecognitionInterval?: number;
 
   /** 
+   * <!-- doc-id: ActivityConfig.minimumActivityRecognitionConfidence -->
    * Minimum motion-activity confidence (0–100) required to trigger a state change (Android only). 
    * Default: `75`
    */
   minimumActivityRecognitionConfidence?: number;
 
   /**
+   * <!-- doc-id: ActivityConfig.disableStopDetection -->
    * Disable motion-activity related stop-detection.
    *
    * __iOS:__
@@ -139,6 +143,7 @@ export interface ActivityConfig {
   disableStopDetection?: boolean;
 
   /**
+   * <!-- doc-id: ActivityConfig.stopOnStationary -->
    * Automatically {@link BackgroundGeolocation.stop} when the {@link GeoConfig.stopTimeout} elapses.
    *
    * The plugin can optionally automatically stop tracking when the {@link GeoConfig.stopTimeout} timer elapses.  For example, when the plugin
@@ -161,6 +166,7 @@ export interface ActivityConfig {
   stopOnStationary?: boolean;
 
   /**
+   * <!-- doc-id: ActivityConfig.motionTriggerDelay -->
    * __`[Android only]`__  Optionally add a delay in milliseconds to trigger Android into the *moving* state when Motion API reports the device is moving (eg: `on_foot`, `in_vehicle`)
    *
    * This can help prevent false-positive motion-triggering when one moves about their home, for example.  Only if the Motion API stays in the *moving* state for `motionTriggerDelay` milliseconds will the plugin trigger into the *moving* state and begin tracking the location.
@@ -201,6 +207,7 @@ export interface ActivityConfig {
   motionTriggerDelay?: number;
 
   /**
+   * <!-- doc-id: ActivityConfig.triggerActivities -->
    * Configures a comma-separated list of motion-activities which are allow to trigger location-tracking.
    * 
    * __⚠️ Warning:__ Requires that the user grant your app the "*Motion/Health*" permission.
@@ -237,6 +244,7 @@ export interface ActivityConfig {
   triggerActivities?: TriggerActivity[] | TriggerActivity;
 
   /**
+   * <!-- doc-id: ActivityConfig.disableMotionActivityUpdates -->
    * Disable the plugin requesting "Motion & Fitness" (ios) or "Physical Activity" (android >= 10) authorization from the User.
    *
    * Defaults to **`false`**.  Set to **`true`** to disable asking the user for this permission.
@@ -267,6 +275,7 @@ export interface ActivityConfig {
   disableMotionActivityUpdates?: boolean;
 
   /**
+   * <!-- doc-id: ActivityConfig.stopDetectionDelay -->
    * __`[iOS only]`__ Allows the iOS stop-detection system to be delayed from activating.
    *  
    * Defaults to **`0`** (no delay).  Allows the stop-detection system to be delayed from activating.  When the stop-detection system *is* engaged, location-services will be temporarily turned **off** and only the accelerometer is monitored.  Stop-detection will only engage if this timer expires.  The timer is cancelled if any movement is detected before expiration.  If a value of **`0`** is specified, the stop-detection system will engage as soon as the device is detected to be stationary.

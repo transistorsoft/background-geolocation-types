@@ -3,6 +3,7 @@ import type { Location } from '../data/Location';
 import type { TrackingMode } from '../../enums/TrackingMode';
 
 /**
+ * <!-- doc-id: State -->
  * Effective runtime state returned by `BackgroundGeolocation.ready/getState`.
  *
  * `State` **is** the active {@link Config} (compound), plus runtime-only fields.
@@ -10,10 +11,14 @@ import type { TrackingMode } from '../../enums/TrackingMode';
  * @category Primary API
  */
 export interface State extends Config {
-  /** Whether the SDK has been enabled via `start` or `startGeofences`. */
+  /** 
+   * <!-- doc-id: State.enabled -->
+   * Whether the SDK has been enabled via `start` or `startGeofences`. 
+   */ 
   enabled: boolean;
 
   /** 
+   * <!-- doc-id: State.isMoving -->
    * Whether the SDK is currently in the *moving* state (vs stationary). 
    * 
    * @example
@@ -31,12 +36,14 @@ export interface State extends Config {
   isMoving: boolean;
 
   /**
+   * <!-- doc-id: State.schedulerEnabled -->
    * `true` when a schedule is configured and `startSchedule()` executed.
    * `stopSchedule()` will set this to `false`.
    */
   schedulerEnabled: boolean;
 
   /**
+   * <!-- doc-id: State.trackingMode -->
    * Tracking mode.
    *
    * | Value | Name       | Description                   |
@@ -60,17 +67,20 @@ export interface State extends Config {
   trackingMode: TrackingMode;
 
   /**
+   * <!-- doc-id: State.odometer -->
    * Current distance-traveled in meters.
    * See: {@link odometerError}, {@link BackgroundGeolocation.setOdometer}, {@link BackgroundGeolocation.getOdometer}.
    */
   odometer: number;
 
   /**
+   * <!-- doc-id: State.odometerError -->
    * The accumulated error in the odometer (in meters).
    */
   odometerError: number;
 
   /**
+   * <!-- doc-id: State.didLaunchInBackground -->
    * iOS only. `true` when the app was launched in the background due to a
    * background event (fetch, geofence exit, stationary geofence exit).
    * Always `false` on Android.
@@ -78,6 +88,7 @@ export interface State extends Config {
   didLaunchInBackground: boolean;
 
   /** 
+   * <!-- doc-id: State.didDeviceReboot -->
    * Indicates if the app was launched after a device reboot. 
    */
   didDeviceReboot: boolean;  

@@ -1,6 +1,7 @@
 import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
 
 /**
+ * <!-- doc-id: AuthorizationConfig -->
  * Configure the SDK to authenticate with your server using an
  * {@link AuthorizationConfig.accessToken | access token} (e.g., a
  * [JSON Web Token](https://jwt.io/)), and automatically request new tokens when
@@ -81,10 +82,12 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  */
 export interface AuthorizationConfig {  
   /**
+   * <!-- doc-id: AuthorizationConfig.strategy -->
    * Authorization strategy.  Only [JWT](https://jwt.io/) is supported.
    */
   strategy:string;
   /**
+   * <!-- doc-id: AuthorizationConfig.accessToken -->
    * Authorization token (eg: [JWT](https://jwt.io/)) required for authorization by your server at {@link HttpConfig.url}.
    *
    * The SDK will automatically apply the configured `accessToken` to each HTTP request's `Authorization` header, eg:
@@ -95,10 +98,12 @@ export interface AuthorizationConfig {
    */
   accessToken:string;
   /**
+   * <!-- doc-id: AuthorizationConfig.refreshToken -->
    * The token to be POSTed to {@link refreshUrl}, encoded into the {@link refreshPayload}, when a new {@link accessToken} is required after {@link expires} or when HTTP `401 Unauthorized` is received.
    */
   refreshToken?:string;
   /**
+   * <!-- doc-id: AuthorizationConfig.refreshUrl -->
    * The url to your authorization server that provides new {@link accessToken} when expired.
    *
    * When the SDK receives a response the server, it will decode the JSON and recursively iterate through the keys, performing regular expressions and other String-analysis *to "taste"* the data in search of the following 3 items:
@@ -133,6 +138,7 @@ export interface AuthorizationConfig {
    */
    refreshUrl?:string;
   /**
+   * <!-- doc-id: AuthorizationConfig.refreshPayload -->
    * Refresh payload will be encoded into the FORM POST to the {@link refreshUrl} when requesting a new {@link accessToken} after expiration.
    *
    * You *must* provide one field-template which will represent your "refresh token" using the value: __`{refreshToken}`__.  The SDK will
@@ -167,6 +173,7 @@ export interface AuthorizationConfig {
    */
   refreshPayload?:Record<string,string>;
   /**
+   * <!-- doc-id: AuthorizationConfig.refreshHeaders -->
    * Optional headers applied on requests to {@link refreshUrl}
    * Defaults to: `{"Authorization":  "Bearer {accessToken}"}`
    *
@@ -195,6 +202,7 @@ export interface AuthorizationConfig {
   refreshHeaders?:Record<string,string>;
 
   /**
+   * <!-- doc-id: AuthorizationConfig.expires -->
    * Token expiry time in seconds.
    */
   expires?:number;
