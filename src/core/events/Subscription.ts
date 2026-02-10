@@ -1,4 +1,5 @@
 /**
+  * <!-- doc-id: Subscription -->
   * Object returned by BackgroundGeolocation event-listeners.  
   * 
   * `Subscription` contains just a single method {@link remove}, used for removing an event-listener.
@@ -81,6 +82,9 @@
   * @category Events
   */
 export interface Subscription {
-  /** Remove the event-listener. */
+  /** 
+   * <!-- doc-id: Subscription.remove -->
+   * Remove the event-listener. 
+   */ 
   remove(): void;
 }

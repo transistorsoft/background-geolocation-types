@@ -1,4 +1,5 @@
 /**
+ * <!-- doc-id: LocationRequest -->
  * Indicates what level of location authorization the SDK should request.
  *
  * | Name       | Value        | Description                                              |
@@ -14,8 +15,20 @@
  * @category Config
  */
 export const LocationRequest = {
+  /**
+   * <!-- doc-id: LocationRequest.Always -->
+   * Request full background + foreground authorization. 
+   */
   Always: 'Always',
+  /**
+   * <!-- doc-id: LocationRequest.WhenInUse -->
+   * Request foreground-only authorization. 
+   */
   WhenInUse: 'WhenInUse',
+  /**
+   * <!-- doc-id: LocationRequest.Any -->
+   * Accept *either* Always or WhenInUse (no specific request). 
+   */
   Any: 'Any',
 } as const;
 

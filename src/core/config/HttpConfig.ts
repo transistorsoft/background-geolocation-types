@@ -2,6 +2,7 @@
 import { HttpMethod } from '../../enums/HttpMethod';
 
 /**
+ * <!-- doc-id: HttpConfig -->
  * **HTTP / Networking Configuration**
  *
  * The {@link HttpConfig} group controls how recorded locations are uploaded to
@@ -248,6 +249,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  */
 export interface HttpConfig {
   /**
+   * <!-- doc-id: HttpConfig.url -->
    * Server URL where you want the SDK to post recorded locations.
    *
    * Both the iOS and Android native code host their own robust HTTP service
@@ -295,6 +297,7 @@ export interface HttpConfig {
   url?: string;
 
   /**
+   * <!-- doc-id: HttpConfig.headers -->
    * Optional HTTP headers applied to every outbound upload request.
    *
    * These headers are merged with the SDK’s automatically applied headers
@@ -338,6 +341,7 @@ export interface HttpConfig {
   headers?: Record<string, string>;
 
   /**
+   * <!-- doc-id: HttpConfig.params -->
    * Optional HTTP **`params`** appended to the JSON body of each outbound upload request.
    *
    * These key/value pairs are merged into the payload sent to your server
@@ -377,6 +381,7 @@ export interface HttpConfig {
   params?: Record<string, any>;
 
   /**
+   * <!-- doc-id: HttpConfig.method -->
    * The HTTP method used when uploading locations to your configured {@link url}.
    *
    * Defaults to **`POST`**.  
@@ -396,6 +401,7 @@ export interface HttpConfig {
   method?: HttpMethod;
 
   /**
+   * <!-- doc-id: HttpConfig.autoSync -->
    * Immediately upload each recorded location to your configured {@link url}.
    *
    * Defaults to **`true`**.
@@ -419,6 +425,7 @@ export interface HttpConfig {
   autoSync?: boolean;
 
   /**
+   * <!-- doc-id: HttpConfig.autoSyncThreshold -->
    * The minimum number of persisted records the plugin must accumulate
    * before triggering an automatic upload via {@link autoSync}.
    *
@@ -453,6 +460,7 @@ export interface HttpConfig {
   autoSyncThreshold?: number;
 
   /**
+   * <!-- doc-id: HttpConfig.disableAutoSyncOnCellular -->
    * Disable {@link autoSync} when the device is connected over **cellular data**.
    *
    * Defaults to **`false`**.  
@@ -473,6 +481,7 @@ export interface HttpConfig {
   disableAutoSyncOnCellular?: boolean;
 
   /**
+   * <!-- doc-id: HttpConfig.batchSync -->
    * Upload **multiple locations** to your {@link url} in a single HTTP request.
    *
    * Defaults to **`false`**.  
@@ -494,6 +503,7 @@ export interface HttpConfig {
   batchSync?: boolean;
 
   /**
+   * <!-- doc-id: HttpConfig.maxBatchSize -->
    * Controls the number of records attached to **each** batched HTTP request.
    *
    * Defaults to **`-1`** (no maximum).
@@ -516,6 +526,7 @@ export interface HttpConfig {
   maxBatchSize?: number;
 
   /**
+   * <!-- doc-id: HttpConfig.rootProperty -->
    * The root property of the JSON object where location data will be placed.
    *
    * When set, outgoing HTTP payloads will wrap the serialized location record(s)
@@ -566,6 +577,7 @@ export interface HttpConfig {
   rootProperty?: string;
 
   /**
+   * <!-- doc-id: HttpConfig.timeout -->
    * HTTP request timeout in **milliseconds**.
    *
    * When an HTTP request exceeds this timeout, the SDK fires

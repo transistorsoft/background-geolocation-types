@@ -1,13 +1,20 @@
 import type { MotionActivityType } from '../../enums/MotionActivityType';
 
 /**  
+ * <!-- doc-id: MotionActivityEvent -->
  * Emitted by {@link BackgroundGeolocation.onActivityChange}.
  * 
  * @category Events
  */
 export interface MotionActivityEvent {
-  /** Reported device motion activity. */
+  /** 
+   * <!-- doc-id: MotionActivityEvent.activity -->
+   * Reported device motion activity. 
+   */
   activity: MotionActivityType;
-  /** Confidence of the reported activity in percent. */
+  /** 
+   * <!-- doc-id: MotionActivityEvent.confidence -->
+   * Confidence of the reported activity in percent. 
+   */
   confidence: number;
 }

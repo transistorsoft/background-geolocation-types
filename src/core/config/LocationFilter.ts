@@ -2,6 +2,7 @@ import { LocationFilterPolicy } from '../../enums/LocationFilterPolicy';
 import { KalmanProfile } from '../../enums/KalmanProfile';
 
 /**
+ * <!-- doc-id: LocationFilter -->
  * Defines how raw GPS samples are filtered, denoised, and smoothed before being
  * recorded or used for odometer calculations.
  *
@@ -79,6 +80,7 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  */
 export interface LocationFilter {
   /**
+   * <!-- doc-id: LocationFilter.policy -->
    * Defines the filtering policy applied to incoming raw GPS samples before they
    * are accepted, averaged, or rejected by the {@link LocationFilter}.
    *
@@ -151,6 +153,7 @@ export interface LocationFilter {
   policy?: LocationFilterPolicy;
 
   /**
+   * <!-- doc-id: LocationFilter.useKalman -->
    * Enables the Kalman filter to smooth incoming location speed and position.
    *
    * When `true`, the SDK applies a Kalman filter to reduce noise and stabilize
@@ -159,6 +162,7 @@ export interface LocationFilter {
   useKalman?: boolean;
 
   /**
+   * <!-- doc-id: LocationFilter.kalmanDebug -->
    * Enables verbose Kalman debug output in logs.
    *
    * When `true`, the SDK logs additional diagnostic data about the Kalman
@@ -168,6 +172,7 @@ export interface LocationFilter {
   kalmanDebug?: boolean;
 
   /**
+   * <!-- doc-id: LocationFilter.kalmanProfile -->
    * Specifies the preset tuning profile for the Kalman filter used in location
    * denoising.
    *
@@ -190,6 +195,7 @@ export interface LocationFilter {
   kalmanProfile?: KalmanProfile;
 
   /**
+   * <!-- doc-id: LocationFilter.rollingWindow -->
    * Number of samples in the rolling window used for burst averaging.
    *
    * Higher values produce smoother averaged locations but introduce greater
@@ -200,6 +206,7 @@ export interface LocationFilter {
   rollingWindow?: number;
 
   /**
+   * <!-- doc-id: LocationFilter.burstWindow -->
    * Duration (in seconds) of each burst window used for averaging samples.
    *
    * The plugin groups all locations received within this time window into a
@@ -210,6 +217,7 @@ export interface LocationFilter {
   burstWindow?: number;
 
   /**
+   * <!-- doc-id: LocationFilter.maxBurstDistance -->
    * Maximum distance (in meters) between samples considered part of the same burst.
    *
    * Prevents the filter from merging location samples that are too far apart into
@@ -220,6 +228,7 @@ export interface LocationFilter {
   maxBurstDistance?: number;
 
   /**
+   * <!-- doc-id: LocationFilter.trackingAccuracyThreshold -->
    * Minimum acceptable horizontal accuracy (in meters) for a sample to qualify
    * for tracking.
    *
@@ -231,6 +240,7 @@ export interface LocationFilter {
   trackingAccuracyThreshold?: number;
 
   /**
+ * <!-- doc-id: LocationFilter.maxImpliedSpeed -->
  * Maximum implied speed (in meters/second) permitted before a location
  * sample is rejected.
  *
@@ -242,6 +252,7 @@ export interface LocationFilter {
   maxImpliedSpeed?: number;
 
   /**
+   * <!-- doc-id: LocationFilter.filterDebug -->
    * Enables verbose debug logging for the filtering engine.
    *
    * When `true`, the SDK logs detailed decisions for each incoming sample,
@@ -251,6 +262,7 @@ export interface LocationFilter {
   filterDebug?: boolean;
 
   /**
+   * <!-- doc-id: LocationFilter.odometerUseKalmanFilter -->
    * Applies a Kalman filter **only to odometer calculations**, independent of
    * {@link LocationFilter.useKalman}.
    *
@@ -270,6 +282,7 @@ export interface LocationFilter {
   odometerUseKalmanFilter?: boolean;
 
   /**
+   * <!-- doc-id: LocationFilter.odometerAccuracyThreshold -->
    * Maximum horizontal accuracy (in meters) allowed for a sample to affect the odometer.
    *
    * Any location whose `accuracy` exceeds this threshold is **ignored** for

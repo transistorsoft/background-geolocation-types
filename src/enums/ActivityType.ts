@@ -1,4 +1,5 @@
 /**
+ * <!-- doc-id: ActivityType -->
  * iOS Activity Type used with {@link GeoConfig.activityType}.
  *
  * Corresponds to Apple's `CLActivityType` enum:
@@ -14,20 +15,31 @@
  *
  * @category Config
  */
-export const ActivityType = {
-  /** Default/unspecified activity. */
+export const ActivityType = {  
+  /**
+   * <!-- doc-id: ActivityType.Other -->
+   * Default/unspecified activity. 
+   */
   Other: 1,
-
-  /** Automotive navigation activity. */
+  /**
+   * <!-- doc-id: ActivityType.AutomotiveNavigation -->
+   * Automotive navigation mode. 
+   */
   AutomotiveNavigation: 2,
-
-  /** Fitness (walking, running, etc). */
+  /**
+   * <!-- doc-id: ActivityType.Fitness -->
+   * Fitness-related activity. 
+   */
   Fitness: 3,
-
-  /** Other navigation (non-automotive). */
+  /**
+   * <!-- doc-id: ActivityType.OtherNavigation -->
+   * Non-automotive navigation mode. 
+   */
   OtherNavigation: 4,
-
-  /** Airborne activity (iOS 15+). */
+  /**
+   * <!-- doc-id: ActivityType.Airborne -->
+   * Airborne activity (iOS 15+). 
+   */
   Airborne: 5,
 } as const;
 

@@ -1,4 +1,5 @@
 /**
+ * <!-- doc-id: NotificationPriority -->
  * Defines the priority / visibility of the Android foreground-service notification.
  *
  * This affects how the notification appears in the status bar and how strongly
@@ -9,19 +10,34 @@
  * @category Config
  */
 export const NotificationPriority = {
-  /** Default notification priority (normal weighting). */
+  /**
+   * <!-- doc-id: NotificationPriority.Default --> 
+   * Default notification priority (normal weighting). 
+   */ 
   Default: 0,
 
-  /** Notification strongly weighted to top of list; icon strongly weighted to the left. */
+  /**
+   * <!-- doc-id: NotificationPriority.High -->
+   * Notification strongly weighted to top of list; icon strongly weighted to the left. 
+   */
   High: 1,
 
-  /** Notification weighted to bottom of list; icon weighted to the right. */
+  /**
+   * <!-- doc-id: NotificationPriority.Low -->
+   * Notification weighted to bottom of list; icon weighted to the right. 
+   */
   Low: -1,
 
-  /** Same as {@link NotificationPriority.High}. */
+  /**
+   * <!-- doc-id: NotificationPriority.Max -->
+   * Same as {@link NotificationPriority.High}.
+   */
   Max: 2,
 
-  /** Notification strongly weighted to bottom of list; icon hidden. */
+  /**
+   * <!-- doc-id: NotificationPriority.Min -->
+   * Notification strongly weighted to bottom of list; icon hidden. 
+   */
   Min: -2,
 } as const;
 

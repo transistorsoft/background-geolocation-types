@@ -1,4 +1,5 @@
 /**
+ * <!-- doc-id: SQLQueryOrder -->
  * Sort order for {@link SQLQuery.order}.
  *
  * | Name          | Value |
@@ -9,7 +10,15 @@
  * @category Logger
  */
 export const SQLQueryOrder = {
+  /**
+   * <!-- doc-id: SQLQueryOrder.Asc -->
+   * Ascending order (oldest to newest). 
+   */
   Asc: 1,
+  /**
+   * <!-- doc-id: SQLQueryOrder.Desc -->
+   * Descending order (newest to oldest). 
+   */
   Desc: -1,
 } as const;
 
