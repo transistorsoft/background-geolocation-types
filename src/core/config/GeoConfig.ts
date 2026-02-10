@@ -216,74 +216,74 @@ export interface GeoConfig {
    */
   activityType?: ActivityType;
   /**
-  * <!-- doc-id: GeoConfig.distanceFilter -->
-  * The minimum distance (measured in meters) a device must move horizontally before an update event is generated.
-  *
-  * However, by default, **`distanceFilter`** is elastically auto-calculated by the plugin:  When speed increases, **`distanceFilter`** increases;  when speed decreases, so too does **`distanceFilter`**.
-  *
-  *
-  * ### ℹ️ Note:
-  * - To disable this behavior, configure {@link disableElasticity} __`true`__.
-  * - To control the scale of the automatic `distanceFilter` calculation, see {{@link elasticityMultiplier}
-  *
-  * `distanceFilter` is auto-scaled by rounding speed to the nearest `5 m/s` and adding `distanceFilter` meters for each `5 m/s` increment.
-  *
-  * For example, at biking speed of 7.7 m/s with a configured `distanceFilter: 30`:
-  *
-  * ## Example
-  * ```
-  *   rounded_speed = round(7.7, 5)
-  *   => 10
-  *   multiplier = rounded_speed / 5
-  *   => 10 / 5 = 2
-  *   adjusted_distance_filter = multiplier * distanceFilter
-  *   => 2 * 30 = 60 meters
-  * ```
-  *
-  * At highway speed of `27 m/s` with a configured `distanceFilter: 50`:
-  *
-  * ## Example
-  * ```
-  *   rounded_speed = round(27, 5)
-  *   => 30
-  *   multiplier = rounded_speed / 5
-  *   => 30 / 5 = 6
-  *   adjusted_distance_filter = multiplier * distanceFilter * elasticityMultipiler
-  *   => 6 * 50 = 300 meters
-  * ```
-  *
-  * Note the following real example of "elasticity" on highway 101 towards San Francisco as the driver slows down while running into
-  * slower traffic &mdash; locations become compressed as `distanceFilter` decreases.
-  *
-  * ![distanceFilter at highway speed](https://dl.dropboxusercontent.com/s/uu0hs0sediw26ar/distance-filter-highway.png?dl=1)
-  *
-  * Compare now background-geolocation in the scope of a city.  In this image, the left-hand track is from a cab-ride, while the right-hand
-  * track is walking speed.
-  *
-  * ![distanceFilter at city scale](https://dl.dropboxusercontent.com/s/yx8uv2zsimlogsp/distance-filter-city.png?dl=1)
-  */
+   * <!-- doc-id: GeoConfig.distanceFilter -->
+   * The minimum distance (measured in meters) a device must move horizontally before an update event is generated.
+   *
+   * However, by default, **`distanceFilter`** is elastically auto-calculated by the plugin:  When speed increases, **`distanceFilter`** increases;  when speed decreases, so too does **`distanceFilter`**.
+   *
+   *
+   * ### ℹ️ Note:
+   * - To disable this behavior, configure {@link disableElasticity} __`true`__.
+   * - To control the scale of the automatic `distanceFilter` calculation, see {{@link elasticityMultiplier}
+   *
+   * `distanceFilter` is auto-scaled by rounding speed to the nearest `5 m/s` and adding `distanceFilter` meters for each `5 m/s` increment.
+   *
+   * For example, at biking speed of 7.7 m/s with a configured `distanceFilter: 30`:
+   *
+   * ## Example
+   * ```
+   *   rounded_speed = round(7.7, 5)
+   *   => 10
+   *   multiplier = rounded_speed / 5
+   *   => 10 / 5 = 2
+   *   adjusted_distance_filter = multiplier * distanceFilter
+   *   => 2 * 30 = 60 meters
+   * ```
+   *
+   * At highway speed of `27 m/s` with a configured `distanceFilter: 50`:
+   *
+   * ## Example
+   * ```
+   *   rounded_speed = round(27, 5)
+   *   => 30
+   *   multiplier = rounded_speed / 5
+   *   => 30 / 5 = 6
+   *   adjusted_distance_filter = multiplier * distanceFilter * elasticityMultipiler
+   *   => 6 * 50 = 300 meters
+   * ```
+   *
+   * Note the following real example of "elasticity" on highway 101 towards San Francisco as the driver slows down while running into
+   * slower traffic &mdash; locations become compressed as `distanceFilter` decreases.
+   *
+   * ![distanceFilter at highway speed](https://dl.dropboxusercontent.com/s/uu0hs0sediw26ar/distance-filter-highway.png?dl=1)
+   *
+   * Compare now background-geolocation in the scope of a city.  In this image, the left-hand track is from a cab-ride, while the right-hand
+   * track is walking speed.
+   *
+   * ![distanceFilter at city scale](https://dl.dropboxusercontent.com/s/yx8uv2zsimlogsp/distance-filter-city.png?dl=1)
+   */
   distanceFilter?: number;
 
   /**   
-  * <!-- doc-id: GeoConfig.stationaryRadius -->
-  * The minimum distance the device must move beyond the stationary location for aggressive background-tracking to engage.
-  * 
-  * ⚠️ Note: The device will not detect the exact moment it moves out of the stationary-radius.  In normal conditions, it will typically
-  * take **~200 meters** of movement before the plugin begins tracking.
-  *
-  * Configuring **`stationaryRadius: 0`** has **NO EFFECT**.  In fact the plugin enforces a minimum **`stationaryRadius`** of `25` and
-  * in-practice, the native API won't respond for at least 200 meters.
-  *
-  * The following image shows the typical distance iOS requires to detect exit of the **`stationaryRadius`**:
-  * - *Green polylines*: represent a transition from **stationary** state to **moving** (__~200 meters__).
-  * - *Red circles*: locations where the plugin entered the **stationary** state.
-  *
-  * ![](https://dl.dropboxusercontent.com/s/vnio90swhs6xmqm/screenshot-ios-stationary-exit.png?dl=1)
-  *
-  * ℹ️ See also:
-  * - 📘 [Philosophy of Operation](github:wiki/Philosophy-of-Operation)
-  *
-  */
+   * <!-- doc-id: GeoConfig.stationaryRadius -->
+   * The minimum distance the device must move beyond the stationary location for aggressive background-tracking to engage.
+   * 
+   * ⚠️ Note: The device will not detect the exact moment it moves out of the stationary-radius.  In normal conditions, it will typically
+   * take **~200 meters** of movement before the plugin begins tracking.
+   *
+   * Configuring **`stationaryRadius: 0`** has **NO EFFECT**.  In fact the plugin enforces a minimum **`stationaryRadius`** of `25` and
+   * in-practice, the native API won't respond for at least 200 meters.
+   *
+   * The following image shows the typical distance iOS requires to detect exit of the **`stationaryRadius`**:
+   * - *Green polylines*: represent a transition from **stationary** state to **moving** (__~200 meters__).
+   * - *Red circles*: locations where the plugin entered the **stationary** state.
+   *
+   * ![](https://dl.dropboxusercontent.com/s/vnio90swhs6xmqm/screenshot-ios-stationary-exit.png?dl=1)
+   *
+   * ℹ️ See also:
+   * - 📘 [Philosophy of Operation](github:wiki/Philosophy-of-Operation)
+   *
+   */
   stationaryRadius?: number;
 
   /**   
@@ -293,36 +293,36 @@ export interface GeoConfig {
    * Defaults to `5` minutes.  When in the *moving* state, specifies the number of minutes to wait before turning off location-services and
    * transitioning to *stationary* state after the ActivityRecognition System detects the device is `STILL`.  An example use-case for this
    * configuration is to delay GPS OFF while in a car waiting at a traffic light.
-  *
-  * :warning: Setting a very long `stopTimeout` will cause the device's location API to remain ON while the device is potentially motionless for extended periods, which may have a significant impact on battery life.  It depends upon your use-case.
-  *
-  * ### ℹ️ See also:
-  * - {@link BackgroundGeolocation.onMotionChange}
-  * - 📘 [Philosophy of Operation](github:wiki/Philosophy-of-Operation)
-  */
+   *
+   * :warning: Setting a very long `stopTimeout` will cause the device's location API to remain ON while the device is potentially motionless for extended periods, which may have a significant impact on battery life.  It depends upon your use-case.
+   *
+   * ### ℹ️ See also:
+   * - {@link BackgroundGeolocation.onMotionChange}
+   * - 📘 [Philosophy of Operation](github:wiki/Philosophy-of-Operation)
+   */
   stopTimeout?: number;
 
   /**
-  * <!-- doc-id: GeoConfig.stopOnStationary -->
-  * Automatically {@link BackgroundGeolocation.stop} when the {@link stopTimeout} elapses.
-  *
-  * The plugin can optionally automatically stop tracking when the {@link stopTimeout} timer elapses.  For example, when the plugin
-  * first fires {@link BackgroundGeolocation.onMotionChange} into the *moving* state, the next time an *onMotionChange* event occurs
-  * into the *stationary* state, the plugin will have automatically called {@link BackgroundGeolocation.stop} upon itself.
-  *
-  * ⚠️ `stopOnStationary` will **only** occur due to {@link stopTimeout} timer elapse.  It will **not** occur by manually executing
-  * {@link BackgroundGeolocation.changePace} __`false`__.
-  *
-  * @example
-  * ```typescript
-  * BackgroundGeolocation.ready({
-  *   stopOnStationary: true,
-  *   isMoving: true
-  * }, (state) => {
-  *   BackgroundGeolocation.start();
-  * });
-  * ```
-  */
+   * <!-- doc-id: GeoConfig.stopOnStationary -->
+   * Automatically {@link BackgroundGeolocation.stop} when the {@link stopTimeout} elapses.
+   *
+   * The plugin can optionally automatically stop tracking when the {@link stopTimeout} timer elapses.  For example, when the plugin
+   * first fires {@link BackgroundGeolocation.onMotionChange} into the *moving* state, the next time an *onMotionChange* event occurs
+   * into the *stationary* state, the plugin will have automatically called {@link BackgroundGeolocation.stop} upon itself.
+   *
+   * ⚠️ `stopOnStationary` will **only** occur due to {@link stopTimeout} timer elapse.  It will **not** occur by manually executing
+   * {@link BackgroundGeolocation.changePace} __`false`__.
+   *
+   * @example
+   * ```typescript
+   * BackgroundGeolocation.ready({
+   *   stopOnStationary: true,
+   *   isMoving: true
+   * }, (state) => {
+   *   BackgroundGeolocation.start();
+   * });
+   * ```
+   */
   stopOnStationary?: boolean;
 
   /**
@@ -350,115 +350,115 @@ export interface GeoConfig {
   pausesLocationUpdatesAutomatically?: boolean;
 
   /**
-  * <!-- doc-id: GeoConfig.disableElasticity -->
-  * Defaults to **`false`**.  Set **`true`** to disable automatic, speed-based {@link distanceFilter} auto-scaling.  By default, the SDK automatically
-  * increases {@link distanceFilter} as speed increases (and decreases it as speed *decreases*) in order to record fewer locations and conserve energy.
-  *
-  * Note the following real example of "elasticity" on highway 101 towards San Francisco as the driver slows down while running into slower
-  * traffic &mdash; locations become compressed as {@link distanceFilter} decreases.
-  *
-  * ![distanceFilter at highway speed](https://dl.dropboxusercontent.com/s/uu0hs0sediw26ar/distance-filter-highway.png?dl=1)
-  *
-  * ### ℹ️ See also:
-  * - {@link elasticityMultiplier}
-  * - {@link distanceFilter}
-  */
+   * <!-- doc-id: GeoConfig.disableElasticity -->
+   * Defaults to **`false`**.  Set **`true`** to disable automatic, speed-based {@link distanceFilter} auto-scaling.  By default, the SDK automatically
+   * increases {@link distanceFilter} as speed increases (and decreases it as speed *decreases*) in order to record fewer locations and conserve energy.
+   *
+   * Note the following real example of "elasticity" on highway 101 towards San Francisco as the driver slows down while running into slower
+   * traffic &mdash; locations become compressed as {@link distanceFilter} decreases.
+   *
+   * ![distanceFilter at highway speed](https://dl.dropboxusercontent.com/s/uu0hs0sediw26ar/distance-filter-highway.png?dl=1)
+   *
+   * ### ℹ️ See also:
+   * - {@link elasticityMultiplier}
+   * - {@link distanceFilter}
+   */
   disableElasticity?: boolean;
 
   /**
-  * <!-- doc-id: GeoConfig.elasticityMultiplier -->
-  * Controls the scale of automatic speed-based {@link distanceFilter} elasticity.
-  *
-  * Increasing `elasticityMultiplier` will result in fewer location samples as speed increases.  A value of `0` has the same effect as
-  * {@link disableElasticity} __`true`__.
-  */
+   * <!-- doc-id: GeoConfig.elasticityMultiplier -->
+   * Controls the scale of automatic speed-based {@link distanceFilter} elasticity.
+   *
+   * Increasing `elasticityMultiplier` will result in fewer location samples as speed increases.  A value of `0` has the same effect as
+   * {@link disableElasticity} __`true`__.
+   */
   elasticityMultiplier?: number;
 
   /**
-  * <!-- doc-id: GeoConfig.stopAfterElapsedMinutes -->
-  * Automatically {@link BackgroundGeolocation.stop} tracking after *x* minutes.
-  *
-  * The plugin can optionally automatically {@link BackgroundGeolocation.stop} after some number of minutes elapses after the {@link BackgroundGeolocation.start} method was called.
-  *
-  * @example
-  * ```typescript
-  * BackgroundGeolocation.ready({
-  *   stopAfterElapsedMinutes: 30
-  * }).then((state) => {
-  *   BackgroundGeolocation.start();  // <-- plugin will automatically #stop in 30 minutes
-  * });
-  * ```
-  */
+   * <!-- doc-id: GeoConfig.stopAfterElapsedMinutes -->
+   * Automatically {@link BackgroundGeolocation.stop} tracking after *x* minutes.
+   *
+   * The plugin can optionally automatically {@link BackgroundGeolocation.stop} after some number of minutes elapses after the {@link BackgroundGeolocation.start} method was called.
+   *
+   * @example
+   * ```typescript
+   * BackgroundGeolocation.ready({
+   *   stopAfterElapsedMinutes: 30
+   * }).then((state) => {
+   *   BackgroundGeolocation.start();  // <-- plugin will automatically #stop in 30 minutes
+   * });
+   * ```
+   */
   stopAfterElapsedMinutes?: number;
 
   /**
-  * <!-- doc-id: GeoConfig.useSignificantChangesOnly -->
-  * Set `true` in order to disable constant background-tracking.  Locations will be recorded only periodically.
-  *
-  * Defaults to `false`.  A location will be recorded only every `500` to `1000` meters (can be higher in non urban environments; depends upon the spacing of Cellular towers).  Many of the plugin's configuration parameters **will have no effect**, such as {@link distanceFilter}, {@link stationaryRadius}, {@link activityType}, etc.
-  *
-  * Using `significantChangesOnly: true` will provide **significant** power-saving at the expense of fewer recorded locations.
-  *
-  * **iOS**
-  *
-  * Engages the iOS [Significant Location Changes API](https://developer.apple.com/reference/corelocation/cllocationmanager/1423531-startmonitoringsignificantlocati?language=objc) API for only periodic location updates every 500-1000 meters.
-  *
-  * ⚠️ If Apple has rejected your application, refusing to grant your app the privilege of using the **`UIBackgroundMode: "location"`**, this can be a solution.
-  *
-  * **Android**
-  *
-  * A location will be recorded several times per hour while the device is in the *moving* state.  No foreground-service will be run (nor its corresponding persistent {@link NotificationConfig}).
-  *
-  * Example 1 **`useSignificantChangesOnly: true`**
-  * 
-  * ![](https://dl.dropboxusercontent.com/s/wdl9e156myv5b34/useSignificantChangesOnly.png?dl=1)
-  *
-  * Example 2 **`useSignificantChangesOnly: false` (Default)**
-  *
-  * ![](https://dl.dropboxusercontent.com/s/hcxby3sujqanv9q/useSignificantChangesOnly-false.png?dl=1)
-  */
+   * <!-- doc-id: GeoConfig.useSignificantChangesOnly -->
+   * Set `true` in order to disable constant background-tracking.  Locations will be recorded only periodically.
+   *
+   * Defaults to `false`.  A location will be recorded only every `500` to `1000` meters (can be higher in non urban environments; depends upon the spacing of Cellular towers).  Many of the plugin's configuration parameters **will have no effect**, such as {@link distanceFilter}, {@link stationaryRadius}, {@link activityType}, etc.
+   *
+   * Using `significantChangesOnly: true` will provide **significant** power-saving at the expense of fewer recorded locations.
+   *
+   * **iOS**
+   *
+   * Engages the iOS [Significant Location Changes API](https://developer.apple.com/reference/corelocation/cllocationmanager/1423531-startmonitoringsignificantlocati?language=objc) API for only periodic location updates every 500-1000 meters.
+   *
+   * ⚠️ If Apple has rejected your application, refusing to grant your app the privilege of using the **`UIBackgroundMode: "location"`**, this can be a solution.
+   *
+   * **Android**
+   *
+   * A location will be recorded several times per hour while the device is in the *moving* state.  No foreground-service will be run (nor its corresponding persistent {@link NotificationConfig}).
+   *
+   * Example 1 **`useSignificantChangesOnly: true`**
+   * 
+   * ![](https://dl.dropboxusercontent.com/s/wdl9e156myv5b34/useSignificantChangesOnly.png?dl=1)
+   *
+   * Example 2 **`useSignificantChangesOnly: false` (Default)**
+   *
+   * ![](https://dl.dropboxusercontent.com/s/hcxby3sujqanv9q/useSignificantChangesOnly-false.png?dl=1)
+   */
   useSignificantChangesOnly?: boolean;
 
   /**
-  * <!-- doc-id: GeoConfig.disableLocationAuthorizationAlert -->
-  * Disables automatic authorization alert when plugin detects the user has disabled location authorization.
-  *
-  * You will be responsible for handling disabled location authorization by listening to the {@link BackgroundGeolocation.onProviderChange} event.
-  *
-  * By default, the plugin automatically shows a native alert to the user when location-services are disabled, directing them to the settings screen.  If you **do not** desire this automated behavior, set `disableLocationAuthorizationAlert: true`.
-  *
-  * __iOS__
-  *
-  * The iOS alert dialog text elements can be configured via {@link locationAuthorizationAlert} and {@link locationAuthorizationRequest}.
-  *
-  * ![](https://dl.dropbox.com/s/wk66ave2mzq6m6a/ios-locationAuthorizationAlert.jpg?dl=1)
-  *
-  * __Android__
-  *
-  * Android can detect when the user has configured the device's *Settings->Location* in a manner that does not match your location request (eg: {@link desiredAccuracy}).  For example, if the user configures *Settings->Location->Mode* with *Battery Saving* (ie: Wifi only) but you've specifically requested {@link DesiredAccuracy.High} (ie: GPS), Android will show a dialog asking the user to confirm the desired changes.  If the user clicks `[OK]`, the OS will automcatically modify the Device settings.
-  *
-  * ![](https://dl.dropbox.com/scl/fi/t7bwdrmogr26rcmrbemkt/android-location-resolution-dialog.png?rlkey=won88t8xo5zcei7ktmurebb5t&dl=1)
-  *
-  * This automated Android dialog will be shown in the following cases:
-  * - {@link BackgroundGeolocation.onProviderChange}
-  * - {@link BackgroundGeolocation.start}
-  * - {@link BackgroundGeolocation.requestPermission}
-  *
-  * @example
-  * ```typescript
-  * BackgroundGeolocation.onProviderChange((event) => {
-  *   console.log("[onProviderChange] ", event);
-  *
-  *   if (!provider.enabled) {
-  *     alert("Please enable location services");
-  *   }
-  * });
-  *
-  * BackgroundGeolocation.ready({
-  *   disableLocationAuthorizationAlert: true
-  * });
-  * ```
-  */
+   * <!-- doc-id: GeoConfig.disableLocationAuthorizationAlert -->
+   * Disables automatic authorization alert when plugin detects the user has disabled location authorization.
+   *
+   * You will be responsible for handling disabled location authorization by listening to the {@link BackgroundGeolocation.onProviderChange} event.
+   *
+   * By default, the plugin automatically shows a native alert to the user when location-services are disabled, directing them to the settings screen.  If you **do not** desire this automated behavior, set `disableLocationAuthorizationAlert: true`.
+   *
+   * __iOS__
+   *
+   * The iOS alert dialog text elements can be configured via {@link locationAuthorizationAlert} and {@link locationAuthorizationRequest}.
+   *
+   * ![](https://dl.dropbox.com/s/wk66ave2mzq6m6a/ios-locationAuthorizationAlert.jpg?dl=1)
+   *
+   * __Android__
+   *
+   * Android can detect when the user has configured the device's *Settings->Location* in a manner that does not match your location request (eg: {@link desiredAccuracy}).  For example, if the user configures *Settings->Location->Mode* with *Battery Saving* (ie: Wifi only) but you've specifically requested {@link DesiredAccuracy.High} (ie: GPS), Android will show a dialog asking the user to confirm the desired changes.  If the user clicks `[OK]`, the OS will automcatically modify the Device settings.
+   *
+   * ![](https://dl.dropbox.com/scl/fi/t7bwdrmogr26rcmrbemkt/android-location-resolution-dialog.png?rlkey=won88t8xo5zcei7ktmurebb5t&dl=1)
+   *
+   * This automated Android dialog will be shown in the following cases:
+   * - {@link BackgroundGeolocation.onProviderChange}
+   * - {@link BackgroundGeolocation.start}
+   * - {@link BackgroundGeolocation.requestPermission}
+   *
+   * @example
+   * ```typescript
+   * BackgroundGeolocation.onProviderChange((event) => {
+   *   console.log("[onProviderChange] ", event);
+   *
+   *   if (!provider.enabled) {
+   *     alert("Please enable location services");
+   *   }
+   * });
+   *
+   * BackgroundGeolocation.ready({
+   *   disableLocationAuthorizationAlert: true
+   * });
+   * ```
+   */
   disableLocationAuthorizationAlert?: boolean;
 
   /**
@@ -780,46 +780,46 @@ export interface GeoConfig {
   geofenceProximityRadius?: number;
 
   /**
-  * <!-- doc-id: GeoConfig.geofenceModeHighAccuracy -->
-  * __`[Android only]`__ Enable high-accuracy for **geofence-only** mode (See {@link BackgroundGeolocation.startGeofences}).
-  *
-  * __⚠️ Warning: Will consume more power.__
-  *
-  * Defaults to `false`. Runs Android's {@link BackgroundGeolocation.startGeofences} with a *foreground service* (along with its corresponding persistent {@link AppConfig.notification}).
-  *
-  * Configuring `geofenceModeHighAccuracy: true` will make Android geofence triggering **far more responsive**. In this mode, the usual config options to control location-services will be applied:
-  *
-  * - {@link GeoConfig.desiredAccuracy} ({@link DesiredAccuracy.Medium} works well).
-  * - {@link GeoConfig.locationUpdateInterval}
-  * - {@link GeoConfig.distanceFilter}
-  * - {@link GeoConfig.deferTime}
-  *
-  * With the default `geofenceModeHighAccuracy: false`, a device will have to move farther *into* a geofence before the *ENTER* event fires and farther *out of* a geofence before
-  * the *EXIT* event fires.
-  *
-  * The more aggressive you configure the location-update params above (at the cost of power consumption), the more responsive will be your geofence-triggering.
-  *
-  * @example
-  * ```typescript
-  * BackgroundGeolocation.ready({
-  *   geolocation: {
-  *     geofenceModeHighAccuracy: true,
-  *     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
-  *     locationUpdateInterval: 5000,
-  *     distanceFilter: 50,
-  *   }
-  * }).then((state) => {
-  *   BackgroundGeolocation.startGeofences();
-  * });
-  * ```
-  *
-  * @example **`geofenceModeHighAccuracy: false`** (Default) &mdash; Transition events **are delayed**.
-  * ![](https://dl.dropboxusercontent.com/s/6nxbuersjcdqa8b/geofenceModeHighAccuracy-false.png?dl=1)
-  *
-  * @example **`geofenceModeHighAccuracy: true`** &mdash; Transition events are **nearly instantaneous**.
-  * ![](https://dl.dropbox.com/s/w53hqn7f7n1ug1o/geofenceModeHighAccuracy-true.png?dl=1)
-  *
-  */
+   * <!-- doc-id: GeoConfig.geofenceModeHighAccuracy -->
+   * __`[Android only]`__ Enable high-accuracy for **geofence-only** mode (See {@link BackgroundGeolocation.startGeofences}).
+   *
+   * __⚠️ Warning: Will consume more power.__
+   *
+   * Defaults to `false`. Runs Android's {@link BackgroundGeolocation.startGeofences} with a *foreground service* (along with its corresponding persistent {@link AppConfig.notification}).
+   *
+   * Configuring `geofenceModeHighAccuracy: true` will make Android geofence triggering **far more responsive**. In this mode, the usual config options to control location-services will be applied:
+   *
+   * - {@link GeoConfig.desiredAccuracy} ({@link DesiredAccuracy.Medium} works well).
+   * - {@link GeoConfig.locationUpdateInterval}
+   * - {@link GeoConfig.distanceFilter}
+   * - {@link GeoConfig.deferTime}
+   *
+   * With the default `geofenceModeHighAccuracy: false`, a device will have to move farther *into* a geofence before the *ENTER* event fires and farther *out of* a geofence before
+   * the *EXIT* event fires.
+   *
+   * The more aggressive you configure the location-update params above (at the cost of power consumption), the more responsive will be your geofence-triggering.
+   *
+   * @example
+   * ```typescript
+   * BackgroundGeolocation.ready({
+   *   geolocation: {
+   *     geofenceModeHighAccuracy: true,
+   *     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_MEDIUM,
+   *     locationUpdateInterval: 5000,
+   *     distanceFilter: 50,
+   *   }
+   * }).then((state) => {
+   *   BackgroundGeolocation.startGeofences();
+   * });
+   * ```
+   *
+   * @example **`geofenceModeHighAccuracy: false`** (Default) &mdash; Transition events **are delayed**.
+   * ![](https://dl.dropboxusercontent.com/s/6nxbuersjcdqa8b/geofenceModeHighAccuracy-false.png?dl=1)
+   *
+   * @example **`geofenceModeHighAccuracy: true`** &mdash; Transition events are **nearly instantaneous**.
+   * ![](https://dl.dropbox.com/s/w53hqn7f7n1ug1o/geofenceModeHighAccuracy-true.png?dl=1)
+   *
+   */
   geofenceModeHighAccuracy?:boolean;
 
   /**
