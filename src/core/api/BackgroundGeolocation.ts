@@ -547,7 +547,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   readonly logger: Logger;
 
   /**
-  *<!-- doc-id: BackgroundGeolocation.ready -->
+  * <!-- doc-id: BackgroundGeolocation.ready -->
   *
   * Signal to the plugin that your app is launched and ready, proving the default {@link Config}.
   *
