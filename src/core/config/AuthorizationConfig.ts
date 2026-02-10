@@ -139,7 +139,6 @@ export interface AuthorizationConfig {
    * _automatically_ replace this simple template with the configured {@link refreshToken}.
    *
    * @example
-   *
    * ```typescript
    * BackgroundGeolocation.ready({
    *   authorization: {
@@ -175,8 +174,7 @@ export interface AuthorizationConfig {
    *
    * If you do not want *any* headers applied on requests to {refreshUrl}, provide an empty `{}`.
    *
-   * ## Example
-   *
+   * @example
    * ```typescript
    * BackgroundGeolocation.ready({
    *   authorization: {

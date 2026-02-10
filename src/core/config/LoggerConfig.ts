@@ -10,6 +10,7 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * __Configure via:__ `config.logger`
  *
+ * @example
  * ```ts
  * BackgroundGeolocation.ready({
  *   logger: {
@@ -99,8 +100,7 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * __Examples__
  *
- * **1) Development profile (maximum visibility)**
- *
+ * @example Development profile (maximum visibility)
  * ```ts
  * BackgroundGeolocation.ready({
  *   logger: {
@@ -110,9 +110,8 @@ import { LogLevel } from '../../enums/LogLevel';
  *   }
  * });
  * ```
- *
- * **2) Production profile (quiet & conservative)**
- *
+ * 
+ * @example Production profile (quiet & conservative)
  * ```ts
  * BackgroundGeolocation.ready({
  *   logger: {
@@ -123,8 +122,7 @@ import { LogLevel } from '../../enums/LogLevel';
  * });
  * ```
  *
- * **3) Disable all logging**
- *
+ * @example Disable all logging
  * ```ts
  * BackgroundGeolocation.setConfig({
  *   logger: {
@@ -135,8 +133,7 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * __Migration from legacy flat Config__
  *
- * Legacy:
- *
+ * @example Legacy flat Config
  * ```ts
  * Config({
  *   debug: true,
@@ -145,8 +142,7 @@ import { LogLevel } from '../../enums/LogLevel';
  * });
  * ```
  *
- * New (compound):
- *
+ * @example New compound Config
  * ```ts
  * Config({
  *   logger: {

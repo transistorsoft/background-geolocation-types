@@ -31,6 +31,7 @@ import { NotificationConfig } from './NotificationConfig';
  *
  * __Example__
  *
+ * @example
  * ```ts
  * import BackgroundGeolocation from "react-native-background-geolocation";
  *
@@ -97,6 +98,7 @@ export interface PermissionRationale {
  *
  * Use this class via {@link Config.app}.
  *
+ * @example
  * ```ts
  * BackgroundGeolocation.ready({
  *   app: {
@@ -129,9 +131,7 @@ export interface PermissionRationale {
  *   JS/UI process is killed. Pair this with {@link HttpConfig.url} to ensure continuous uploads.
  * - The **scheduler** uses Android’s `AlarmManager` by default; control this with {@link AppConfig.scheduleUseAlarmManager}.
  *
- * @example
- *
- * Configure once at startup:
+ * @example Configure once at startup:
  *
  * ```ts
  * import BackgroundGeolocation, {
@@ -166,7 +166,7 @@ export interface PermissionRationale {
  * await BackgroundGeolocation.ready(config);
  * ```
  *
- * Update later at runtime:
+ * @example Update later at runtime:
  *
  * ```ts
  * await BackgroundGeolocation.setConfig({
@@ -292,7 +292,6 @@ export interface AppConfig {
    * - It is **not possible** to configure a `heartbeatInterval` faster than 60 seconds.
    *
    * @example
-   * 
    * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
@@ -416,6 +415,7 @@ export interface AppConfig {
    *
    * Append `geofence` or `location` to explicitly choose a tracking mode:
    *
+   * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
@@ -427,7 +427,8 @@ export interface AppConfig {
    * ```
    *
    * Since `location` is the default mode, it may be omitted:
-   *
+   * 
+   * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
@@ -470,6 +471,7 @@ export interface AppConfig {
   /**
    * __Android only__ Force the Android scheduler to use `AlarmManager` (more precise) instead of `JobScheduler`.  Defaults to `false`.
    *
+   * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   app: {

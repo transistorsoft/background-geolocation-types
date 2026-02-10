@@ -63,6 +63,7 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  * Older versions of the SDK placed activity-recognition parameters directly
  * on the root {@link Config} object:
  *
+ * @example
  * ```ts
  * BackgroundGeolocation.ready({
  *   activityRecognitionInterval: 10000,
@@ -73,6 +74,7 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  *
  * These values are now grouped under {@link ActivityConfig}:
  *
+ * @example
  * ```ts
  * BackgroundGeolocation.ready({
  *   activity: {

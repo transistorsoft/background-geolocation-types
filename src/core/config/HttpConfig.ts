@@ -107,6 +107,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * Or manually:
  *
+ * @example Manual sync
  * ```ts
  * await BackgroundGeolocation.sync();
  * ```
@@ -171,7 +172,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * **Examples**
  *
- * Simple upload:
+ * @example Simple upload
  * ```ts
  * BackgroundGeolocation.ready({
  *   http: {
@@ -183,8 +184,8 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *   }
  * });
  * ```
- *
- * Batched uploads:
+ * 
+ * @example Batched uploads
  * ```ts
  * BackgroundGeolocation.ready({
  *   http: {
@@ -198,7 +199,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * });
  * ```
  *
- * Conserve cellular data:
+ * @example Conserve cellular data
  * ```ts
  * BackgroundGeolocation.ready({
  *   http: {
@@ -208,8 +209,8 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *   }
  * });
  * ```
- *
- * Manual sync:
+ * 
+ * @example Manual sync
  * ```ts
  * await BackgroundGeolocation.setConfig({
  *   http: { url: "https://api.example.com", autoSync: false }
@@ -219,8 +220,8 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * ```
  *
  * **Migration from legacy flat Config**
- *
- * Old:
+ * 
+ * @example Legacy flat Config
  * ```ts
  * BackgroundGeolocation.ready({
  *   url: "https://api.example.com",
@@ -229,7 +230,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * });
  * ```
  *
- * New (compound):
+ * @example New compound Config
  * ```ts
  * BackgroundGeolocation.ready({
  *   http: {
@@ -520,6 +521,7 @@ export interface HttpConfig {
    * When set, outgoing HTTP payloads will wrap the serialized location record(s)
    * under the specified key.
    *
+   * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   http: {

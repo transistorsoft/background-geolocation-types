@@ -1,6 +1,7 @@
 import { PersistMode } from '../../enums/PersistMode';
 
 /**
+ * <!-- doc-id: PersistenceConfig -->
  * **Persistence / Storage Configuration**
  *
  * The **PersistenceConfig** group controls how the SDK stores, orders, and
@@ -8,6 +9,7 @@ import { PersistMode } from '../../enums/PersistMode';
  * durable buffer between data producers (locations, geofences) and consumers
  * (your app code and the HTTP service).
  *
+ * @example
  * ```ts
  * BackgroundGeolocation.ready({
  *   persistence: {
@@ -87,8 +89,7 @@ import { PersistMode } from '../../enums/PersistMode';
  * > Even with {@link PersistMode.None}, HTTP uploads can still occur if triggered
  * > directly. Persistence controls the *buffer*, not the upload.
  *
- * __Example__
- *
+ * @example
  * ```ts
  * const location = await bg.BackgroundGeolocation.getCurrentPosition({
  *   persist: true,
@@ -109,7 +110,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *
  * __Examples__
  *
- * **Configure persistence behavior**
+ * @example Configure persistence behavior
  * ```ts
  * const config = {
  *   persistence: {
@@ -127,7 +128,8 @@ import { PersistMode } from '../../enums/PersistMode';
  * const state = await BackgroundGeolocation.ready(config);
  * ```
  *
- * **Inspect and purge the database**
+ * @example Inspect and purge the database
+ * 
  * ```ts
  * final pending = await BackgroundGeolocation.getCount();
  * console.log('Pending records: $pending');
@@ -137,7 +139,7 @@ import { PersistMode } from '../../enums/PersistMode';
  * console.log('Destroyed all records? $ok');
  * ```
  *
- * **Custom JSON templates**
+ * @example Custom JSON templates
  * ```ts
  * const config = {
  *   persistence: {
@@ -160,8 +162,7 @@ import { PersistMode } from '../../enums/PersistMode';
  * };
  * ```
  *
- * __Migration from legacy flat Config__
- *
+ * @example Migration from legacy flat Config
  * ```ts
  * // Legacy
  * {
@@ -176,8 +177,7 @@ import { PersistMode } from '../../enums/PersistMode';
  * };
  * ```
  *
- * Now grouped under **PersistenceConfig**:
- *
+ * @example Now grouped under PersistenceConfig
  * ```ts
  * {
  *   persistence: {
@@ -368,8 +368,7 @@ export interface PersistenceConfig {
    * The plugin does *not* automatically apply double-quotes around string
    * data. Templates are JSON-encoded **exactly as written**.
    *
-   * Incorrect:
-   *
+   * @example Incorrect
    * ```typescript
    * BackgroundGeolocation.ready({
    *   persistence: {
@@ -384,8 +383,7 @@ export interface PersistenceConfig {
    * {"timestamp": 2018-01-01T12:01:01.123Z}
    * ```
    *
-   * Correct:
-   *
+   * @example Correct
    * ```typescript
    * BackgroundGeolocation.ready({
    *   persistence: {
@@ -494,8 +492,8 @@ export interface PersistenceConfig {
    * __See also:__  
    * - 📘 {@link HttpEvent | HTTP Guide}
    *
-   * __Example:__
-   * ```typescript
+   * @example
+   * ```ts
    * BackgroundGeolocation.ready({
    *   http: {
    *     url: "https://my-server.com/locations",   
@@ -547,7 +545,7 @@ export interface PersistenceConfig {
    *
    * ![](https://www.dropbox.com/s/ljacoquuuv5sd5r/disableProviderChangeRecord.png?dl=1)
    *
-   * __Example:__
+   * @example
    * ```typescript
    * BackgroundGeolocation.ready({
    *   persistence: {

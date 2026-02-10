@@ -110,8 +110,7 @@ export interface LocationFilter {
    *
    * **Examples**
    *
-   * Balanced default filtering:
-   *
+   * @example Balanced default filtering
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
@@ -122,8 +121,7 @@ export interface LocationFilter {
    * });
    * ```
    *
-   * No filtering — capture all raw locations:
-   *
+   * @example No filtering — capture all raw locations:
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
@@ -134,8 +132,7 @@ export interface LocationFilter {
    * });
    * ```
    *
-   * Maximum smoothing for analytics:
-   *
+   * @example Maximum smoothing for analytics:
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {

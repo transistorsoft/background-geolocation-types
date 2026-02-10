@@ -15,9 +15,10 @@ import { NotificationPriority } from '../../enums/NotificationPriority';
  * ```ts
  * BackgroundGeolocation.ready({
  *   app: {
- *    notification: {
- *     title: "The Title",
- *     text: "The Text",
+ *     notification: {
+ *       title: "The Title",
+ *       text: "The Text"
+ *     }
  *   }
  * });
  *
@@ -295,7 +296,6 @@ export interface NotificationConfig {
    *
    * As a starting point, copy this into your XML file:
    *
-   * @example
    * ```xml
    * <?xml version="1.0" encoding="utf-8"?>
    * <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -413,7 +413,6 @@ export interface NotificationConfig {
    *  
    * You can declare your own custom `<TextView />` elements and render data into them using the `notification.strings` parameter.
    *
-   * @example
    * ```xml
    * <TextView
    *     android:id="@+id/myCustomElement"  // <-- myCustomElement
@@ -459,8 +458,7 @@ export interface NotificationConfig {
    *     android:text="Foo" />
    * ```
    *
-   * __Example: Register button listeners__
-   *
+   * @example Register button listeners
    * ```ts
    * BackgroundGeolocation.ready({
    *   app: { 

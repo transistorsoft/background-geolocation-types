@@ -30,8 +30,7 @@
    *
    * **Examples**
    *
-   * Balanced default filtering:
-   *
+   * @example Balanced default filtering
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
@@ -42,8 +41,7 @@
    * });
    * ```
    *
-   * No filtering — capture all raw locations:
-   *
+   * @example No filtering — capture all raw locations
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
@@ -54,8 +52,7 @@
    * });
    * ```
    *
-   * Maximum smoothing for analytics:
-   *
+   * @example Maximum smoothing for analytics
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
