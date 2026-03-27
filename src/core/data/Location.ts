@@ -4,376 +4,428 @@ import { GeofenceEvent } from '../events/GeofenceEvent';
 
 /**
  * <!-- doc-id: Coords -->
- * This object is attached to instances of {@link Location.coords}.
- * 
+ * Geographic coordinates attached to a {@link Location}.
+ *
  * @category Data
 */
 export interface Coords {
   /**
    * <!-- doc-id: Coords.floor -->
-   * __[iOS Only]__ When the environment contains indoor-tracking hardware (eg: bluetooth beacons) the current floor within a building.
+   * Floor within a building, when indoor-positioning hardware (e.g. Bluetooth
+   * beacons) is available. [iOS only]
    */
   floor?: number;
+
   /**
    * <!-- doc-id: Coords.latitude -->
-   * Latitude of the location.
+   * Latitude in decimal degrees.
    */
   latitude: number;
+
   /**
    * <!-- doc-id: Coords.longitude -->
-   * Longitude of the location.
+   * Longitude in decimal degrees.
    */
   longitude: number;
+
   /**
    * <!-- doc-id: Coords.accuracy -->
-   * Accuracy in meters.
+   * Horizontal accuracy radius in meters.
    */
   accuracy: number;
+
   /**
    * <!-- doc-id: Coords.altitude -->
-   * [iOS] Altitude above sea-level in meters.
-   * [Android] The altitude of this location in meters above the WGS84 reference ellipsoid.
-   * - See {@link ellipsoidal_altitude}
+   * Altitude above a reference plane in meters.
    *
+   * #### iOS
+   *
+   * Altitude above mean sea level.
+   *
+   * #### Android
+   *
+   * Altitude above the WGS84 reference ellipsoid. See also
+   * {@link ellipsoidal_altitude}.
    */
   altitude?: number;
+
   /**
    * <!-- doc-id: Coords.ellipsoidal_altitude -->
-   * The altitude of this location in meters above the WGS84 reference ellipsoid.
+   * Altitude above the WGS84 reference ellipsoid in meters.
    */
   ellipsoidal_altitude?: number;
+
   /**
    * <!-- doc-id: Coords.altitude_accuracy -->
-   * Altitude accuracy in meters.
+   * Vertical accuracy in meters. Returns `-1` if unavailable.
    *
-   * If this location does not have `altitude_accuracy`, then `-1` is returned.
+   * #### iOS
    *
-   * __iOS:__
+   * When positive, the `altitude` value is within ±`altitude_accuracy` meters.
+   * When negative, `altitude` is invalid. Determining altitude accuracy
+   * requires a GPS-capable device; on some devices this value is always
+   * negative.
    *
-   * When this property contains 0 or a positive number, the value in the altitude property is plus or minus the specified number of meters. When this property contains a negative number, the value in the altitude property is invalid.
+   * #### Android
    *
-   * Determining the [altitudeAccuracy] requires a device with GPS capabilities. Thus, on some devices, this property always contains a negative value.
-   *
-   * __Android:__
-   *
-   * Android defines vertical accuracy at 68% confidence. Specifically, as 1-side of the 2-sided range above and below the estimated altitude reported by [altitude], within which there is a 68% probability of finding the true altitude.
-   *
-   * In the case where the underlying distribution is assumed Gaussian normal, this would be considered 1 standard deviation.
-   *
-   * For example, if [altitude] returns `150`, and [verticalAccuracy] returns `20` then there is a 68% probability of the true altitude being between `130` and `170` meters.
-   *
+   * Defined as the 1-sigma vertical accuracy at 68% confidence — the
+   * half-width of the range above and below `altitude` within which the true
+   * altitude has a 68% probability of falling.
    */
   altitude_accuracy?: number;
+
   /**
    * <!-- doc-id: Coords.heading -->
-   * Heading in degrees.
-   * ⚠️ Note:  Only present when location came from GPS.  `-1` otherwise.
+   * Direction of travel in degrees (0–360, clockwise from true north).
+   *
+   * ### Note
+   *
+   * Only present when the location came from GPS. Returns `-1` otherwise.
    */
   heading?: number;
+
   /**
    * <!-- doc-id: Coords.heading_accuracy -->
    * Heading accuracy in degrees.
-   * ⚠️ Note:  Only present when location came from GPS.  `-1` otherwise.
+   *
+   * ### Note
+   *
+   * Only present when the location came from GPS. Returns `-1` otherwise.
    */
   heading_accuracy?: number;
+
   /**
    * <!-- doc-id: Coords.speed -->
-   * Speed in meters / second.
-   * ⚠️ Note:  Only present when location came from GPS.  `-1` otherwise.
+   * Ground speed in meters per second.
+   *
+   * ### Note
+   *
+   * Only present when the location came from GPS. Returns `-1` otherwise.
    */
   speed?: number;
+
   /**
    * <!-- doc-id: Coords.speed_accuracy -->
-   * Speed accuracy in meters / second.
-   * ⚠️ Note:  Only present when location came from GPS.  `-1` otherwise.
+   * Speed accuracy in meters per second.
+   *
+   * ### Note
+   *
+   * Only present when the location came from GPS. Returns `-1` otherwise.
    */
   speed_accuracy?: number;
 }
 
 /**
  * <!-- doc-id: Battery -->
- * This object is attached to instances of {@link Location.battery}.
- * 
+ * Device battery state at the time a {@link Location} was recorded.
+ *
  * @category Data
  */
 export interface Battery {
   /**
    * <!-- doc-id: Battery.is_charging -->
-   * `true` when device is plugged in to power.
+   * `true` when the device is connected to a power source.
    */
   is_charging: boolean;
+
   /**
    * <!-- doc-id: Battery.level -->
-   * Battery level.  `0.0` = empty; `1.0` = full charge.
+   * Battery charge level: `0.0` = empty, `1.0` = fully charged.
    */
   level: number;
 }
 
 /**
  * <!-- doc-id: MotionActivity -->
- * The last known motion-activity when this location was recorded.
- * 
+ * The motion activity reported by the device at the time a {@link Location}
+ * was recorded.
+ *
  * @category Data
  */
 export interface MotionActivity {
   /**
    * <!-- doc-id: MotionActivity.type -->
-   * The reported device {@link MotionActivityType motion activity} (eg: `still`, `on_foot`, `in_vehicle`).
+   * Detected motion activity type (e.g. `still`, `on_foot`, `in_vehicle`).
    */
   type: MotionActivityType;
+
   /**
    * <!-- doc-id: MotionActivity.confidence -->
-   * Confidence of the reported device motion activity in %.
+   * Confidence of the reported activity as a percentage (0–100).
    */
   confidence: number;
 }
 
 /**
  * <!-- doc-id: Location -->
- * A `Location` object represents a geographic location captured by the device's native location API.
- * 
- * - `CLLocationManager` delivers instance of `CLLocation` on iOS
- * - `FusedLocationProviderClient` deliver instance of `android.location.Location` on Android
+ * A location record captured by the device's native location API and
+ * delivered by the SDK.
  *
- * __Javascript Callback Schema__
- * 
+ * iOS uses `CLLocationManager` / `CLLocation`; Android uses
+ * `FusedLocationProviderClient` / `android.location.Location`.
+ *
+ * ### Contents
+ * - [Overview](#overview)
+ * - [JavaScript schema](#javascript-schema)
+ * - [HTTP POST schema](#http-post-schema)
+ *
+ * ---
+ *
+ * ### Overview
+ *
+ * | Field | Description |
+ * |-------|-------------|
+ * | {@link timestamp} | ISO-8601 UTC timestamp from the native API. |
+ * | {@link uuid} | Universally unique identifier for this record. |
+ * | {@link coords} | Latitude, longitude, accuracy, speed, heading, altitude. |
+ * | {@link activity} | Motion activity at time of recording. |
+ * | {@link battery} | Battery level and charging state. |
+ * | {@link odometer} | Accumulated distance traveled in meters. |
+ * | {@link event} | SDK event that triggered this location. |
+ * | {@link is_moving} | `true` when recorded in the moving state. |
+ * | {@link sample} | `true` for intermediate accuracy-sampling locations. |
+ * | {@link extras} | Optional custom metadata. |
+ *
+ * ---
+ *
+ * ### JavaScript schema
+ *
  * @example
- * ```
+ * ```json
  * {
- *    "timestamp":     [Date],     // <-- Javascript Date instance
- *    "event":         [String],   // <-- motionchange|geofence|heartbeat
- *    "is_moving":     [Boolean],  // <-- The motion-state when location was recorded.
- *    "uuid":          [String],   // <-- Universally unique identifier
- *    "age":           [Integer],  // <-- Age of the location in milliseconds
- *    "coords": {
- *        "latitude":  [Double],
- *        "longitude": [Double],
- *        "accuracy":  [Double],
- *        "speed":     [Double],
- *        "heading":   [Double],
- *        "altitude":  [Double]
- *        "ellipsoidal_altitude":  [Double]
- *    },
- *    "activity": {
- *        "type": [still|on_foot|walking|running|in_vehicle|on_bicycle],
- *        "confidence": [0-100%]
- *    },
- *    "battery": {
- *        "level": [Double],
- *        "is_charging": [Boolean]
- *    },
- *    "odometer": [Double/meters]
+ *   "timestamp":  "2015-05-05T04:31:54.123Z",
+ *   "event":      "motionchange",
+ *   "is_moving":  true,
+ *   "uuid":       "904e9958-4828-4e4e-b380-be403c964a7e",
+ *   "age":        1200,
+ *   "coords": {
+ *     "latitude":             45.519239,
+ *     "longitude":           -73.617058,
+ *     "accuracy":             15,
+ *     "speed":                1.2,
+ *     "heading":              270,
+ *     "altitude":             45.2,
+ *     "ellipsoidal_altitude": 45.3
+ *   },
+ *   "activity": { "type": "on_foot", "confidence": 85 },
+ *   "battery":  { "level": 0.72, "is_charging": false },
+ *   "odometer": 12543.8
  * }
  * ```
- * 
- * __HTTP POST Schema__
  *
- * The location-data schema POSTed to your server takes the following form:
+ * ---
+ *
+ * ### HTTP POST schema
+ *
  * @example
- * ```
+ * ```json
  * {
- *     "location": {
- *         "coords": {
- *             "latitude":   [Double],
- *             "longitude":  [Double],
- *             "accuracy":   [Double],
- *             "speed":      [Double],
- *             "heading":    [Double],
- *             "altitude":   [Double],
- *             "ellipsoidal_altitude": [Double]
- *         },
- *         "extras": {   // <-- optional meta-data
- *             "foo": "bar"
- *         },
- *         "activity": {
- *             "type": [still|on_foot|walking|running|in_vehicle|on_bicycle|unknown],
- *             "confidence": [0-100%]
- *         },
- *         "geofence": {  // <-- Present only if a geofence was triggered at this location
- *             "identifier": [String],
- *             "action": [String ENTER|EXIT]
- *         },
- *         "battery": {
- *             "level": [Double],
- *             "is_charging": [Boolean]
- *         },
- *         "timestamp": [ISO-8601 UTC], // eg:  "2015-05-05T04:31:54.123Z"
- *         "age":       [Integer],      // <-- Age of the location in milliseconds
- *         "uuid":      [String],       // <-- Universally unique identifier
- *         "event"      [String],       // <-- motionchange|geofence|heartbeat
- *         "is_moving": [Boolean],      // <-- The motion-state when recorded.
- *         "odometer": [Double/meters]
- *     }
- *  }
+ *   "location": {
+ *     "timestamp":  "2015-05-05T04:31:54.123Z",
+ *     "event":      "motionchange",
+ *     "is_moving":  true,
+ *     "uuid":       "904e9958-4828-4e4e-b380-be403c964a7e",
+ *     "age":        1200,
+ *     "odometer":   12543.8,
+ *     "coords": {
+ *       "latitude":             45.519239,
+ *       "longitude":           -73.617058,
+ *       "accuracy":             15,
+ *       "speed":                1.2,
+ *       "heading":              270,
+ *       "altitude":             45.2,
+ *       "ellipsoidal_altitude": 45.3
+ *     },
+ *     "extras":   { "foo": "bar" },
+ *     "activity": { "type": "on_foot", "confidence": 85 },
+ *     "geofence": { "identifier": "Home", "action": "ENTER" },
+ *     "battery":  { "level": 0.72, "is_charging": false }
+ *   }
+ * }
  * ```
- * 
+ *
  * @category Data
  */
 export interface Location {
   /**
    * <!-- doc-id: Location.timestamp -->
-   * `ISO-8601 UTC` timestamp provided by the native location API.
+   * ISO-8601 UTC timestamp provided by the native location API.
    */
   timestamp: string;
+
   /**
    * <!-- doc-id: Location.age -->
-   * The age of the location in milliseconds, relative to the Device system-time when the location was received.
-   * For example, if the reported `age` is `10000`, that location was recorded 10s ago, relative to the system-time.
-   * `location.timestamp` + `location.age` = Device system-time when location was recorded.
-  */
+   * Age of the location in milliseconds, measured from the device system
+   * clock at the time the location was received.
+   *
+   * `location.timestamp` + `location.age` = device system time when the
+   * SDK received the location from the native API.
+   */
   age: number;
+
   /**
    * <!-- doc-id: Location.odometer -->
-   * Total distance traveled, in meters, since the odometer was last set or reset.
+   * Accumulated distance traveled in meters since the last odometer reset.
    *
-   * The SDK continuously integrates distance between recorded locations to maintain
-   * a running total. This value increases regardless of tracking mode and persists
-   * across app restarts (unless explicitly reset).
+   * The SDK integrates the distance between each pair of accepted locations
+   * to maintain a running total. This value survives app restarts unless
+   * explicitly reset.
    *
-   * __ℹ️ How it's calculated:__
-   * - Distance is computed between each pair of accepted locations.
-   * - The {@link LocationFilter} evaluates the accuracy and motion context of each sample.
-   * - Low-quality samples may be rejected or down-weighted depending on
-   *   {@link LocationFilter.odometerAccuracyThreshold}, reducing odometer pollution.
-   * - The accumulated drift is exposed via {@link Location.odometer_error}.
+   * #### How it's calculated
    *
-   * __When the odometer increases:__
+   * - Distance is computed between each consecutive pair of accepted locations.
+   * - The {@link LocationFilter} evaluates accuracy and motion context for
+   *   each sample. Low-quality samples may be rejected or down-weighted
+   *   based on {@link LocationFilter.odometerAccuracyThreshold}.
+   * - Accumulated drift is exposed via {@link Location.odometer_error}.
+   *
+   * #### When it increases
+   *
    * - After the device moves and a new location is recorded.
-   * - During both moving and stationary states (if minor motion is detected).
-   * - In geofences-only mode, the odometer increases whenever a location is recorded
-   *   for a geofence transition or stationary exit.
+   * - During both moving and stationary states when minor motion is detected.
+   * - In geofences-only mode, at each geofence transition or stationary exit.
    *
-   * __When it does *not* increase:__
+   * #### When it does not increase
+   *
    * - When a sample fails accuracy thresholds.
-   * - When {@link is_moving} is false *and* no sufficient movement occurs.
+   * - When the device is stationary and no sufficient movement is detected.
    *
-   * __Resetting or setting the odometer:__
-   * - Use {@link BackgroundGeolocation.resetOdometer} to zero it out.
-   * - Use {@link BackgroundGeolocation.setOdometer} to force a new value manually.
-   *   This also resets {@link Location.odometer_error} to `0`.
-   *
-   * __Persistence:__
-   * - The odometer value is stored in `State` and is restored after app restart.
-   * - Only a user-initiated reset or explicit call to `setOdometer` clears it.
-   *
-   * __Best practices:__
-   * - Display the odometer directly to users (e.g., trip distance, workout distance).
-   * - Use {@link Location.odometer_error} to measure confidence in the odometer.
-   * - For fitness apps, consider resetting it at the beginning of each workout session.
-   *
-   * @example
-   * ```ts
-   * BackgroundGeolocation.onLocation(location => {
-   *   console.log("Distance traveled:", location.odometer);
-   *
-   *   if (location.odometer_error > 25) {
-   *     console.warn("Odometer accuracy degraded");
-   *   }
-   * });
-   *
-   * // Reset at start of a trip
-   * await BackgroundGeolocation.resetOdometer();
-   * ```
-   *
-   * ℹ️
+   * **See also**
    * - {@link LocationFilter}
    * - {@link LocationFilter.odometerAccuracyThreshold}
    * - {@link BackgroundGeolocation.resetOdometer}
    * - {@link BackgroundGeolocation.getOdometer}
-   */
-  odometer: number;
-  /**
-   * <!-- doc-id: Location.odometer_error -->
-   * Accumulated **odometer drift**, in meters.
-   *
-   * __ℹ️ Why does this exist?__
-   * - The SDK maintains a continuously increasing {@link odometer} value by integrating distance between recorded locations.
-   * - When GNSS accuracy is degraded (tunnels, downtown canyons, indoor / underground environments), distance calculations can accumulate **drift**.
-   * - The `odometer_error` value tells you *how much uncertainty* has accumulated in the current odometer estimate.
-   *
-   * __How to use it:__
-   * - Treat this as a “confidence interval” for {@link odometer}.  
-   *   For example, if `odometer = 12000` and `odometer_error = 40`, the *true* travelled distance is likely within **±40 meters** of the reported value.
-   * - Resetting or setting a new {@link odometer} value automatically resets `odometer_error` to `0`.
-   * - Values typically remain low (e.g., < 10m) during good GPS conditions, but can grow during:
-   *   - long tunnels  
-   *   - heavy multipath environments  
-   *   - extended indoor tracking  
-   *
-   * __Best practice:__
-   * - Display `odometer` normally to end-users.
-   * - Use `odometer_error` internally for data-quality scoring, filtering, or highlighting low-accuracy segments.
    *
    * @example
    * ```ts
-   * BackgroundGeolocation.onLocation(location => {
-   *   console.log("Odometer:", location.odometer);
-   *   console.log("Odometer drift:", location.odometer_error);
+   * BackgroundGeolocation.onLocation((location) => {
+   *   console.log("Distance traveled:", location.odometer);
+   * });
    *
+   * // Reset at the start of a trip
+   * await BackgroundGeolocation.resetOdometer();
+   * ```
+   */
+  odometer: number;
+
+  /**
+   * <!-- doc-id: Location.odometer_error -->
+   * Accumulated odometer drift in meters.
+   *
+   * Represents the uncertainty that has built up in the {@link odometer}
+   * value due to GPS noise, tunnel blackouts, and other inaccurate samples.
+   *
+   * #### How to use it
+   *
+   * Treat this as a confidence interval for {@link odometer}. For example,
+   * if `odometer = 12000` and `odometer_error = 40`, the true traveled
+   * distance is likely within ±40 meters of the reported value.
+   *
+   * Resetting or setting a new {@link odometer} value automatically resets
+   * `odometer_error` to `0`. Values typically remain low (< 10 m) under
+   * good GPS conditions but grow during long tunnels, dense urban canyons, or
+   * extended indoor tracking.
+   *
+   * **See also**
+   * - {@link odometer}
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.onLocation((location) => {
+   *   console.log("Odometer:", location.odometer);
    *   if (location.odometer_error > 50) {
    *     console.warn("High odometer drift — signal quality degraded");
    *   }
    * });
    * ```
-   * ℹ️
-   * - {@link odometer}
-   */  
+   */
   odometer_error: number;
+
   /**
    * <!-- doc-id: Location.is_moving -->
-   * `true` if location was recorded while plugin is in the *moving* state.
+   * `true` when the SDK was in the **moving** state when this location was
+   * recorded.
    */
   is_moving: boolean;
+
   /**
    * <!-- doc-id: Location.uuid -->
-   * Universally Unique Identifier.  You can use this to match locations recorded at your server with those in the logs.
-   * It can also be used to ensure if the plugin has ever posted the same location *twice*.
+   * Universally unique identifier for this location record.
+   *
+   * Use this to correlate locations in your server database with those in the
+   * SDK logs, or to detect whether a location has been delivered more than once.
    */
   uuid: string;
+
   /**
    * <!-- doc-id: Location.event -->
-   * Event responsible for generating this location (`motionchange`, `providerchange`, `geofence`, `heartbeat`).
+   * SDK event that triggered this location record.
+   *
+   * One of: `"motionchange"`, `"providerchange"`, `"geofence"`, `"heartbeat"`.
    */
   event?: string;
+
   /**
    * <!-- doc-id: Location.mock -->
-   * Present (and `true`) if the location was generated by a "Fake Location" application or simulator.
+   * `true` when the location was generated by a mock location app or simulator.
    */
   mock?: boolean;
+
   /**
    * <!-- doc-id: Location.sample -->
-   * `true` if the plugin is currently waiting for the best possible location to arrive.  Samples are recorded when the plugin is transitioning between motion-states (*moving* vs *stationary*) or {@link BackgroundGeolocation.getCurrentPosition}.
-   * If you're manually posting location to your server, you should not persist these "samples".
+   * `true` for intermediate sample locations collected during accuracy
+   * convergence.
+   *
+   * The SDK collects multiple samples when transitioning between motion states
+   * or during {@link BackgroundGeolocation.getCurrentPosition} to find the
+   * most accurate fix. These samples are delivered to
+   * {@link BackgroundGeolocation.onLocation} but are **not** persisted to
+   * SQLite. Filter them out before manually posting locations to your server.
    */
   sample?: boolean;
+
   /**
    * <!-- doc-id: Location.coords -->
-   * `latitude`, `longitude`, `speed`, `heading`, etc.
+   * Geographic coordinates: latitude, longitude, accuracy, speed, heading,
+   * and altitude.
    */
   coords: Coords;
+
   /**
    * <!-- doc-id: Location.battery -->
-   * Device battery level when the location was recorded.
+   * Device battery state at the time this location was recorded.
    */
   battery: Battery;
+
   /**
    * <!-- doc-id: Location.extras -->
-   * Optional arbitrary meta-data attached to this location.
+   * Optional arbitrary metadata attached to this location.
+   *
+   * Merged with configured {@link PersistenceConfig.extras} before persisting
+   * and included in the payload posted to {@link HttpConfig.url}.
    */
   extras?: Record<string, any>;
+
   /**
    * <!-- doc-id: Location.geofence -->
-   * If this location was recorded due to a geofence transition, the corresponding geofence-event.
+   * The geofence event that triggered this location, if applicable.
+   *
+   * Present only when {@link event} is `"geofence"`.
    */
   geofence?: GeofenceEvent;
+
   /**
    * <!-- doc-id: Location.activity -->
-   * Device motion-activity when this location was recorded (eg: `still`, `on_foot`, `in_vehicle`).
+   * Motion activity detected by the device at the time this location was
+   * recorded (e.g. `still`, `on_foot`, `in_vehicle`).
    */
   activity: MotionActivity;
+
   /**
    * <!-- doc-id: Location.provider -->
-   * If this location was recorded due to {@link ProviderChangeEvent}, this is a reference to the location-provider state.
+   * Location-services provider state at the time this location was recorded.
+   *
+   * Present only when {@link event} is `"providerchange"`.
    */
   provider?: ProviderChangeEvent;
 }
