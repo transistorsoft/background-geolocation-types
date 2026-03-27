@@ -1,101 +1,151 @@
 /**
  * <!-- doc-id: DeviceSettingsRequest -->
- * An object for redirecting a User to an Android device's settings screen from a {@link DeviceSettings} request.
+ * Returned by a {@link DeviceSettings} request — describes which settings
+ * screen to show and whether the user has already been prompted. [Android only]
  *
- * Contains meta-data about the device (`manufacturer`, `model`, `version`) and whether you’ve already shown this screen.
- * 
+ * Contains device metadata (`manufacturer`, `model`, `version`) and a `seen`
+ * flag so you can avoid showing the same screen repeatedly. Pass this object
+ * to {@link DeviceSettings.show} to redirect the user.
+ *
  * @category Device
  */
 export interface DeviceSettingsRequest {
   /**
    * <!-- doc-id: DeviceSettingsRequest.manufacturer -->
-   * Device manufacturer (e.g., "Huawei", "Samsung"). 
-   */ 
+   * Device manufacturer (e.g. `"Huawei"`, `"Samsung"`).
+   */
   manufacturer: string;
-  /** 
+
+  /**
    * <!-- doc-id: DeviceSettingsRequest.model -->
-   * Device model (e.g., "P40", "SM-G991B"). 
-   */ 
+   * Device model name (e.g. `"P40"`, `"SM-G991B"`).
+   */
   model: string;
-  /** 
+
+  /**
    * <!-- doc-id: DeviceSettingsRequest.version -->
-   * OS version string. 
-   */ 
+   * Android OS version string.
+   */
   version: string;
-  /** 
+
+  /**
    * <!-- doc-id: DeviceSettingsRequest.seen -->
-   * Whether this screen has previously been shown. */
+   * `true` if this settings screen has already been shown to the user on this
+   * device. Use this to avoid showing the same prompt repeatedly.
+   */
   seen: boolean;
-  /** 
+
+  /**
    * <!-- doc-id: DeviceSettingsRequest.lastSeenAt -->
-   * Timestamp of when this screen was last shown. */
+   * Timestamp of the last time this screen was shown to the user.
+   */
   lastSeenAt: Date;
+
   /**
    * <!-- doc-id: DeviceSettingsRequest.action -->
-   * The settings screen action to be shown.
-   * ⚠️ Set automatically by the native layer.
+   * The Android Intent action used to open the target settings screen.
+   *
+   * ### ⚠️ Warning
+   *
+   * This field is set automatically by the native layer. Do not set it manually.
    */
   action: string;
 }
 
 /**
  * <!-- doc-id: DeviceSettings -->
- * Device Settings API (types-only).
+ * API for directing users to Android device settings screens that can affect
+ * background geolocation performance. [Android only]
  *
- * Provides an API to show Android & vendor-specific Battery / Power Management settings screens that can
- * affect performance of the Background Geolocation SDK on various devices.
+ * Many Android manufacturers apply aggressive battery optimizations that can
+ * kill background services, including the geolocation SDK. This API surfaces
+ * the relevant settings screens so users can whitelist your app.
  *
- * See: https://dontkillmyapp.com/
+ * For a comprehensive list of affected devices and manufacturers, see
+ * [dontkillmyapp.com](https://dontkillmyapp.com/).
  *
  * @example
  * ```ts
- * // Is Android device ignoring battery optimizations?
  * const isIgnoring = await BackgroundGeolocation.deviceSettings.isIgnoringBatteryOptimizations();
  * if (!isIgnoring) {
  *   const req = await BackgroundGeolocation.deviceSettings.showIgnoreBatteryOptimizations();
  *   if (!req.seen) {
- *     const confirmed = await showMyConfirmDialog({ title: 'Settings request', text: 'Please disable battery optimizations' });
+ *     const confirmed = await showMyConfirmDialog({
+ *       title: 'Settings request',
+ *       text: 'Please disable battery optimizations for this app'
+ *     });
  *     if (confirmed) {
  *       await BackgroundGeolocation.deviceSettings.show(req);
  *     }
  *   }
  * }
  * ```
+ *
  * @category Device
  */
 export interface DeviceSettings {
   /**
    * <!-- doc-id: DeviceSettings.isIgnoringBatteryOptimizations -->
-   * Returns `true` if device is ignoring battery optimizations for your app.
+   * Returns `true` if the OS is ignoring battery optimizations for your app.
+   * [Android only]
    *
-   * In most cases, the SDK performs normally with battery optimizations enabled.
+   * In most cases the SDK performs acceptably even when battery optimizations
+   * are active, but aggressive manufacturer-specific restrictions may interfere
+   * with background operation.
    */
   isIgnoringBatteryOptimizations(): Promise<boolean>;
 
   /**
    * <!-- doc-id: DeviceSettings.showIgnoreBatteryOptimizations -->
-   * Prepare a request to show Android’s *Ignore Battery Optimizations* settings screen.
+   * Prepare a request to show the Android *Ignore Battery Optimizations*
+   * settings screen. [Android only]
    *
-   * Does **not** immediately redirect — returns a {@link DeviceSettingsRequest} first so you can
-   * decide whether to prompt the user (eg: avoid annoying them if `seen === true`).
+   * Returns a {@link DeviceSettingsRequest} rather than immediately redirecting,
+   * so you can inspect {@link DeviceSettingsRequest.seen} and decide whether to
+   * prompt the user.
    *
-   * ⚠️ On some devices/OS versions, this screen may not exist; callers should `catch` errors.
+   * ### ⚠️ Warning
+   *
+   * On some devices and OS versions this screen may not be available. Always
+   * wrap calls to {@link DeviceSettings.show} in a `try/catch`.
+   *
+   * **See also**
+   * - {@link isIgnoringBatteryOptimizations}
+   * - {@link show}
    */
   showIgnoreBatteryOptimizations(): Promise<DeviceSettingsRequest>;
 
   /**
    * <!-- doc-id: DeviceSettings.showPowerManager -->
-   * Prepare a request to show a vendor-specific “Power Manager” screen (Huawei, Xiaomi, Vivo, etc).
+   * Prepare a request to show a vendor-specific Power Manager settings screen
+   * (Huawei, Xiaomi, Vivo, Oppo, etc.). [Android only]
    *
-   * Does **not** immediately redirect — returns a {@link DeviceSettingsRequest} first.
-   * Not all vendors/versions implement this screen; callers should `catch` errors.
+   * Returns a {@link DeviceSettingsRequest} rather than immediately redirecting.
+   *
+   * ### ⚠️ Warning
+   *
+   * Not all manufacturers or OS versions implement this screen. Always wrap
+   * calls to {@link DeviceSettings.show} in a `try/catch`.
+   *
+   * **See also**
+   * - {@link show}
    */
   showPowerManager(): Promise<DeviceSettingsRequest>;
 
   /**
    * <!-- doc-id: DeviceSettings.show -->
-   * Execute a previously prepared {@link DeviceSettingsRequest} to actually show the screen.
+   * Execute a previously prepared {@link DeviceSettingsRequest} to open the
+   * target settings screen. [Android only]
+   *
    * Resolves `true` if the redirect was attempted.
+   *
+   * @example
+   * ```ts
+   * const req = await BackgroundGeolocation.deviceSettings.showPowerManager();
+   * if (!req.seen) {
+   *   await BackgroundGeolocation.deviceSettings.show(req);
+   * }
+   * ```
    */
   show(request: DeviceSettingsRequest): Promise<boolean>;
 }

@@ -2,70 +2,98 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
 
 /**
  * <!-- doc-id: ActivityConfig -->
- * Activity Recognition configuration.
+ * Activity recognition configuration for the background geolocation SDK.
  *
- * The {@link ActivityConfig} object defines options related to motion and activity detection
- * for the {@link BackgroundGeolocation} SDK. These parameters control how the SDK interprets
- * transitions between *moving* and *stationary* states using platform motion APIs
- * (Android Activity Recognition / iOS Core Motion).
+ * `ActivityConfig` controls how the SDK interprets transitions between *moving*
+ * and *stationary* states using platform motion APIs (Android Activity Recognition
+ * and iOS Core Motion).
  *
- * __Overview__ 
+ * ### Contents
+ * - [Overview](#overview)
+ * - [Stop detection](#stop-detection)
+ * - [Motion trigger](#motion-trigger)
+ * - [Migration](#migration)
  *
- * {@link ActivityConfig} is supplied via {@link Config.activity} when calling
- * {@link BackgroundGeolocation.ready} or {@link BackgroundGeolocation.setConfig}.
+ * ---
  *
- * | Category              | Description |
- * |-----------------------|-------------|
- * | Motion Detection      | Tune recognition cadence and sensitivity via {@link ActivityConfig.activityRecognitionInterval} *(Android)* and {@link ActivityConfig.minimumActivityRecognitionConfidence} *(Android)*. |
- * | Behavioral Options    | Control moving↔stationary transitions with {@link ActivityConfig.disableStopDetection} *(cross-platform behavioral)*, {@link ActivityConfig.stopOnStationary} *(cross-platform behavioral)*, and {@link ActivityConfig.motionTriggerDelay} *(Android)*. |
- * | Motion Updates Toggle | Enable/disable platform activity updates with {@link ActivityConfig.disableMotionActivityUpdates} *(Android & iOS)*. |
- * | iOS Timing            | Fine-tune stop-detection timing with {@link ActivityConfig.stopDetectionDelay} *(iOS)*. |
+ * ### Overview
+ *
+ * | Area | Keys | Notes |
+ * |------|------|-------|
+ * | **Recognition cadence** | `activityRecognitionInterval`, `minimumActivityRecognitionConfidence` | How often and how confidently the SDK polls platform motion APIs. |
+ * | **Stop detection** | `disableStopDetection`, `stopOnStationary`, `stopDetectionDelay` | Controls when the SDK transitions to stationary and stops tracking. `stopDetectionDelay` is [iOS only]. |
+ * | **Motion trigger** | `motionTriggerDelay`, `triggerActivities` | Controls which activities start tracking and how quickly. `motionTriggerDelay` is [Android only]. |
+ * | **Permission** | `disableMotionActivityUpdates` | Opt out of Motion & Fitness / Physical Activity permission requests. |
  *
  * @example
- *
  * ```ts
- * import BackgroundGeolocation, {
- *   type Config,
- *   type ActivityConfig
- * } from 'react-native-background-geolocation';
+ * BackgroundGeolocation.ready({
+ *   activity: {
+ *     // Poll activity recognition every 10 seconds (both platforms)
+ *     activityRecognitionInterval: 10000,
  *
- * const activity: ActivityConfig = {
- *   // Android: poll activity recognition every 10s
- *   activityRecognitionInterval: 10000,
+ *     // Require ≥75% confidence before changing activity (both platforms)
+ *     minimumActivityRecognitionConfidence: 75,
  *
- *   // Android: require ≥75% confidence before changing activity
- *   minimumActivityRecognitionConfidence: 75,
+ *     // Disable automatic stop detection (both platforms)
+ *     disableStopDetection: false,
  *
- *   // Cross-platform: enable/disable automatic stop detection
- *   disableStopDetection: false,
+ *     // Automatically stop when stationary (both platforms)
+ *     stopOnStationary: true,
  *
- *   // Cross-platform: automatically stop when stationary
- *   stopOnStationary: true,
+ *     // Delay motion-trigger transitions by 30s (Android only)
+ *     motionTriggerDelay: 30000,
  *
- *   // Android: delay motion-trigger transitions by 30s
- *   motionTriggerDelay: 30000,
+ *     // Disable platform motion activity APIs (both platforms)
+ *     disableMotionActivityUpdates: false,
  *
- *   // Android & iOS: disable platform motion activity APIs
- *   disableMotionActivityUpdates: false,
- *
- *   // iOS: delay stop-detection by 10s
- *   stopDetectionDelay: 10000
- * };
- *
- * const config: Config = {
- *   activity
- * };
- *
- * await BackgroundGeolocation.ready(config);
+ *     // Delay stop-detection by 10s (iOS only)
+ *     stopDetectionDelay: 10000
+ *   }
+ * });
  * ```
  *
- * __Migrating from legacy `Config`__
+ * ---
  *
- * Older versions of the SDK placed activity-recognition parameters directly
- * on the root {@link Config} object:
+ * ### Stop detection
+ *
+ * The SDK uses platform motion APIs to detect when the device has stopped moving
+ * and transitions to the *stationary* state. In that state, location services are
+ * paused to conserve battery.
+ *
+ * - {@link ActivityConfig.disableStopDetection} disables this mechanism entirely.
+ *   With it off, location services run continuously.
+ * - {@link ActivityConfig.stopOnStationary} takes it a step further — the SDK
+ *   calls `stop()` on itself when the {@link GeoConfig.stopTimeout} elapses,
+ *   ending all tracking.
+ * - {@link ActivityConfig.stopDetectionDelay} (iOS only) adds a grace period
+ *   before the stop-detection system engages, preventing false stops at traffic
+ *   lights or brief pauses.
+ *
+ * ---
+ *
+ * ### Motion trigger
+ *
+ * When in the *stationary* state, the SDK waits for a motion event before
+ * re-engaging location tracking:
+ *
+ * - {@link ActivityConfig.triggerActivities} limits which activity types can
+ *   trigger the transition to *moving*. By default all moving activities trigger.
+ * - {@link ActivityConfig.motionTriggerDelay} (Android only) adds a delay before
+ *   committing to the *moving* state. If the device returns to `still` before the
+ *   delay expires, the transition is cancelled.
+ *
+ * ---
+ *
+ * ### Migration
+ *
+ * Activity recognition options previously lived at the root of `Config`. They are
+ * now grouped under the `activity` key. Legacy flat keys remain available but are
+ * **deprecated** and will be removed in a future major release.
  *
  * @example
  * ```ts
+ * // Legacy (deprecated)
  * BackgroundGeolocation.ready({
  *   activityRecognitionInterval: 10000,
  *   disableStopDetection: true,
@@ -73,10 +101,9 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  * });
  * ```
  *
- * These values are now grouped under {@link ActivityConfig}:
- *
  * @example
  * ```ts
+ * // Current
  * BackgroundGeolocation.ready({
  *   activity: {
  *     activityRecognitionInterval: 10000,
@@ -86,103 +113,122 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  * });
  * ```
  *
- * __See also__ 
- * - {@link Config.activity} for where this configuration is supplied.
- * 
+ * **See also**
+ * - {@link Config.activity}
+ *
  * @category Config
  */
 export interface ActivityConfig {
-  /** 
+  /**
    * <!-- doc-id: ActivityConfig.activityRecognitionInterval -->
-   * Interval (ms) between motion-activity updates.
-   * Default: `10000`
+   * Interval in milliseconds between motion-activity polls. Defaults to
+   * `10000` ms (10 seconds).
+   *
+   * Lower values increase responsiveness to state changes at the cost of
+   * additional battery use. The minimum supported value is `500` ms.
    */
   activityRecognitionInterval?: number;
 
-  /** 
+  /**
    * <!-- doc-id: ActivityConfig.minimumActivityRecognitionConfidence -->
-   * Minimum motion-activity confidence (0–100) required to trigger a state change (Android only). 
-   * Default: `75`
+   * Minimum confidence level (0–100) required before a detected activity
+   * triggers a moving/stationary state change.
+   *
+   * Defaults to `70` on iOS and `75` on Android. Higher values reduce
+   * false-positive transitions but may cause the SDK to react more slowly
+   * to genuine activity changes.
    */
   minimumActivityRecognitionConfidence?: number;
 
   /**
    * <!-- doc-id: ActivityConfig.disableStopDetection -->
-   * Disable motion-activity related stop-detection.
+   * Disables the motion-activity-based stop-detection system. Defaults to
+   * `false`.
    *
-   * __iOS:__
+   * #### iOS
    *
-   * Disables the accelerometer-based **Stop-detection System**.  When disabled, the plugin will use the default iOS behavior of automatically
-   * turning off location-services when the device has stopped for **exactly 15 minutes**.  When disabled, you will no longer have control over {@link GeoConfig.stopTimeout}.
+   * Disables the accelerometer-based stop-detection system. When disabled,
+   * the SDK falls back to the default iOS behaviour of automatically turning
+   * off location services after the device has been stationary for exactly
+   * 15 minutes. {@link GeoConfig.stopTimeout} has no effect in this state.
    *
-   * To *completely* disable automatically turning off iOS location-services, you must also provide {@link GeoConfig.pausesLocationUpdatesAutomatically} __`false`__.
+   * To prevent iOS from ever turning off location services automatically,
+   * also set {@link GeoConfig.pausesLocationUpdatesAutomatically} to `false`.
    *
    * @example
    * ```typescript
    * BackgroundGeolocation.ready({
-   *   disableStopDetection: true,
-   *   pausesLocationUpdatesAutomatically: false
+   *   activity: {
+   *     disableStopDetection: true,
+   *   },
+   *   geolocation: {
+   *     pausesLocationUpdatesAutomatically: false
+   *   }
    * });
    * ```
    *
-   * __⚠️ iOS location-services will **never** turn off!__
+   * ### ⚠️ Warning
    *
-   * With the above configuration, iOS location-services will never turn off and you could **quickly discharge the battery**.  Do **not** do
-   * this unless you know *exactly* what you're doing (eg: A jogging app with `[Start workout]` / `[Stop Workout]` buttons
-   * executing {@link BackgroundGeolocation.changePace}).
+   * With the above configuration, iOS location services will never turn off
+   * and the battery will drain rapidly. Use this only when you have explicit
+   * start/stop controls in your app (for example, a workout app with
+   * **Start** / **Stop** buttons calling {@link BackgroundGeolocation.changePace}).
    *
-   * __iOS Stop-detection timing__
+   * ![](https://dl.dropbox.com/scl/fi/fhkz97f9jl4omnv7y30by/ios-stop-detection-timing.png?rlkey=cvs9h2nnngmmz9bwh1vg3796g&dl=1)
    *
-   * ![](https://dl.dropboxusercontent.com/s/ojjdfkmua15pskh/ios-stop-detection-timing.png?dl=1)
+   * #### Android
    *
-   * __Android__
-   *
-   * Location-services **will never turn OFF** if you set this to **`true`**!  It will be purely up to you or the user to execute
-   * {@link BackgroundGeolocation.changePace} __`false`__ or {@link BackgroundGeolocation.stop} to turn off location-services.
+   * Location services will never turn off while `disableStopDetection` is
+   * `true`. The only way to stop tracking is to call
+   * {@link BackgroundGeolocation.changePace} `false` or
+   * {@link BackgroundGeolocation.stop} explicitly.
    */
   disableStopDetection?: boolean;
 
   /**
    * <!-- doc-id: ActivityConfig.stopOnStationary -->
-   * Automatically {@link BackgroundGeolocation.stop} when the {@link GeoConfig.stopTimeout} elapses.
+   * Automatically calls {@link BackgroundGeolocation.stop} when the
+   * {@link GeoConfig.stopTimeout} elapses. Defaults to `false`.
    *
-   * The plugin can optionally automatically stop tracking when the {@link GeoConfig.stopTimeout} timer elapses.  For example, when the plugin
-   * first fires {@link BackgroundGeolocation.onMotionChange} into the *moving* state, the next time an *onMotionChange* event occurs
-   * into the *stationary* state, the plugin will have automatically called {@link BackgroundGeolocation.stop} upon itself.
+   * When the SDK transitions to the *stationary* state and the
+   * `stopTimeout` timer expires, the SDK calls `stop()` on itself — ending
+   * all tracking. The next tracking session must be started manually.
    *
-   * ⚠️ `stopOnStationary` will **only** occur due to {@link GeoConfig.stopTimeout} timer elapse.  It will **not** occur by manually executing
-   * {@link BackgroundGeolocation.changePace} __`false`__.
+   * ### ⚠️ Warning
+   *
+   * `stopOnStationary` fires only when the {@link GeoConfig.stopTimeout}
+   * timer elapses naturally. It does **not** fire when
+   * {@link BackgroundGeolocation.changePace} `false` is called manually.
    *
    * @example
    * ```typescript
    * BackgroundGeolocation.ready({
-   *   stopOnStationary: true,
-   *   isMoving: true
-   * }, (state) => {
+   *   activity: {
+   *     stopOnStationary: true,
+   *   }
+   * }).then(() => {
    *   BackgroundGeolocation.start();
    * });
    * ```
-   */  
+   */
   stopOnStationary?: boolean;
 
   /**
    * <!-- doc-id: ActivityConfig.motionTriggerDelay -->
-   * __`[Android only]`__  Optionally add a delay in milliseconds to trigger Android into the *moving* state when Motion API reports the device is moving (eg: `on_foot`, `in_vehicle`)
+   * Adds a delay in milliseconds before the SDK commits to the *moving* state
+   * when the Motion API reports movement. Defaults to `0` (no delay).
+   * [Android only]
    *
-   * This can help prevent false-positive motion-triggering when one moves about their home, for example.  Only if the Motion API stays in the *moving* state for `motionTriggerDelay` milliseconds will the plugin trigger into the *moving* state and begin tracking the location.
-   * If the Motion API returns to the `still` state before `motionTriggerDelay` times-out, the trigger to the *moving* state will be cancelled.
+   * When the Motion API reports a moving activity (e.g. `on_foot`,
+   * `in_vehicle`), the SDK waits `motionTriggerDelay` milliseconds before
+   * transitioning to *moving* and starting location tracking. If the Motion
+   * API returns to `still` before the delay expires, the transition is
+   * cancelled. This prevents false-positive triggers when briefly moving
+   * around a stationary location (for example, walking around a home).
    *
-   * @example
-   * ```typescript
-   * // Delay Android motion-triggering by 30000ms
-   * BackgroundGeolocation.ready({
-   *   motionTriggerDelay: 30000
-   * })
-   * ```
+   * The following log shows a device detecting `on_foot` but returning to
+   * `still` before the delay expires, cancelling the transition:
    *
-   * The following `logcat` shows an Android device detecting motion __`on_foot`__ but returning to __`still`__ before __`motionTriggerDelay`__ expires, cancelling the transition to the *moving* state (see `⏰ Cancel OneShot: MOTION_TRIGGER_DELAY`):
-   *
-   * __Logcat__
    * ```bash
    *  04-08 10:58:03.419 TSLocationManager: ╔═════════════════════════════════════════════
    *  04-08 10:58:03.419 TSLocationManager: ║ Motion Transition Result
@@ -203,72 +249,90 @@ export interface ActivityConfig {
    *  04-08 10:58:19.381 TSLocationManager: [c.t.l.s.TSScheduleManager cancelOneShot]
    *  04-08 10:58:19.381 TSLocationManager:   ⏰ Cancel OneShot: MOTION_TRIGGER_DELAY <-- timer cancelled
    * ```
+   *
+   * @example
+   * ```typescript
+   * BackgroundGeolocation.ready({
+   *   activity: {
+   *     motionTriggerDelay: 30000
+   *   }
+   * });
+   * ```
    */
   motionTriggerDelay?: number;
 
   /**
    * <!-- doc-id: ActivityConfig.triggerActivities -->
-   * Configures a comma-separated list of motion-activities which are allow to trigger location-tracking.
-   * 
-   * __⚠️ Warning:__ Requires that the user grant your app the "*Motion/Health*" permission.
-   * 
+   * Restricts which detected activities can trigger a transition from the
+   * *stationary* state to the *moving* state.
    *
-   * These are the comma-delimited list of [activity-names](https://developers.google.com/android/reference/com/google/android/gms/location/DetectedActivity) returned by the `ActivityRecognition` API which will trigger a state-change from **stationary** to **moving**.  By default, the plugin will trigger on **any** of the **moving-states**:
+   * By default the SDK triggers on any moving activity: `in_vehicle`,
+   * `on_bicycle`, `on_foot`, `running`, or `walking`. Configure this to
+   * limit tracking to specific use cases — for example, vehicles only.
    *
-   * | Activity Name  |
-   * |----------------|
-   * | `in_vehicle`   |
-   * | `on_bicycle`   |
-   * | `on_foot`      |
-   * | `running`      |
-   * | `walking`      |
+   * See {@link TriggerActivity} for all valid activity names.
    *
-   * See {@link TriggerActivity} for all allowed activity names.
+   * ### ⚠️ Warning
    *
-   * If you wish, you can configure the plugin to only engage the **moving** state for vehicles-only by providing just `"in_vehicle"`, for example.
-   *
+   * Using `triggerActivities` requires the user to grant the
+   * **Motion & Fitness** (iOS) or **Physical Activity** (Android 10+)
+   * permission.
    *
    * @example
    * ```typescript
    * // Only trigger tracking for vehicles
    * BackgroundGeolocation.ready({
-   *   triggerActivities: "in_vehicle"
-   * );
+   *   activity: {
+   *     triggerActivities: ["in_vehicle"]
+   *   }
+   * });
    *
    * // Only trigger tracking for on_foot, walking and running
    * BackgroundGeolocation.ready({
-   *   triggerActivities: "on_foot, walking, running"
-   * );
+   *   activity: {
+   *     triggerActivities: ["on_foot", "walking", "running"]
+   *   }
+   * });
    * ```
    */
   triggerActivities?: TriggerActivity[] | TriggerActivity;
 
   /**
    * <!-- doc-id: ActivityConfig.disableMotionActivityUpdates -->
-   * Disable the plugin requesting "Motion & Fitness" (ios) or "Physical Activity" (android >= 10) authorization from the User.
+   * Disables the SDK's request for Motion & Fitness (iOS) or Physical
+   * Activity (Android 10+) permission. Defaults to `false`.
    *
-   * Defaults to **`false`**.  Set to **`true`** to disable asking the user for this permission.
+   * Set to `true` to suppress the permission request. The SDK remains
+   * functional but without motion data it relies on less efficient fallback
+   * mechanisms to detect moving/stationary transitions.
    *
-   * __iOS__
+   * #### iOS
+   *
+   * The SDK is highly optimized around motion-activity updates. Disabling
+   * them increases battery consumption. Provide an
+   * `NSMotionUsageDescription` in your `Info.plist` to explain the benefit
+   * to users — for example:
+   * > "Motion activity detection increases battery efficiency by
+   * > intelligently toggling location tracking off when your device is
+   * > stationary."
    *
    * ![](https://dl.dropbox.com/s/v3qt7ry1k4b3iir/ios-motion-permission.png?dl=1)
    *
-   * The plugin is **HIGHLY** optimized for motion-activity-updates.  If you **do** disable this, the plugin *will* drain more battery power.  You are **STRONGLY** advised against disabling this.  You should explain to your users with an appropriate `NSMotionUsageDescription` in your `Info.plist` file, for example:
-   * > "Motion activity detection increases battery efficiency by intelligently toggling location-tracking" off when your device is detected to be stationary.
+   * #### Android
    *
-   * __Android__
+   * Android 10+ requires runtime permission for Physical Activity. Without
+   * it, the SDK falls back to a stationary geofence mechanism — the device
+   * must move **200–500 m** before tracking re-engages, compared to just a
+   * few meters when the Motion API is authorized.
    *
-   * Android 10+ now requires run-time permission from the user for "Physical Activity".
-   * 
    * ![](https://dl.dropbox.com/s/6v4391oz592bdjg/android-permission-physical-activity.png?dl=1)
-   *
-   * Traditionally, the `background-geolocation` Android SDK has relied heavily upon the Motion API for determining when to toggle location-services on/off based upon whether the device is *moving* vs *stationary*.
-   * However, the Android SDK has a fallback "stationary geofence" mechanism just like iOS, the exit of which will cause the plugin to change to the *moving* state, toggle location-services and begin tracking.  This will, of course, require the device moves a distance of typically **200-500 meters** before tracking engages.  With the Motion API authorized, the Android SDK typically requires just **a few meters** of movement for tracking to engage.
    *
    * @example
    * ```typescript
    * BackgroundGeolocation.ready({
-   *   disableMotionActivityUpdates: true
+   *   activity: {
+   *     disableMotionActivityUpdates: true
+   *   }
    * });
    * ```
    */
@@ -276,16 +340,20 @@ export interface ActivityConfig {
 
   /**
    * <!-- doc-id: ActivityConfig.stopDetectionDelay -->
-   * __`[iOS only]`__ Allows the iOS stop-detection system to be delayed from activating.
-   *  
-   * Defaults to **`0`** (no delay).  Allows the stop-detection system to be delayed from activating.  When the stop-detection system *is* engaged, location-services will be temporarily turned **off** and only the accelerometer is monitored.  Stop-detection will only engage if this timer expires.  The timer is cancelled if any movement is detected before expiration.  If a value of **`0`** is specified, the stop-detection system will engage as soon as the device is detected to be stationary.
+   * Delays the iOS stop-detection system from engaging after the device
+   * becomes stationary. Defaults to `0` (engage immediately). [iOS only]
    *
-   * You can experience the iOS stop-detection system at work by configuring {@link LoggerConfig.debug} __`true`__.  After the device stops moving (stopped at a traffic light, for example), the plugin will emit a *Lullabye* sound-effect and local-notifications about "Location-services: OFF / ON".
+   * When the stop-detection system engages, location services are temporarily
+   * turned off and only the accelerometer is monitored. The delay timer starts
+   * when the device is detected as stationary and is cancelled if any movement
+   * is detected before it expires. Setting `stopDetectionDelay` to a non-zero
+   * value helps avoid false stops at traffic lights or brief pauses.
    *
-   * __iOS Stop-detection timing__
+   * Enable {@link LoggerConfig.debug} to observe stop-detection in action —
+   * the SDK emits a sound effect and local notifications when location services
+   * toggle on and off.
    *
-   * ![](https://dl.dropboxusercontent.com/s/ojjdfkmua15pskh/ios-stop-detection-timing.png?dl=1)
+   * ![](https://dl.dropbox.com/scl/fi/fhkz97f9jl4omnv7y30by/ios-stop-detection-timing.png?rlkey=cvs9h2nnngmmz9bwh1vg3796g&dl=1)
    */
   stopDetectionDelay?: number;
 }
-

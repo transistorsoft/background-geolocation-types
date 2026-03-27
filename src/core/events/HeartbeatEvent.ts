@@ -1,17 +1,36 @@
 import type { Location } from '../data/Location';
 
-/** 
+/**
  * <!-- doc-id: HeartbeatEvent -->
- * Emitted by {@link BackgroundGeolocation.onHeartbeat}.
- * 
+ * Periodic heartbeat delivered to {@link BackgroundGeolocation.onHeartbeat}.
+ *
+ * The SDK fires this event on a fixed interval while running in the background,
+ * providing a regular opportunity to perform work even when no location events
+ * are occurring. Configure the interval with {@link AppConfig.heartbeatInterval}.
+ *
+ * @example
+ * ```ts
+ * BackgroundGeolocation.onHeartbeat(async (event) => {
+ *   console.log("[onHeartbeat]", event.location);
+ *
+ *   // Request a fresh location fix if needed.
+ *   const location = await BackgroundGeolocation.getCurrentPosition({
+ *     samples: 1
+ *   });
+ *   console.log("[onHeartbeat] fresh position:", location);
+ * });
+ * ```
+ *
  * @category Events
  */
 export interface HeartbeatEvent {
   /**
    * <!-- doc-id: HeartbeatEvent.location -->
-   * The last-known location.
-   * Note: Heartbeat does not actively engage location-services.
-   * Use getCurrentPosition for a fresh fix.
+   * Most recent location recorded by the SDK.
+   *
+   * The heartbeat event does not actively request a fresh location fix. Call
+   * {@link BackgroundGeolocation.getCurrentPosition} if an up-to-date reading
+   * is required.
    */
   location: Location;
 }

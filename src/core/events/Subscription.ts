@@ -1,90 +1,64 @@
 /**
  * <!-- doc-id: Subscription -->
- * Object returned by BackgroundGeolocation event-listeners.  
- * 
- * `Subscription` contains just a single method {@link remove}, used for removing an event-listener.
+ * Handle returned by every `BackgroundGeolocation.on*` event-listener method.
  *
- * - {@link BackgroundGeolocation.onLocation}
- * - {@link BackgroundGeolocation.onMotionChange}
- * - {@link BackgroundGeolocation.onHttp}
- * - {@link BackgroundGeolocation.onHeartbeat}
- * - {@link BackgroundGeolocation.onProviderChange}
- * - {@link BackgroundGeolocation.onActivityChange}
- * - {@link BackgroundGeolocation.onGeofence}
- * - {@link BackgroundGeolocation.onGeofencesChange}
- * - {@link BackgroundGeolocation.onEnabledChange}
- * - {@link BackgroundGeolocation.onConnectivityChange}
- * - {@link BackgroundGeolocation.onSchedule}
- * - {@link BackgroundGeolocation.onPowerSaveChange}
- * - {@link BackgroundGeolocation.onNotificationAction}
- * - {@link BackgroundGeolocation.onAuthorization}
+ * `Subscription` exposes a single {@link remove} method used to stop
+ * listening to an event and free associated resources. Always call `remove()`
+ * when a listener is no longer needed to prevent memory leaks.
  *
- * __Removing an event-listener__:
+ * ### Removing an event-listener
  *
  * @example
- * ```typescript
- * // Event-listeners return a Subscription instance, containing a .remove() method.
- * const subscription = BackgroundGeolocation.onLocation(location => {
- *   console.log("[onLocation] ", location);
+ * ```ts
+ * const subscription = BackgroundGeolocation.onLocation((location) => {
+ *   console.log("[onLocation]", location);
  * });
- * .
- * .
- * .
- * // Later, to remove the event-listener:
+ *
+ * // Later, when the listener is no longer needed:
  * subscription.remove();
  * ```
  *
- * One might typically manage a collection of `Subscription` instances
+ * ### Managing multiple subscriptions
+ *
+ * Collect subscriptions in an array and remove them all at once — for example
+ * when a view is destroyed.
  *
  * @example
- * ```typescript
+ * ```ts
  * import BackgroundGeolocation, {
  *   Location,
  *   Subscription
- * } from ...
+ * } from "react-native-background-geolocation";
  *
- * // Your custom Collection of Subscription instances.
- * const SUBSCRIPTIONS = [];
+ * const subscriptions: Subscription[] = [];
  *
- * // Your custom method to push a Subscription instance.
- * const subscribe = (subscription:Subscription) => {
- *   SUBSCRIPTIONS.push(subscription);
+ * function addListeners() {
+ *   subscriptions.push(
+ *     BackgroundGeolocation.onLocation((location: Location) => {
+ *       console.log("[onLocation]", location);
+ *     }),
+ *     BackgroundGeolocation.onMotionChange((event) => {
+ *       console.log("[onMotionChange]", event);
+ *     }),
+ *     BackgroundGeolocation.onEnabledChange((enabled: boolean) => {
+ *       console.log("[onEnabledChange]", enabled);
+ *     })
+ *   );
  * }
  *
- * // Your custom method to interate your SUBSCRIPTIONS and .remove each.
- * const unsubscribe = () => {
- *   SUBSCRIPTIONS.forEach((subscription:Subscription) => subscription.remove());
+ * function removeListeners() {
+ *   subscriptions.forEach((sub) => sub.remove());
+ *   subscriptions.length = 0;
  * }
- *
- * const initBackgroundGeolocation = () {
- *   // Create event-listeners as usual, feeding the returned Subscription into
- *   // your custom  subscribe() method.
- *   subscribe(BackgroundGeolocation.onLocation((location:Location) => {
- *     console.log('[onLocation]', location);
- *   });
- *
- *   subscribe(BackgroundGeolocation.onMotionChange((location:Location) => {
- *     console.log('[onMotionChange]', location);
- *   });
- *
- *   subscribe(BackgroundGeolocation.onEnabledChange((enabled:boolean) => {
- *     console.log('[onEnabledChange]', enabled);
- *   });
- * }
- *
- * const onDestroyView = () => {
- *   // Call your custom unsubscribe method
- *   unsubscribe();
- * }
- *
  * ```
- * 
+ *
  * @category Events
  */
 export interface Subscription {
-  /** 
+  /**
    * <!-- doc-id: Subscription.remove -->
-   * Remove the event-listener. 
-   */ 
+   * Removes the event-listener and frees its resources. Call this when the
+   * listener is no longer needed to prevent memory leaks.
+   */
   remove(): void;
 }

@@ -8,22 +8,58 @@ import { AuthorizationConfig } from './AuthorizationConfig';
 import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationService';
 /**
  * <!-- doc-id: Config -->
- * Configuration API.
+ * Root configuration object passed to {@link BackgroundGeolocation.ready} and
+ * {@link BackgroundGeolocation.setConfig}.
  *
- * The `Config` class defines all SDK options, grouped into compound
- * configuration objects:
+ * `Config` groups all SDK options into typed sub-interfaces. Each key maps to a
+ * dedicated configuration area — set only the keys relevant to your use case.
  *
- * - {@link GeoConfig} — Geolocation and filtering options
- * - {@link AppConfig} — Application lifecycle options
- * - {@link HttpConfig} — Networking and HTTP sync options
- * - {@link PersistenceConfig} — Data persistence and database options
- * - {@link LoggerConfig} — Logging and debugging options
- * - {@link ActivityConfig} — Motion and activity-recognition options
+ * ### Contents
+ * - [Overview](#overview)
+ * - [Examples](#examples)
  *
- * Instances of `Config` are consumed by {@link BackgroundGeolocation.ready}
- * and {@link BackgroundGeolocation.setConfig}.
+ * ---
  *
- * @example
+ * ### Overview
+ *
+ * | Key | Type | Description |
+ * |-----|------|-------------|
+ * | {@link geolocation} | {@link GeoConfig} | Accuracy, sampling, elasticity, stop-detection, permissions, and geofencing. |
+ * | {@link activity} | {@link ActivityConfig} | Motion recognition, stop-detection triggers, and motion-trigger delay. |
+ * | {@link http} | {@link HttpConfig} | Upload URL, sync cadence, batching, headers, and params. |
+ * | {@link persistence} | {@link PersistenceConfig} | SQLite storage, TTL, record limits, and custom extras. |
+ * | {@link app} | {@link AppConfig} | App lifecycle — background operation, boot behaviour, headless mode, and foreground notification. |
+ * | {@link logger} | {@link LoggerConfig} | Debug logging, log level, and log retention. |
+ * | {@link authorization} | {@link AuthorizationConfig} | JWT and SAS token management with automatic refresh. |
+ *
+ * The SDK persists its configuration across app launches. Call
+ * {@link BackgroundGeolocation.ready} once at startup — subsequent launches load
+ * the persisted config automatically. Use {@link BackgroundGeolocation.setConfig}
+ * to update individual keys at runtime without restarting.
+ *
+ * ---
+ *
+ * ### Examples
+ *
+ * @example Minimal configuration
+ * ```ts
+ * const state = await BackgroundGeolocation.ready({
+ *   geolocation: {
+ *     desiredAccuracy: DesiredAccuracy.High,
+ *     distanceFilter: 20,
+ *   },
+ *   http: {
+ *     url: 'https://my.server.com/api/locations',
+ *     autoSync: true,
+ *   },
+ *   app: {
+ *     stopOnTerminate: false,
+ *     startOnBoot: true,
+ *   },
+ * });
+ * ```
+ *
+ * @example Full configuration
  * ```ts
  * import BackgroundGeolocation, {
  *   Config,
@@ -39,166 +75,135 @@ import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationServ
  *   State
  * } from '{{pluginName}}';
  *
- * async function main() {
- *   // Configure the SDK with compound configuration objects.
- *   const config: Config = {
- *     geolocation: {
- *       desiredAccuracy: DesiredAccuracy.High,
- *       distanceFilter: 20,
- *       stopTimeout: 5,
- *       stationaryRadius: 150,
- *     },
- *     activity: {
- *       disableStopDetection: false,
- *       motionTriggerDelay: 30000,
- *     },
- *     http: {
- *       url: 'https://my.server.com/api/locations',
- *       method: 'POST',
- *       autoSync: true,
- *       headers: {
- *         Authorization: 'Bearer secret-token',
- *       },
- *       params: {
- *         user_id: 123,
- *       },
- *     },
- *     persistence: {
- *       persistMode: PersistMode.All,
- *       maxDaysToPersist: 14,
- *       extras: { appVersion: '1.0.0' },
- *     },
- *     app: {
- *       stopOnTerminate: false,
- *       startOnBoot: true,
- *       enableHeadless: true
- *     },
- *     logger: {
- *       debug: true,
- *       logLevel: LogLevel.Verbose,
- *       logMaxDays: 3,
- *     },
- *   };
+ * const config: Config = {
+ *   geolocation: {
+ *     desiredAccuracy: DesiredAccuracy.High,
+ *     distanceFilter: 20,
+ *     stopTimeout: 5,
+ *     stationaryRadius: 150,
+ *   },
+ *   activity: {
+ *     disableStopDetection: false,
+ *     motionTriggerDelay: 30000,
+ *   },
+ *   http: {
+ *     url: 'https://my.server.com/api/locations',
+ *     method: 'POST',
+ *     autoSync: true,
+ *     headers: { Authorization: 'Bearer secret-token' },
+ *     params: { user_id: 123 },
+ *   },
+ *   persistence: {
+ *     persistMode: PersistMode.All,
+ *     maxDaysToPersist: 14,
+ *     extras: { appVersion: '1.0.0' },
+ *   },
+ *   app: {
+ *     stopOnTerminate: false,
+ *     startOnBoot: true,
+ *     enableHeadless: true,
+ *   },
+ *   logger: {
+ *     debug: true,
+ *     logLevel: LogLevel.Verbose,
+ *     logMaxDays: 3,
+ *   },
+ * };
  *
- *   // Apply the configuration.
- *   const state: State = await BackgroundGeolocation.ready(config);
- *   console.log('[ready] BackgroundGeolocation is configured and ready to use');
- *
- *   if (!state.enabled) {
- *     await BackgroundGeolocation.start();
- *   }
- *
- *   // To modify configuration after initialization, use setConfig.
- *   const updated: State = await BackgroundGeolocation.setConfig({
- *     http: {
- *       headers: {
- *         Authorization: 'Bearer new-token',
- *       },
- *     },
- *     logger: {
- *       logLevel: LogLevel.Info
- *     },
- *   });
- *
- *   await BackgroundGeolocation.sync();
+ * const state: State = await BackgroundGeolocation.ready(config);
+ * if (!state.enabled) {
+ *   await BackgroundGeolocation.start();
  * }
  *
+ * // Update a subset of config at runtime.
+ * await BackgroundGeolocation.setConfig({
+ *   http: { headers: { Authorization: 'Bearer new-token' } },
+ *   logger: { logLevel: LogLevel.Info },
+ * });
  * ```
+ *
  * @category Primary API
  * @category Config
  */
 export interface Config {
   /**
    * <!-- doc-id: Config.reset -->
-   * Reset the plugin to its initial state before applying this configuration.  This is probably what you want.
-   *   
-   * Defaults to `true`
-   * 
-   * If you set this to `false`, the SDK will consume your `Config` only at the first install of your app.  Thereafter, the only way
-   * to change your configuration will be to call {@link BackgroundGeolocation.setConfig},
-   * 
-   * You will certainly **NOT** want to use `reset: false` during development, as it will prevent your configuration changes from taking effect on subsequent app launches.
+   * Controls whether the SDK resets to factory defaults before applying this
+   * configuration. Defaults to `true`.
+   *
+   * When `true` (the default), every call to {@link BackgroundGeolocation.ready}
+   * applies the supplied `Config` on top of fresh defaults. When `false`, the SDK
+   * applies the supplied `Config` only on the first install. On subsequent launches
+   * it ignores the `Config` argument entirely — the only way to change settings is
+   * via {@link BackgroundGeolocation.setConfig}.
+   *
+   * ### ⚠️ Warning
+   *
+   * During development, always leave `reset: true` (or omit it). Setting `reset:
+   * false` causes the SDK to ignore your `Config` after the first launch, so
+   * configuration changes made between development builds will not take effect.
    */
   reset?: boolean;
   /**
    * <!-- doc-id: Config.logger -->
-   * Logger configuration.
+   * Debug logging, log level, and log retention. See {@link LoggerConfig}.
    */
   logger?: LoggerConfig;
   /**
    * <!-- doc-id: Config.geolocation -->
-   * Geolocation configuration.
+   * Accuracy, sampling, elasticity, stop-detection, permissions, and geofencing.
+   * See {@link GeoConfig}.
    */
   geolocation?: GeoConfig;
   /**
    * <!-- doc-id: Config.http -->
-   * HTTP configuration.
+   * Upload URL, HTTP method, sync cadence, batching, headers, and params.
+   * See {@link HttpConfig}.
    */
   http?: HttpConfig;
   /**
    * <!-- doc-id: Config.app -->
-   * App configuration.
+   * App lifecycle — background operation, boot behaviour, headless mode, and
+   * foreground notification. See {@link AppConfig}.
    */
   app?: AppConfig;
   /**
    * <!-- doc-id: Config.persistence -->
-   * Persistence configuration.
+   * SQLite storage, TTL, record limits, and custom extras. See {@link PersistenceConfig}.
    */
   persistence?: PersistenceConfig;
   /**
    * <!-- doc-id: Config.activity -->
-   * Motion Activity configuration.
+   * Motion recognition, stop-detection triggers, and motion-trigger delay.
+   * See {@link ActivityConfig}.
    */
   activity?: ActivityConfig;
   /**
    * <!-- doc-id: Config.authorization -->
-   * Authorization configuration.
+   * JWT and SAS token management with automatic refresh. See {@link AuthorizationConfig}.
    */
   authorization?: AuthorizationConfig;
   /**
     * <!-- doc-id: Config.transistorAuthorizationToken -->
-    * *Convenience* option to automatically configures the SDK to upload locations to the Transistor Software demo server 
-    * at http://tracker.transistorsoft.com (or your own local instance of [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console))
+    * Convenience option that automatically configures the SDK to upload locations
+    * to the Transistor Software demo server at tracker.transistorsoft.com, or a
+    * local instance of [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console).
     *
-    * See {@link TransistorAuthorizationService}.  This option will **automatically configure** the {@link HttpConfig.url} 
-    * to point at the Demo server as well as well as the required {@link AuthorizationConfig} configuration.
+    * Setting this option automatically sets {@link HttpConfig.url} and the required
+    * {@link AuthorizationConfig} values. See {@link TransistorAuthorizationService}
+    * for how to obtain a token.
     *
     * @example
     * ```typescript
-    * const token = await
-    *   BackgroundGeolocation.findOrCreateTransistorAuthorizationToken("my-company-name", "my-username");
+    * const token = await BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(
+    *   "my-company-name",
+    *   "my-username"
+    * );
     *
     * BackgroundGeolocation.ready({
     *   transistorAuthorizationToken: token
     * });
     * ```
-    *
-    * This *convenience* option merely performs the following [[Authorization]] configuration *automatically* for you:
-    *
-    * @example
-    * ```typescript
-    * // Base url to Transistor Demo Server.
-    * const url = "http://tracker.transistorsoft.com";
-    *
-    * // Register for an authorization token from server.
-    * const token = await
-    *   BackgroundGeolocation.findOrCreateTransistorAuthorizationToken("my-company-name", "my-username");
-    *
-    * BackgroundGeolocation.ready({
-    *   url: url + "/api/locations",
-    *   authorization: {
-    *     strategy: "JWT",
-    *     accessToken: token.accessToken,
-    *     refreshToken: token.refreshToken,
-    *     refreshUrl: url + "/v2/refresh_token",
-    *     refreshPayload: {
-    *       refresh_token: "{refreshToken}"
-    *     },
-    *     expires: token.expires
-    *   }
-    * });
-    * ```
-    *
     */
   transistorAuthorizationToken?: TransistorAuthorizationToken;
 

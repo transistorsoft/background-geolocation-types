@@ -3,144 +3,124 @@ import { HttpMethod } from '../../enums/HttpMethod';
 
 /**
  * <!-- doc-id: HttpConfig -->
- * **HTTP / Networking Configuration**
+ * HTTP and networking configuration for the background geolocation SDK.
  *
- * The {@link HttpConfig} group controls how recorded locations are uploaded to
- * your server. It defines the endpoint, HTTP verb, headers, params, batching
- * behavior, and request timeouts.
+ * `HttpConfig` controls how recorded locations are uploaded to your server —
+ * the endpoint, HTTP verb, headers, params, batching behaviour, and request timeouts.
  *
- * These options apply to all automatic syncs as well as manual syncs triggered
- * by the app.
+ * ### Contents
+ * - [Overview](#overview)
+ * - [Upload lifecycle](#upload-lifecycle)
+ * - [Payload composition](#payload-composition)
+ * - [Sync strategy](#sync-strategy)
+ * - [Error handling](#error-handling)
+ * - [Remote control](#remote-control)
+ * - [Logging](#logging)
+ * - [Migration](#migration)
+ * - [Examples](#examples)
+ *
+ * ---
+ *
+ * ### Overview
+ *
+ * The SDK persistently stores each recorded location in an internal SQLite
+ * database before attempting to upload it. The HTTP service continuously
+ * consumes this queue in the background, surviving app termination and device
+ * reboot. When connectivity returns it resumes automatically.
+ *
+ * | Area | Keys | Notes |
+ * |------|------|-------|
+ * | **Destination** | {@link url}, {@link method} | `method` defaults to `POST`. |
+ * | **Payload** | {@link rootProperty}, {@link params}, {@link headers} | Controls JSON body and headers. |
+ * | **Sync cadence** | {@link autoSync}, {@link autoSyncThreshold}, {@link batchSync}, {@link maxBatchSize} | Immediate vs batched uploads. |
+ * | **Network policy** | {@link disableAutoSyncOnCellular}, {@link timeout} | Conserve bandwidth and battery. |
  *
  * @example
  * ```ts
  * BackgroundGeolocation.ready({
  *   http: {
- *     url: "https://example.com/locations",
+ *     url: "https://api.example.com/locations",
  *     autoSync: true,
  *     params: { user_id: 1234 }
  *   }
  * });
  * ```
  *
- * **Overview**
+ * ---
  *
- * The SDK persistently stores each recorded location in its internal SQLite
- * database before attempting to upload it. The HTTP Service continuously consumes
- * this queue of stored records in the background. For each record:
+ * ### Upload lifecycle
  *
- * 1. A **record-level lock** is acquired to prevent duplicate uploads.  
- * 2. The record is serialized into an HTTP request and posted to {@link url}.  
- * 3. A **2xx** response marks the record as delivered and it is deleted.  
- * 4. Failed or timed-out uploads remain locked until released for retry.  
+ * Each location follows this path from recording to delivery:
  *
- * The uploader operates automatically across:
+ * 1. Location is recorded and written to SQLite.
+ * 2. A **record-level lock** is acquired to prevent duplicate uploads.
+ * 3. The record is serialized and posted to {@link url}.
+ * 4. A **2xx** response marks the record as delivered — it is deleted from the database.
+ * 5. On failure, the lock is released and the record is retried later.
  *
- * - background execution  
- * - app termination  
- * - device reboot  
+ * The SQLite buffer acts as a rolling queue and is normally empty. Records are removed when:
+ * - your server returns a 2xx (see {@link HttpEvent})
+ * - {@link BackgroundGeolocation.destroyLocations} is called
+ * - TTL from {@link PersistenceConfig.maxDaysToPersist} expires
+ * - {@link PersistenceConfig.maxRecordsToPersist} is exceeded
  *
- * When connectivity returns, it resumes processing any remaining records.
+ * Inspect queue size with {@link BackgroundGeolocation.getCount} or fetch
+ * records with {@link BackgroundGeolocation.getLocations}.
  *
- * | Area            | Keys                                        | Notes |
- * |-----------------|----------------------------------------------|-------|
- * | **Destination** | {@link url}, {@link method}                             | `method` defaults to `POST`. |
- * | **Payload**     | {@link rootProperty}, {@link params}, {@link headers}          | Controls JSON body and headers. |
- * | **Sync cadence** | {@link autoSync}, {@link autoSyncThreshold}, {@link batchSync}, {@link maxBatchSize} | Immediate vs batched uploads. |
- * | **Network policy** | {@link disableAutoSyncOnCellular}, {@link timeout}   | Conserve bandwidth and battery. |
+ * ---
  *
- * **How uploads work**
+ * ### Payload composition
  *
- * 1. Each location is written to SQLite.  
- * 2. Pending records are locked for upload.  
- * 3. Locked records are sent to {@link url}.  
- * 4. On success (2xx), the record is deleted.  
- * 5. On failure, the record is unlocked and retried later.  
+ * - **Body:** JSON. If {@link batchSync} is `true`, an array of records is sent.
+ *   If {@link rootProperty} is set, the payload becomes `{ "<rootProperty>": [...] }`.
+ * - **Headers:** Merged from {@link headers} plus any authorization headers
+ *   injected by {@link AuthorizationConfig}.
+ * - **Params:** Merged into every payload at the root level, or under
+ *   {@link rootProperty} if configured.
  *
- * **The SQLite buffer**
- *
- * The storage acts as a rolling buffer and is normally empty. Records disappear
- * when:
- *
- * - your server returns a 2xx (see {@link HttpEvent})  
- * - {@link BackgroundGeolocation.destroyLocations} is called  
- * - TTL from {@link PersistenceConfig.maxDaysToPersist} expires  
- * - {@link PersistenceConfig.maxRecordsToPersist} is exceeded  
- *
- * Inspect queue size using {@link BackgroundGeolocation.getCount} or fetch with
- * {@link BackgroundGeolocation.getLocations}.
- *
- * **Payload composition**
- *
- * - **Body:** JSON. If `batchSync` is `true`, an array of records is sent.  
- *   If `rootProperty` is set, payload becomes:
- *
- *   ```json
- *   { "<rootProperty>": [...] }
- *   ```
- *
- * - **Headers:** Combined from {@link headers} plus authorization if
- *   configured.
- *
- * - **Params:** Added to every payload at the root or under `rootProperty`.
- *
- * Uploads use `application/json`; authorization refresh requests use
+ * Uploads use `application/json`. Authorization refresh requests use
  * `application/x-www-form-urlencoded`.
  *
- * **Sync strategy**
+ * ---
  *
- * - `autoSync`: upload after each record  
- * - `autoSyncThreshold`: wait for N records  
- * - `batchSync`: upload several records in one request  
- * - `maxBatchSize`: max records per batch  
- * - `timeout`: maximum HTTP duration  
- * - `disableAutoSyncOnCellular`: defer uploads until Wi-Fi  
+ * ### Sync strategy
  *
- * **Error handling & retries**
+ * | Option | Behaviour |
+ * |--------|-----------|
+ * | {@link autoSync} | Upload immediately after each recorded location. |
+ * | {@link autoSyncThreshold} | Wait until N records are queued before uploading. |
+ * | {@link batchSync} | Bundle all queued records into a single HTTP request. |
+ * | {@link maxBatchSize} | Cap the number of records per batch request. |
+ * | {@link disableAutoSyncOnCellular} | Defer uploads until Wi-Fi is available. |
+ * | {@link timeout} | Abort requests exceeding this duration (ms). |
  *
- * On non-2xx or network failure, records remain in queue and are retried when:
+ * ---
  *
- * - new locations arrive  
- * - app resumes / device boots  
- * - {@link BackgroundGeolocation.onConnectivityChange} fires  
- * - {@link BackgroundGeolocation.onHeartbeat} fires  
- * - iOS background fetch runs  
+ * ### Error handling
  *
- * Or manually:
+ * On a non-2xx response or network failure, records remain locked in the queue
+ * and are retried when:
+ * - new locations are recorded
+ * - the app resumes or the device reboots
+ * - {@link BackgroundGeolocation.onConnectivityChange} fires
+ * - {@link BackgroundGeolocation.onHeartbeat} fires
+ * - iOS background fetch runs
+ *
+ * To trigger a manual upload at any time:
  *
  * @example Manual sync
  * ```ts
  * await BackgroundGeolocation.sync();
  * ```
  *
- * **HTTP Logging**
+ * ---
  *
- * Logs provide insight into HTTP behavior:
+ * ### Remote control
  *
- * ```text
- * 📍 Location
- * ✅ INSERT: record stored
- * 🔒 Locked 1 records
- * 🔵 HTTP POST
- * 🔵 Response: 200
- * ✅ DESTROY
- * ```
+ * Your server can instruct the SDK to execute commands by including a
+ * `background_geolocation` key in any HTTP response body.
  *
- * | # | Entry                     | Meaning |
- * |:-:|---------------------------|---------|
- * | 1 | `📍 Location`             | Raw location recorded |
- * | 2 | `INSERT`                 | Persisted to SQLite |
- * | 3 | `Locked`                 | Marked for upload |
- * | 4 | `HTTP POST/PUT`          | Attempted upload |
- * | 5 | `Response`               | Server status |
- * | 6 | `DESTROY` / `UNLOCK`     | Success / failed retry |
- *
- * **Remote control via HTTP response (RPC)**
- *
- * Your server may instruct the SDK to execute commands by returning JSON
- * containing a `background_geolocation` payload.
- *
- * **Multiple commands**
+ * @example
  * ```json
  * {
  *   "background_geolocation": [
@@ -150,78 +130,52 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * }
  * ```
  *
- * **Single command**
- * ```json
- * { "background_geolocation": ["stop"] }
+ * | Command | Arguments | Effect |
+ * |---------|-----------|--------|
+ * | `"start"` | — | {@link BackgroundGeolocation.start} |
+ * | `"stop"` | — | {@link BackgroundGeolocation.stop} |
+ * | `"startGeofences"` | — | {@link BackgroundGeolocation.startGeofences} |
+ * | `"changePace"` | `boolean` | {@link BackgroundGeolocation.changePace} |
+ * | `"setConfig"` | `{Config}` | {@link BackgroundGeolocation.setConfig} |
+ * | `"addGeofence"` | `{Geofence}` | {@link BackgroundGeolocation.addGeofence} |
+ * | `"addGeofences"` | `[{Geofence}, ...]` | {@link BackgroundGeolocation.addGeofences} |
+ * | `"removeGeofence"` | `identifier: string` | {@link BackgroundGeolocation.removeGeofence} |
+ * | `"removeGeofences"` | list or none | Remove some or all geofences. |
+ * | `"uploadLog"` | `url: string` | Upload the plugin log. |
+ * | `"destroyLog"` | — | Delete the plugin log. |
+ *
+ * ---
+ *
+ * ### Logging
+ *
+ * The SDK log provides a trace of the full HTTP lifecycle:
+ *
+ * ```
+ * Location
+ * INSERT: record stored
+ * Locked 1 records
+ * HTTP POST
+ * Response: 200
+ * DESTROY
  * ```
  *
- * **Supported remote commands**
+ * | # | Entry | Meaning |
+ * |:-:|-------|---------|
+ * | 1 | Location | Raw location recorded |
+ * | 2 | INSERT | Persisted to SQLite |
+ * | 3 | Locked | Marked for upload |
+ * | 4 | HTTP POST/PUT | Upload attempted |
+ * | 5 | Response | Server status code |
+ * | 6 | DESTROY / UNLOCK | Delivered / failed, queued for retry |
  *
- * | Command           | Arguments                  | Effect |
- * |-------------------|----------------------------|--------|
- * | `"start"`         | —                          | {@link BackgroundGeolocation.start} |
- * | `"stop"`          | —                          | {@link BackgroundGeolocation.stop} |
- * | `"startGeofences"`| —                          | {@link BackgroundGeolocation.startGeofences} |
- * | `"changePace"`    | boolean                    | {@link BackgroundGeolocation.changePace} |
- * | `"setConfig"`     | `{Config}`                 | {@link BackgroundGeolocation.setConfig} |
- * | `"addGeofence"`   | `{Geofence}`               | {@link BackgroundGeolocation.addGeofence} |
- * | `"addGeofences"`  | `[{Geofence}, ...]`        | {@link BackgroundGeolocation.addGeofences} |
- * | `"removeGeofence"`| `identifier:string`        | {@link BackgroundGeolocation.removeGeofence} |
- * | `"removeGeofences"`| list or none             | remove all or some |
- * | `"uploadLog"`     | `url:string`               | upload plugin log |
- * | `"destroyLog"`    | —                          | delete plugin log |
+ * ---
  *
- * **Examples**
+ * ### Migration
  *
- * @example Simple upload
- * ```ts
- * BackgroundGeolocation.ready({
- *   http: {
- *     url: "https://api.example.com/locations",
- *     method: "POST",
- *     autoSync: true,
- *     headers: { Authorization: "Bearer secret" },
- *     params: { device_id: "abc-123" }
- *   }
- * });
- * ```
- * 
- * @example Batched uploads
- * ```ts
- * BackgroundGeolocation.ready({
- *   http: {
- *     url: "https://api.example.com/locations/bulk",
- *     autoSync: true,
- *     batchSync: true,
- *     maxBatchSize: 25,
- *     autoSyncThreshold: 10,
- *     rootProperty: "locations"
- *   }
- * });
- * ```
+ * HTTP options previously lived at the root of `Config`. They are now grouped
+ * under the `http` key. Legacy flat keys remain available but are **deprecated**
+ * and will be removed in a future major release.
  *
- * @example Conserve cellular data
- * ```ts
- * BackgroundGeolocation.ready({
- *   http: {
- *     url: "https://api.example.com/locations",
- *     autoSync: true,
- *     disableAutoSyncOnCellular: true
- *   }
- * });
- * ```
- * 
- * @example Manual sync
- * ```ts
- * await BackgroundGeolocation.setConfig({
- *   http: { url: "https://api.example.com", autoSync: false }
- * });
- *
- * await BackgroundGeolocation.sync();
- * ```
- *
- * **Migration from legacy flat Config**
- * 
  * @example Legacy flat Config
  * ```ts
  * BackgroundGeolocation.ready({
@@ -242,25 +196,75 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * });
  * ```
  *
- * Legacy keys remain available but are **@deprecated** and will be removed in a
- * future major release.
+ * ---
+ *
+ * ### Examples
+ *
+ * @example Simple upload
+ * ```ts
+ * BackgroundGeolocation.ready({
+ *   http: {
+ *     url: "https://api.example.com/locations",
+ *     method: "POST",
+ *     autoSync: true,
+ *     headers: { Authorization: "Bearer secret" },
+ *     params: { device_id: "abc-123" }
+ *   }
+ * });
+ * ```
+ *
+ * @example Batched uploads
+ * ```ts
+ * BackgroundGeolocation.ready({
+ *   http: {
+ *     url: "https://api.example.com/locations/bulk",
+ *     batchSync: true,
+ *     maxBatchSize: 25,
+ *     autoSyncThreshold: 10,
+ *     rootProperty: "locations"
+ *   }
+ * });
+ * ```
+ *
+ * @example Conserve cellular data
+ * ```ts
+ * BackgroundGeolocation.ready({
+ *   http: {
+ *     url: "https://api.example.com/locations",
+ *     autoSync: true,
+ *     disableAutoSyncOnCellular: true
+ *   }
+ * });
+ * ```
+ *
+ * @example Manual sync
+ * ```ts
+ * await BackgroundGeolocation.setConfig({
+ *   http: { url: "https://api.example.com", autoSync: false }
+ * });
+ * await BackgroundGeolocation.sync();
+ * ```
  *
  * @category Config
  */
 export interface HttpConfig {
   /**
    * <!-- doc-id: HttpConfig.url -->
-   * Server URL where you want the SDK to post recorded locations.
+   * The server URL where the SDK posts recorded locations.
    *
-   * Both the iOS and Android native code host their own robust HTTP service
-   * which can automatically upload recorded locations to your server. This is
-   * particularly important on **Android** when running headless with
-   * {@link AppConfig.stopOnTerminate} set to `false`, since only the plugin's
-   * background service continues running in that state.
+   * The SDK hosts a robust HTTP service that continuously uploads recorded
+   * locations to your server in the background, surviving app termination and
+   * device reboot.
+   *
+   * ### Warning
+   * Use the SDK's built-in HTTP service rather than posting locations from your
+   * own code. When {@link AppConfig.stopOnTerminate} is `false`, your app
+   * component terminates but the native background service continues recording
+   * and uploading. The SDK automatically retries on failure — ad-hoc HTTP
+   * requests from application code cannot provide the same reliability.
    *
    * @example
    * ```ts
-   * // Listen to HTTP events.
    * BackgroundGeolocation.onHttp((event) => {
    *   console.log("[onHttp]", event);
    * });
@@ -268,41 +272,23 @@ export interface HttpConfig {
    * BackgroundGeolocation.ready({
    *   http: {
    *     url: "https://my-server.com/locations",
-   *     params: {
-   *       user_id: 1234
-   *     },
-   *     headers: {
-   *       Authorization: "Basic my-secret-key"
-   *     },
+   *     params: { user_id: 1234 },
+   *     headers: { Authorization: "Basic my-secret-key" },
    *     autoSync: true,
    *     method: "POST"
-   *   },
-   *   app: {
-   *     stopOnTerminate: false
    *   }
    * });
    * ```
-   *
-   * __Warning:__ It is highly recommended to let the SDK manage uploads to your
-   * server, **especially on Android** when {@link AppConfig.stopOnTerminate} is
-   * `false`. In that mode your application component *will* terminate—only the
-   * native Android background service continues operating, recording locations
-   * and posting them to your server. The SDK’s HTTP service automatically
-   * retries on failures and is more reliable for background delivery than
-   * ad-hoc HTTP requests from your own code.
-   *
-   * See the HTTP guide under {@link HttpConfig} for full examples, error
-   * handling, and payload structure.
    */
   url?: string;
 
   /**
    * <!-- doc-id: HttpConfig.headers -->
-   * Optional HTTP headers applied to every outbound upload request.
+   * HTTP headers applied to every outbound upload request.
    *
-   * These headers are merged with the SDK’s automatically applied headers
-   * (such as `"content-type": "application/json"`). When using authorization,
-   * the SDK also injects an `Authorization` header as needed.
+   * The supplied headers are merged with the SDK's automatically applied headers
+   * (including `"content-type": "application/json"`). When {@link AuthorizationConfig}
+   * is configured, the SDK also injects an `Authorization` header automatically.
    *
    * @example
    * ```ts
@@ -317,7 +303,7 @@ export interface HttpConfig {
    * });
    * ```
    *
-   * Observing incoming requests at your server:
+   * Incoming request headers at your server:
    *
    * ```text
    * POST /locations
@@ -331,21 +317,17 @@ export interface HttpConfig {
    * }
    * ```
    *
-   * **Note:**  
-   * The SDK automatically applies several required headers, including:
-   * - `"content-type": "application/json"`
-   * - authorization headers when using {@link AuthorizationConfig}
-   *
-   * __See also:__ the **HTTP Guide** under {@link HttpConfig}.
+   * **See also**
+   * - {@link AuthorizationConfig}
    */
   headers?: Record<string, string>;
 
   /**
    * <!-- doc-id: HttpConfig.params -->
-   * Optional HTTP **`params`** appended to the JSON body of each outbound upload request.
+   * Key/value pairs merged into the JSON body of every outbound upload request.
    *
-   * These key/value pairs are merged into the payload sent to your server
-   * (either at the root level or under `rootProperty`, if configured).
+   * Params are merged at the root level of the payload, or nested under
+   * {@link rootProperty} when that is configured.
    *
    * @example
    * ```ts
@@ -360,7 +342,7 @@ export interface HttpConfig {
    * });
    * ```
    *
-   * Example request body received by your server:
+   * Request body received by your server:
    *
    * ```json
    * {
@@ -368,25 +350,23 @@ export interface HttpConfig {
    *     "coords": {
    *       "latitude": 45.51927,
    *       "longitude": -73.61650
-   *       // ...
    *     }
    *   },
-   *   "user_id": 1234,      // <-- params merged into the payload
+   *   "user_id": 1234,
    *   "device_id": "abc123"
    * }
    * ```
    *
-   * __See also:__ the **HTTP Guide** under {@link HttpConfig}.
+   * **See also**
+   * - {@link rootProperty}
    */
   params?: Record<string, any>;
 
   /**
    * <!-- doc-id: HttpConfig.method -->
-   * The HTTP method used when uploading locations to your configured {@link url}.
+   * The HTTP method used when uploading locations to {@link url}.
    *
-   * Defaults to **`POST`**.  
-   * 
-   * Valid values: **`POST`**, **`PUT`**, **`OPTIONS`**.
+   * Defaults to `POST`. Valid values: `POST`, `PUT`, `PATCH`.
    *
    * @example
    * ```ts
@@ -402,77 +382,62 @@ export interface HttpConfig {
 
   /**
    * <!-- doc-id: HttpConfig.autoSync -->
-   * Immediately upload each recorded location to your configured {@link url}.
+   * Uploads each recorded location to {@link url} immediately after it is recorded.
    *
-   * Defaults to **`true`**.
+   * Defaults to `true`. When a {@link url} is configured, the SDK attempts to
+   * upload each location as soon as it is written to SQLite. All recorded locations
+   * are persisted in the internal database until successfully delivered, regardless
+   * of this setting.
    *
-   * When `autoSync` is enabled and a {@link url} is provided, the SDK
-   * will attempt to upload each location **as soon as it is recorded**.
+   * When `autoSync` is `false`, call {@link BackgroundGeolocation.sync} to trigger
+   * uploads manually.
    *
-   * If you set `autoSync: false`, you must manually call
-   * {@link BackgroundGeolocation.sync} to initiate uploads.  
-   * Regardless of `autoSync`, *all* recorded locations are persisted in the
-   * SDK’s internal SQLite database until successfully delivered.
-   *
-   * __Note:__ The queue continues to grow until you call {@link BackgroundGeolocation.sync} or until uploads succeed.
+   * ### Note
+   * With `autoSync: false`, the queue grows until you call
+   * {@link BackgroundGeolocation.sync} or until uploads succeed automatically
+   * on the next retry trigger.
    *
    * **See also**
    * - {@link autoSyncThreshold}
    * - {@link batchSync}
    * - {@link maxBatchSize}
-   * - HTTP Guide at {@link HttpConfig}
    */
   autoSync?: boolean;
 
   /**
    * <!-- doc-id: HttpConfig.autoSyncThreshold -->
-   * The minimum number of persisted records the plugin must accumulate
-   * before triggering an automatic upload via {@link autoSync}.
+   * Minimum number of queued records required before an automatic upload fires.
    *
-   * Defaults to **`0`** (no threshold).
+   * Defaults to `0` (no threshold — upload after every recorded location).
    *
-   * When set to a value greater than `0`, the SDK will wait until at least that
-   * many locations are recorded before uploading to your configured
-   * {@link url}.  
-   *  
-   * Using `autoSyncThreshold` together with {@link batchSync} can
-   * significantly **reduce battery consumption**, since batching minimizes the
-   * number of HTTP requests (which cost far more power than GPS work).
+   * When set above `0`, the SDK waits until at least this many locations are
+   * queued before uploading. Combining `autoSyncThreshold` with {@link batchSync}
+   * significantly reduces battery consumption by minimizing the number of HTTP
+   * requests.
    *
-   *
-   * __⚠️ Warning:__ Ignored during `onMotionChange`
-   *
-   * If you've configured `autoSyncThreshold`, it will be **ignored** during
-   * {@link BackgroundGeolocation.onMotionChange} transitions:
-   *
-   * - Entering the **moving** state:  
-   *   The device may have been dormant for a long time; the SDK eagerly uploads
-   *   queued locations immediately.
-   *
-   * - Entering the **stationary** state:  
-   *   The device may *soon become* dormant; the SDK eagerly uploads all queued
-   *   locations before going idle.
-   *
+   * ### Warning
+   * `autoSyncThreshold` is ignored during {@link BackgroundGeolocation.onMotionChange}
+   * transitions. When the device enters the *moving* state, any queued locations
+   * are uploaded immediately. When it enters the *stationary* state, all remaining
+   * queued locations are flushed before the SDK goes idle.
    *
    * **See also**
-   * - HTTP Guide at {@link HttpConfig}
+   * - {@link autoSync}
+   * - {@link batchSync}
    */
   autoSyncThreshold?: number;
 
   /**
    * <!-- doc-id: HttpConfig.disableAutoSyncOnCellular -->
-   * Disable {@link autoSync} when the device is connected over **cellular data**.
+   * Defers automatic uploads until the device is on Wi-Fi.
    *
-   * Defaults to **`false`**.  
-   * 
-   * When set to **`true`**, automatic HTTP uploads will occur **only when on Wi-Fi**.
+   * Defaults to `false`. When `true`, {@link autoSync} uploads occur only when
+   * a Wi-Fi connection is active. Locations continue to be recorded and queued
+   * while on cellular — they are uploaded once Wi-Fi becomes available.
    *
-   * This is useful for conserving mobile data usage, particularly when large
-   * batches of locations may accumulate while offline.
-   *
-   * __⚠️ Warning:__
-   * This option is **ignored** when manually invoking
-   * {@link BackgroundGeolocation.sync}. Manual syncs always proceed regardless of connection type.
+   * ### Warning
+   * This setting is ignored when calling {@link BackgroundGeolocation.sync}
+   * manually. Manual syncs always proceed regardless of connection type.
    *
    * **See also**
    * - {@link autoSync}
@@ -482,55 +447,44 @@ export interface HttpConfig {
 
   /**
    * <!-- doc-id: HttpConfig.batchSync -->
-   * Upload **multiple locations** to your {@link url} in a single HTTP request.
+   * Bundles all queued locations into a single HTTP request.
    *
-   * Defaults to **`false`**.  
-   * When set to **`true`**, the SDK will bundle **all currently queued locations** in
-   * the native SQLite database and upload them together in **one** HTTP request.
+   * Defaults to `false`. When `true`, the SDK sends all records currently in the
+   * SQLite queue in one HTTP request rather than one request per location. Use
+   * {@link maxBatchSize} to cap the number of records per request.
    *
-   * When `batchSync` is **`false`**, the HTTP service performs **one request per
-   * location**, which can increase battery and network usage.
-   *
-   * Batching is often used together with {@link autoSyncThreshold} to
+   * Batching is most effective when combined with {@link autoSyncThreshold} to
    * reduce upload frequency and conserve power.
    *
    * **See also**
-   * - {@link url}
    * - {@link autoSync}
    * - {@link autoSyncThreshold}
-   * - **HTTP Guide** at {@link HttpConfig}
+   * - {@link maxBatchSize}
    */
   batchSync?: boolean;
 
   /**
    * <!-- doc-id: HttpConfig.maxBatchSize -->
-   * Controls the number of records attached to **each** batched HTTP request.
+   * Maximum number of records included in each batched HTTP request.
    *
-   * Defaults to **`-1`** (no maximum).
+   * Defaults to `-1` (no limit — all queued records in one request).
    *
-   * When using {@link batchSync} with {@link url} configured,
-   * this option limits how many queued location records may be included in a single
-   * HTTP request.
-   *
-   * If the number of queued records exceeds `maxBatchSize`, the SDK will generate
-   * **multiple HTTP requests** until the queue is fully drained.
-   *
-   * This prevents extremely large request bodies when the device has been offline
-   * for long periods (where megabytes of location data may accumulate).   
+   * When {@link batchSync} is `true` and the queue exceeds `maxBatchSize`, the
+   * SDK generates multiple requests until the queue is fully drained. This
+   * prevents excessively large request bodies after the device has been offline
+   * for an extended period.
    *
    * **See also**
    * - {@link batchSync}
-   * - {@link url}
-   * - **HTTP Guide** at {@link HttpConfig}
    */
   maxBatchSize?: number;
 
   /**
    * <!-- doc-id: HttpConfig.rootProperty -->
-   * The root property of the JSON object where location data will be placed.
+   * Wraps the location payload under a named root key in the JSON body.
    *
-   * When set, outgoing HTTP payloads will wrap the serialized location record(s)
-   * under the specified key.
+   * Defaults to `"location"`. When set, outgoing payloads nest the serialized
+   * location record under this key:
    *
    * @example
    * ```ts
@@ -542,7 +496,7 @@ export interface HttpConfig {
    * });
    * ```
    *
-   * Produces payloads shaped like:
+   * Produces:
    *
    * ```json
    * {
@@ -555,8 +509,7 @@ export interface HttpConfig {
    * }
    * ```
    *
-   * If you specify `"."` (dot), the SDK places the data **directly in the root**
-   * of the JSON body:
+   * Set to `"."` to place the location data directly at the root of the JSON body:
    *
    * ```json
    * {
@@ -567,9 +520,6 @@ export interface HttpConfig {
    * }
    * ```
    *
-   * **Note:** See the **HTTP Guide** at {@link HttpConfig} for detailed payload
-   * examples and composition rules.
-   *
    * **See also**
    * - {@link PersistenceConfig.locationTemplate}
    * - {@link PersistenceConfig.geofenceTemplate}
@@ -578,12 +528,11 @@ export interface HttpConfig {
 
   /**
    * <!-- doc-id: HttpConfig.timeout -->
-   * HTTP request timeout in **milliseconds**.
+   * HTTP request timeout in milliseconds.
    *
-   * When an HTTP request exceeds this timeout, the SDK fires
-   * {@link BackgroundGeolocation.onHttp} with a failure event.
-   *
-   * Defaults to **`60000` ms**.
+   * Defaults to `60000` ms (60 seconds). When a request exceeds this duration,
+   * the SDK fires {@link BackgroundGeolocation.onHttp} with a failure event and
+   * the record is unlocked for retry.
    *
    * @example
    * ```ts
@@ -596,7 +545,7 @@ export interface HttpConfig {
    * BackgroundGeolocation.ready({
    *   http: {
    *     url: "https://my-server.com/locations",
-   *     timeout: 3000   // 3-second timeout
+   *     timeout: 3000
    *   }
    * });
    * ```
