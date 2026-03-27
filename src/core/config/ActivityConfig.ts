@@ -174,7 +174,7 @@ export interface ActivityConfig {
    * start/stop controls in your app (for example, a workout app with
    * **Start** / **Stop** buttons calling {@link BackgroundGeolocation.changePace}).
    *
-   * ![](https://dl.dropboxusercontent.com/s/ojjdfkmua15pskh/ios-stop-detection-timing.png?dl=1)
+   * ![](https://dl.dropbox.com/scl/fi/fhkz97f9jl4omnv7y30by/ios-stop-detection-timing.png?rlkey=cvs9h2nnngmmz9bwh1vg3796g&dl=1)
    *
    * #### Android
    *
@@ -353,7 +353,7 @@ export interface ActivityConfig {
    * the SDK emits a sound effect and local notifications when location services
    * toggle on and off.
    *
-   * ![](https://dl.dropboxusercontent.com/s/ojjdfkmua15pskh/ios-stop-detection-timing.png?dl=1)
+   * ![](https://dl.dropbox.com/scl/fi/fhkz97f9jl4omnv7y30by/ios-stop-detection-timing.png?rlkey=cvs9h2nnngmmz9bwh1vg3796g&dl=1)
    */
   stopDetectionDelay?: number;
 }
