@@ -2,35 +2,42 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
 
 /**
  * <!-- doc-id: AuthorizationConfig -->
- * Configure the SDK to authenticate with your server using an
- * {@link AuthorizationConfig.accessToken | access token} (e.g., a
- * [JSON Web Token](https://jwt.io/)), and automatically request new tokens when
- * the server returns **`401 Unauthorized`**.
+ * Token-based authorization configuration for the background geolocation SDK.
  *
- * **Note:** Only [JSON Web Token](https://jwt.io/) (JWT) is currently supported.
+ * `AuthorizationConfig` enables the SDK to authenticate HTTP uploads with an
+ * {@link AuthorizationConfig.accessToken | access token} and to automatically
+ * refresh that token when it expires or when the server returns
+ * `401 Unauthorized`.
  *
- * The SDK automatically attaches your token to each HTTP request:
+ * When using {@link Config.authorization}, do not set `Authorization` manually
+ * inside {@link HttpConfig.headers} — the SDK manages the authorization header
+ * automatically.
  *
- * ```txt
- * Authorization: Bearer XXX.YYY.ZZZ
- * ```
+ * ### Contents
+ * - [Overview](#overview)
+ * - [Token refresh](#token-refresh)
+ * - [Refresh payload](#refresh-payload)
+ * - [Authorization events](#authorization-events)
  *
- * When using {@link Config.authorization}, **do not** manually define
- * `Authorization` inside {@link HttpConfig.headers}. The SDK manages all JWT
- * headers automatically.
+ * ---
  *
- * If you supply {@link AuthorizationConfig.refreshUrl},
+ * ### Overview
+ *
+ * The SDK attaches the configured access token to every HTTP upload request as
+ * an `Authorization` header. If you supply {@link AuthorizationConfig.refreshUrl},
  * {@link AuthorizationConfig.refreshToken}, and
  * {@link AuthorizationConfig.refreshPayload}, the SDK can automatically refresh
  * expired tokens when a `401 Unauthorized` response is received.
  *
- * **Configuration**
+ * | Area | Keys | Notes |
+ * |------|------|-------|
+ * | **Token** | `strategy`, `accessToken`, `expires` | Token value and expiry. |
+ * | **Refresh** | `refreshUrl`, `refreshToken`, `refreshPayload`, `refreshHeaders` | Auto-refresh on `401` or expiry. |
  *
  * @example
  * ```ts
- * const token = getMyToken(); // Your own JWT fetch method
+ * const token = getMyToken(); // Your own token fetch method
  *
- * // Listen for authorization refresh results
  * BackgroundGeolocation.onAuthorization((event) => {
  *   if (event.success) {
  *     console.log("[authorization] SUCCESS:", event.response);
@@ -39,7 +46,6 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  *   }
  * });
  *
- * // Initialize with JWT authorization
  * BackgroundGeolocation.ready({
  *   http: {
  *     url: "https://app.your.server.com/users/locations",
@@ -58,14 +64,71 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  * });
  * ```
  *
- * **Receiving responses from** {@link AuthorizationConfig.refreshUrl}
+ * ---
  *
- * Whenever the SDK receives a response from your
- * {@link refreshUrl}, it fires
- * {@link BackgroundGeolocation.onAuthorization}. Your callback will receive an
+ * ### Token refresh
+ *
+ * When a `401 Unauthorized` response is received, or when `expires` is
+ * reached, the SDK sends an `application/x-www-form-urlencoded` POST to
+ * `refreshUrl` with the `refreshPayload` fields encoded in the body.
+ *
+ * On receiving the response, the SDK recursively iterates through the JSON
+ * keys to locate:
+ *
+ * 1. A new access token
+ * 2. A new refresh token (if present)
+ * 3. An expiry time (if present)
+ *
+ * The SDK recognizes a wide variety of response shapes automatically. For
+ * example, a nested response:
+ *
+ * ```json
+ * {
+ *   "token": {
+ *     "access_token": "XXX.YYY.ZZZ",
+ *     "expires_at": 3900
+ *   },
+ *   "refresh_token": "smTsfaspfgaadsfgqZerUt0wueflasdfkaxjdfeKIacb"
+ * }
+ * ```
+ *
+ * And a flat response:
+ *
+ * ```json
+ * {
+ *   "accessToken": "XXX.YYY.ZZZ",
+ *   "refreshToken": "smTsfaspfgaadsfgqZerUt0wueflasdfkaxjdfeKIacb",
+ *   "expiry": 3900
+ * }
+ * ```
+ *
+ * Both are handled automatically.
+ *
+ * ---
+ *
+ * ### Refresh payload
+ *
+ * `refreshPayload` is a key/value map sent as form fields in the refresh POST.
+ * At least one field must use the template variable `"{refreshToken}"`, which
+ * the SDK replaces with the current `refreshToken` value at request time.
+ * Additional arbitrary fields required by your authorization server may also
+ * be included.
+ *
+ * `refreshHeaders` are sent with each refresh request. The default is
+ * `{"Authorization": "Bearer {accessToken}"}`, where `{accessToken}` is
+ * replaced with the current access token. Pass an empty object `{}` to send
+ * no headers with the refresh request.
+ *
+ * ---
+ *
+ * ### Authorization events
+ *
+ * Whenever the SDK receives a response from {@link refreshUrl}, it fires
+ * {@link BackgroundGeolocation.onAuthorization} with an
  * {@link AuthorizationEvent}.
  *
- * - On **success**, {@link AuthorizationEvent.response} contains the parsed JSON.
+ * - On **success**, {@link AuthorizationEvent.response} contains the parsed
+ *   JSON from the refresh server.
  * - On **error**, {@link AuthorizationEvent.error} contains the error message.
  *
  * @example
@@ -78,74 +141,84 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  *   }
  * });
  * ```
+ *
  * @category Config
  */
-export interface AuthorizationConfig {  
+export interface AuthorizationConfig {
   /**
    * <!-- doc-id: AuthorizationConfig.strategy -->
-   * Authorization strategy.  Only [JWT](https://jwt.io/) is supported.
+   * Authorization strategy used when attaching the token to HTTP requests.
+   * Defaults to `"JWT"`.
+   *
+   * - `"JWT"` — sends the token as `Authorization: Bearer <token>`.
+   *
+   * <!-- TODO: human review — native source (TSAuthorizationConfig.h) documents
+   *      a second strategy "SAS" that sends the token as `Authorization: <token>`
+   *      (no "Bearer " prefix). Verify whether "SAS" is production-ready and
+   *      add documentation if so. -->
    */
-  strategy:string;
+  strategy: string;
+
   /**
    * <!-- doc-id: AuthorizationConfig.accessToken -->
-   * Authorization token (eg: [JWT](https://jwt.io/)) required for authorization by your server at {@link HttpConfig.url}.
+   * The access token attached to each HTTP request as an `Authorization`
+   * header.
    *
-   * The SDK will automatically apply the configured `accessToken` to each HTTP request's `Authorization` header, eg:
-   *
-   * `"Authorization": "Bearer XXX.YYY.ZZZ"`
-   *
-   * You do **not** need to manually configure {@link HttpConfig.headers} with the `Authorization` parameter.  It is all **automatic**.
-   */
-  accessToken:string;
-  /**
-   * <!-- doc-id: AuthorizationConfig.refreshToken -->
-   * The token to be POSTed to {@link refreshUrl}, encoded into the {@link refreshPayload}, when a new {@link accessToken} is required after {@link expires} or when HTTP `401 Unauthorized` is received.
-   */
-  refreshToken?:string;
-  /**
-   * <!-- doc-id: AuthorizationConfig.refreshUrl -->
-   * The url to your authorization server that provides new {@link accessToken} when expired.
-   *
-   * When the SDK receives a response the server, it will decode the JSON and recursively iterate through the keys, performing regular expressions and other String-analysis *to "taste"* the data in search of the following 3 items:
-   *
-   * 1. "access token"
-   * 2. "refresh token"
-   * 3. "expiry time"
-   *
-   * The SDK is designed to operate with *any* response data-structure.  For example, one authorization server might return a complex response such as:
-   *
-   * ```json
-   * {
-   *   "token": {
-   *     "access_token": "XXX.YYY.ZZZ",
-   *     "expires_at": 3900
-   *   },
-   *   "refresh_token": "smTsfaspfgaadsfgqZerUt0wueflasdfkaxjdfeKIacb"
-   * }
-   * ```
-   *
-   * While another server might return a flat response, such as:
-   *
-   * ```json
-   * {
-   *  "accessToken": "XXX.YYY.ZZZ",
-   *  "refreshToken": "smTsfaspfgaadsfgqZerUt0wueflasdfkaxjdfeKIacb",
-   *  "expiry": 3900
-   * }
-   * ```
-   *
-   * When the response from the server is received, the event {@link BackgroundGeolocation.onAuthorization} will be fired, provided with the {@link AuthorizationEvent}.
-   */
-   refreshUrl?:string;
-  /**
-   * <!-- doc-id: AuthorizationConfig.refreshPayload -->
-   * Refresh payload will be encoded into the FORM POST to the {@link refreshUrl} when requesting a new {@link accessToken} after expiration.
-   *
-   * You *must* provide one field-template which will represent your "refresh token" using the value: __`{refreshToken}`__.  The SDK will
-   * _automatically_ replace this simple template with the configured {@link refreshToken}.
+   * The SDK automatically applies the token to every upload request sent to
+   * {@link HttpConfig.url}. Do not set `Authorization` manually in
+   * {@link HttpConfig.headers}.
    *
    * @example
-   * ```typescript
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   authorization: {
+   *     strategy: "JWT",
+   *     accessToken: "XXX.YYY.ZZZ"
+   *   }
+   * });
+   * ```
+   */
+  accessToken: string;
+
+  /**
+   * <!-- doc-id: AuthorizationConfig.refreshToken -->
+   * The token sent to {@link refreshUrl} when a new {@link accessToken} is
+   * needed after {@link expires} or when HTTP `401 Unauthorized` is received.
+   *
+   * The SDK encodes this value into the {@link refreshPayload} by substituting
+   * the `"{refreshToken}"` template variable before sending the refresh
+   * request.
+   */
+  refreshToken?: string;
+
+  /**
+   * <!-- doc-id: AuthorizationConfig.refreshUrl -->
+   * The URL of the authorization server that provides a new {@link accessToken}
+   * when the current token expires.
+   *
+   * The SDK POSTs to this URL using `application/x-www-form-urlencoded` when
+   * the current token expires or when the location server returns
+   * `401 Unauthorized`. The response is parsed automatically — see
+   * [Token refresh](#token-refresh) for supported response formats.
+   *
+   * When the SDK receives a response from the server, it fires
+   * {@link BackgroundGeolocation.onAuthorization} with an
+   * {@link AuthorizationEvent}.
+   */
+  refreshUrl?: string;
+
+  /**
+   * <!-- doc-id: AuthorizationConfig.refreshPayload -->
+   * Form fields sent in the `application/x-www-form-urlencoded` POST to
+   * {@link refreshUrl} when requesting a new {@link accessToken} after
+   * expiration.
+   *
+   * Include at least one field whose value is the template string
+   * `"{refreshToken}"`. The SDK automatically replaces this with the
+   * configured {@link refreshToken} value before sending the request.
+   *
+   * @example
+   * ```ts
    * BackgroundGeolocation.ready({
    *   authorization: {
    *     strategy: "JWT",
@@ -161,7 +234,8 @@ export interface AuthorizationConfig {
    * });
    * ```
    *
-   * with the configuration above, a **`curl`** representation of the SDK's FORM POST, might look like this:
+   * The equivalent `curl` representation of the SDK's form POST:
+   *
    * ```bash
    * $ curl -X POST \
    *   -F 'my_refresh_token=smTsfaspfgaadsfgqZerUt0wueflasdfkaxjdfeKIacb' \
@@ -169,42 +243,44 @@ export interface AuthorizationConfig {
    *   -F 'foo=another arbitrary field' \
    *   https://auth.your.server.com/tokens
    * ```
-   *
    */
-  refreshPayload?:Record<string,string>;
+  refreshPayload?: Record<string, string>;
+
   /**
    * <!-- doc-id: AuthorizationConfig.refreshHeaders -->
-   * Optional headers applied on requests to {@link refreshUrl}
-   * Defaults to: `{"Authorization":  "Bearer {accessToken}"}`
+   * HTTP headers sent with each request to {@link refreshUrl}. Defaults to
+   * `{"Authorization": "Bearer {accessToken}"}`.
    *
-   * The template variable `{accessToken}` will automatically be replaced with your app's current auth token.
-   *
-   * If you do not want *any* headers applied on requests to {refreshUrl}, provide an empty `{}`.
+   * The template variable `{accessToken}` is replaced with the current access
+   * token at request time. To send no headers with refresh requests, provide
+   * an empty object `{}`.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   authorization: {
    *     accessToken: "XXX.YYY.ZZZ",
    *     refreshUrl: "https://auth.domain.com/tokens",
    *     refreshToken: "smTsfaspfgaadsfgqZerUt0wueflasdfkaxjdfeKIacb",
    *     refreshPayload: {
-   *       "my_refresh_token": "{refreshToken}", // <-- replaced with configured refreshToken above.
-   *       "grant_type": "refresh_token",        // <-- arbitrary fields required by your auth server
-   *       "foo": "another arbitrary field"
+   *       my_refresh_token: "{refreshToken}",
+   *       grant_type: "refresh_token",
+   *       foo: "another arbitrary field"
    *     },
-   *     refreshHeaders: {}  // <-- Empty {} to provide no refreshHeaders.
-   *   )
-   * ));
+   *     refreshHeaders: {}
+   *   }
+   * });
    * ```
-   *
    */
-  refreshHeaders?:Record<string,string>;
+  refreshHeaders?: Record<string, string>;
 
   /**
    * <!-- doc-id: AuthorizationConfig.expires -->
-   * Token expiry time in seconds.
+   * Token expiry time in seconds since epoch. Defaults to `-1` (not set).
+   *
+   * When set, the SDK proactively refreshes the token before expiry rather
+   * than waiting for a `401 Unauthorized` response. When not set (default
+   * `-1`), the SDK relies on a `401` response to trigger a refresh.
    */
-  expires?:number;
+  expires?: number;
 }
-
