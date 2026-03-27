@@ -941,7 +941,7 @@ export interface GeoConfig {
    * until the device exits and re-enters the geofence.
    *
    * **See also**
-   * - 📘 [[Geofence | Geofencing Guide]].
+   * - 📘 {@link Geofence | Geofencing Guide}.
    */
   geofenceInitialTriggerEntry?: boolean;
 
