@@ -1,33 +1,70 @@
 import type { DesiredAccuracy } from '../../enums/DesiredAccuracy';
 
+/**
+ * <!-- doc-id: WatchPositionRequest -->
+ * Options for {@link BackgroundGeolocation.watchPosition}.
+ *
+ * Configures the interval, accuracy, persistence, and metadata for a
+ * continuous location stream. All fields are optional.
+ *
+ * ### ⚠️ Warning
+ *
+ * `watchPosition` is intended for foreground use. On iOS it prevents the app
+ * from being suspended, which drains the battery. Remove the subscription when
+ * your app moves to the background.
+ *
+ * @example
+ * ```typescript
+ * const subscription = BackgroundGeolocation.watchPosition(
+ *   { interval: 1000, desiredAccuracy: DesiredAccuracy.High },
+ *   (location) => {
+ *     console.log("[watchPosition]", location);
+ *   },
+ *   (errorCode) => {
+ *     console.warn("[watchPosition] error:", errorCode);
+ *   }
+ * );
+ *
+ * // Later, stop watching.
+ * subscription.remove();
+ * ```
+ *
+ * @category Primary API
+ */
 export interface WatchPositionRequest {
-    /**
-     * <!-- doc-id: WatchPositionRequest.interval -->
-     * Sets the interval in milliseconds at which to fetch location updates.
-     */
-    interval?: number;
-    /**
-     * <!-- doc-id: WatchPositionRequest.desiredAccuracy -->
-     * Sets the {@link DesiredAccuracy} of location updates from the native location API.
-     * 
-     * Defaults to {@link DesiredAccuracy.High}
-     */
-    desiredAccuracy?: DesiredAccuracy;
-    /**
-     * <!-- doc-id: WatchPositionRequest.persist -->
-     * Defaults to `true` when plugin is `enabled`; `false`, otherwise.  Set `false` to disable persisting the retrieved Locations in the plugin's SQLite database.
-     */
-    persist?: boolean;
-    /**
-     * <!-- doc-id: WatchPositionRequest.extras -->
-     * Optional meta-data to attach to each location. These `extras` will be merged to the configured {@link PersistenceConfig.extras} and persisted / POSTed to your server (if you've configured a {@link HttpConfig.url}).
-     */
-    extras?: Record<string, any>;
-    /**
-     * <!-- doc-id: WatchPositionRequest.timeout -->
-     * Location-timeout in `milliseconds`.  
-     * 
-     * Default: `60000`.
-     */
-    timeout?: number;
+  /**
+   * <!-- doc-id: WatchPositionRequest.interval -->
+   * Interval in **milliseconds** between location updates.
+   */
+  interval?: number;
+
+  /**
+   * <!-- doc-id: WatchPositionRequest.desiredAccuracy -->
+   * Target accuracy for location updates from the native API.
+   * Defaults to {@link DesiredAccuracy.High}.
+   */
+  desiredAccuracy?: DesiredAccuracy;
+
+  /**
+   * <!-- doc-id: WatchPositionRequest.persist -->
+   * Whether to persist each location to the SDK's SQLite database and upload
+   * it to {@link HttpConfig.url}. Defaults to `true` when the SDK is enabled;
+   * `false` when stopped.
+   */
+  persist?: boolean;
+
+  /**
+   * <!-- doc-id: WatchPositionRequest.extras -->
+   * Optional key-value metadata to attach to each location. Merged with any
+   * configured {@link PersistenceConfig.extras} before persisting or uploading
+   * to {@link HttpConfig.url}.
+   */
+  extras?: Record<string, any>;
+
+  /**
+   * <!-- doc-id: WatchPositionRequest.timeout -->
+   * Maximum time in **milliseconds** to wait for each location fix before
+   * firing an error. Default `60000`.
+   */
+  timeout?: number;
 }
