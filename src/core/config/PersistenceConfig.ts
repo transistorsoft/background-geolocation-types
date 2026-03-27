@@ -2,12 +2,38 @@ import { PersistMode } from '../../enums/PersistMode';
 
 /**
  * <!-- doc-id: PersistenceConfig -->
- * **Persistence / Storage Configuration**
+ * Persistence and storage configuration for the background geolocation SDK.
  *
- * The **PersistenceConfig** group controls how the SDK stores, orders, and
- * purges records in its on-device SQLite database. The database acts as a
- * durable buffer between data producers (locations, geofences) and consumers
- * (your app code and the HTTP service).
+ * `PersistenceConfig` controls how the SDK stores, orders, templates, and purges
+ * records in its on-device SQLite database — the durable buffer between data
+ * producers (locations, geofences) and consumers (your app and the HTTP service).
+ *
+ * ### Contents
+ * - [Overview](#overview)
+ * - [Storage lifecycle](#storage-lifecycle)
+ * - [Ordering](#ordering)
+ * - [Templates](#templates)
+ * - [Persist mode](#persist-mode)
+ * - [Migration](#migration)
+ * - [Examples](#examples)
+ *
+ * ---
+ *
+ * ### Overview
+ *
+ * The SDK maintains an internal SQLite database as a rolling queue. Each recorded
+ * {@link Location} and geofence event is written immediately, then consumed and
+ * deleted by downstream services. The SDK prefers an empty database — records exist
+ * only while awaiting upload or retrieval.
+ *
+ * | Area | Keys | Notes |
+ * |------|------|-------|
+ * | **Retention** | {@link maxDaysToPersist}, {@link maxRecordsToPersist} | TTL and count-based purge limits. |
+ * | **Ordering** | {@link locationsOrderDirection} | Controls upload and retrieval order. |
+ * | **Templates** | {@link locationTemplate}, {@link geofenceTemplate} | Custom JSON structure for uploads. |
+ * | **Extras** | {@link extras} | Static key/value pairs merged into every record. |
+ * | **Persist mode** | {@link persistMode} | Which event types are written to SQLite. |
+ * | **Diagnostics** | {@link disableProviderChangeRecord} | Suppress provider-change records. |
  *
  * @example
  * ```ts
@@ -24,143 +50,69 @@ import { PersistMode } from '../../enums/PersistMode';
  * });
  * ```
  *
- * The SDK **prefers an empty database**. Each new {@link Location} (and geofence
- * event) is written to SQLite immediately, then consumed (and typically deleted)
- * by downstream services such as the HTTP uploader. When a record is successfully
- * processed (e.g., posted to your server), it is removed to keep the buffer
- * small and responsive.
+ * ---
  *
- * Configure **PersistenceConfig** via {@link Config.persistence}.
+ * ### Storage lifecycle
  *
- * __What gets stored?__
+ * Records are written to SQLite immediately upon recording and deleted when **any**
+ * of the following occur:
  *
- * - **Locations** recorded by the tracker  
- * - **Geofence events** (enter / exit / dwell)  
- * - **Extras** merged at write time via {@link extras}
- *
- * __When are records deleted?__
- *
- * A record is deleted when **any** of the following occur:
- *
- * - Your server returns a `20x` for the HTTP upload (see {@link HttpConfig})
+ * - Your server returns a `20x` response for the HTTP upload (see {@link HttpConfig})
  * - You call {@link BackgroundGeolocation.destroyLocations}
  * - {@link maxDaysToPersist} elapses (rolling TTL purge)
- * - {@link maxRecordsToPersist} would be exceeded  
- *   (oldest records are dropped)
+ * - {@link maxRecordsToPersist} would be exceeded (oldest records are dropped)
  *
- * Inspect pending records using:
+ * Inspect the pending queue with {@link BackgroundGeolocation.getCount} or
+ * {@link BackgroundGeolocation.getLocations}.
  *
- * - {@link BackgroundGeolocation.getCount}  
- * - {@link BackgroundGeolocation.getLocations}
+ * ---
  *
- * __Ordering__
+ * ### Ordering
  *
- * The order in which records are selected for upload or consumption is controlled by
- * {@link locationsOrderDirection}:
+ * {@link locationsOrderDirection} controls the order in which records are selected
+ * for upload or returned by {@link BackgroundGeolocation.getLocations}:
  *
- * - `"ASC"` → oldest first (default)
- * - `"DESC"` → newest first
+ * - `"ASC"` — oldest first (default)
+ * - `"DESC"` — newest first
  *
- * __JSON templating__
+ * ---
  *
- * Customize the JSON structure of uploaded records:
+ * ### Templates
  *
- * - {@link locationTemplate}
- * - {@link geofenceTemplate}
+ * By default the SDK serializes locations and geofence events using its standard
+ * JSON schema. Use {@link locationTemplate} and {@link geofenceTemplate} to
+ * substitute a custom ERB template that reshapes the JSON to match your backend.
  *
- * Templates receive the full record context and can reshape, rename, or nest fields
- * to match backend requirements (see also {@link HttpConfig.rootProperty}).
+ * Use {@link extras} to merge static key/value metadata into every record at write
+ * time, without a custom template.
  *
- * __Extras__
+ * ---
  *
- * {@link extras} is a free-form key/value map merged into **every**
- * record when written. Ideal for static context such as `user_id`, `route_id`,
- * `appVersion`, etc.
+ * ### Persist mode
  *
- * __Persist mode__
+ * {@link persistMode} controls which event types are written to SQLite. All events
+ * are still delivered to their live callbacks ({@link BackgroundGeolocation.onLocation},
+ * {@link BackgroundGeolocation.onGeofence}) regardless of this setting. Events that
+ * are not persisted are not eligible for HTTP uploads via {@link HttpConfig.url}.
  *
- * Control what is written to SQLite with {@link PersistMode}:
- *
- * - {@link PersistMode.All} — persist **locations + geofences**  
- * - {@link PersistMode.Location} — persist **locations only**  
- * - {@link PersistMode.Geofence} — persist **geofences only**  
- * - {@link PersistMode.None} — **do not persist** (live callbacks still fire)
- *
- * > Even with {@link PersistMode.None}, HTTP uploads can still occur if triggered
- * > directly. Persistence controls the *buffer*, not the upload.
+ * The `persist` option on individual API calls can override this setting per-request:
  *
  * @example
  * ```ts
- * const location = await bg.BackgroundGeolocation.getCurrentPosition({
+ * const location = await BackgroundGeolocation.getCurrentPosition({
  *   persist: true,
- *   extras: {"get_current_position": true},
+ *   extras: { get_current_position: true },
  *   samples: 3,
  * });
  * ```
  *
- * In this case, the fetched location is persisted (because `persist: true`,
- * overriding {@link persistMode}), then uploaded immediately if
- * {@link HttpConfig.autoSync} is enabled.
+ * ---
  *
- * __ProviderChange Records__
+ * ### Migration
  *
- * Disable storage of diagnostic “provider change” records (GPS toggled, settings
- * changed, etc.) with {@link disableProviderChangeRecord} to keep
- * the database lean.
- *
- * __Examples__
- *
- * @example Configure persistence behavior
- * ```ts
- * const config = {
- *   persistence: {
- *     maxDaysToPersist: 14,
- *     maxRecordsToPersist: 5000,
- *     locationsOrderDirection: 'ASC',
- *     persistMode: PersistMode.All,
- *     extras: {'user_id': 123, 'appVersion': '1.2.3'},
- *   },
- *   http: {
- *     url: 'https://example.com/locations',
- *     autoSync: true,
- *   }
- * });
- * const state = await BackgroundGeolocation.ready(config);
- * ```
- *
- * @example Inspect and purge the database
- * 
- * ```ts
- * final pending = await BackgroundGeolocation.getCount();
- * console.log('Pending records: $pending');
- *
- * // Purge all records
- * final ok = await bg.BackgroundGeolocation.destroyLocations();
- * console.log('Destroyed all records? $ok');
- * ```
- *
- * @example Custom JSON templates
- * ```ts
- * const config = {
- *   persistence: {
- *     locationTemplate: '''
- *     {
- *       "lat": <%= latitude %>,
- *       "lng": <%= longitude %>,
- *       "ts": "<%= timestamp %>",
- *       "meta": <%= JSON.stringify(extras) %>
- *     }
- *     ''',
- *     geofenceTemplate: '''
- *     {
- *       "id": "<%= identifier %>",
- *       "action": "<%= action %>",
- *       "ts": "<%= timestamp %>"
- *     }
- *     ''',
- *   },
- * };
- * ```
+ * Persistence options previously lived at the root of `Config`. They are now grouped
+ * under the `persistence` key. Legacy flat keys remain available but are **deprecated**
+ * and will be removed in a future major release.
  *
  * @example Migration from legacy flat Config
  * ```ts
@@ -194,17 +146,66 @@ import { PersistMode } from '../../enums/PersistMode';
  * ```
  *
  * Legacy keys remain but are marked **@deprecated**. Prefer the compound form going forward.
- * 
+ *
+ * ---
+ *
+ * ### Examples
+ *
+ * @example Configure persistence behavior
+ * ```ts
+ * const state = await BackgroundGeolocation.ready({
+ *   persistence: {
+ *     maxDaysToPersist: 14,
+ *     maxRecordsToPersist: 5000,
+ *     locationsOrderDirection: 'ASC',
+ *     persistMode: PersistMode.All,
+ *     extras: { user_id: 123, appVersion: '1.2.3' },
+ *   },
+ *   http: {
+ *     url: 'https://example.com/locations',
+ *     autoSync: true,
+ *   }
+ * });
+ * ```
+ *
+ * @example Inspect and purge the database
+ * ```ts
+ * const pending = await BackgroundGeolocation.getCount();
+ * console.log('Pending records:', pending);
+ *
+ * // Purge all records
+ * const ok = await BackgroundGeolocation.destroyLocations();
+ * console.log('Destroyed all records?', ok);
+ * ```
+ *
+ * @example Custom JSON templates
+ * ```ts
+ * BackgroundGeolocation.ready({
+ *   persistence: {
+ *     locationTemplate: `{
+ *       "lat": <%= latitude %>,
+ *       "lng": <%= longitude %>,
+ *       "ts": "<%= timestamp %>",
+ *       "meta": <%= JSON.stringify(extras) %>
+ *     }`,
+ *     geofenceTemplate: `{
+ *       "id": "<%= identifier %>",
+ *       "action": "<%= action %>",
+ *       "ts": "<%= timestamp %>"
+ *     }`,
+ *   },
+ * });
+ * ```
+ *
  * @category Config
  */
 export interface PersistenceConfig {
   /**
    * <!-- doc-id: PersistenceConfig.locationTemplate -->
-   * Optional custom template for rendering {@link Location} JSON request data
-   * in HTTP uploads.
+   * Optional custom ERB template for reshaping {@link Location} JSON in HTTP uploads.
    *
-   * The {@link locationTemplate} is evaluated using
-   * Ruby-style ERB tags:
+   * When set, the SDK evaluates the template string against each location record
+   * before serializing it. Use Ruby-style ERB tags to interpolate field values:
    *
    * ```erb
    * <%= variable_name %>
@@ -228,13 +229,13 @@ export interface PersistenceConfig {
    * });
    * ```
    *
-   * __⚠️ Quoting string data__
+   * ### ⚠️ Warning
    *
-   * The plugin does *not* automatically insert quotes around string values.  
-   * Templates are JSON-encoded **exactly as written**.
+   * The SDK does not automatically insert quotes around string values. Templates
+   * are JSON-encoded exactly as written.
    *
-   * The following will cause a JSON error because `timestamp` is a string
-   * but is rendered unquoted:
+   * The following produces invalid JSON because `timestamp` is a string but is
+   * rendered unquoted:
    *
    * @example
    * ```typescript
@@ -266,7 +267,7 @@ export interface PersistenceConfig {
    * {"timestamp": "2018-01-01T12:01:01.123Z"}
    * ```
    *
-   * __Configured {@link PersistenceConfig.extras | extras}__
+   * #### Configured {@link PersistenceConfig.extras | extras}
    *
    * If {@link extras} are configured, the key/value pairs are merged directly
    * into the rendered location JSON.
@@ -297,7 +298,7 @@ export interface PersistenceConfig {
    * }
    * ```
    *
-   * __Template Tags__
+   * #### Template tags
    *
    * | Tag                    | Type      | Description |
    * |------------------------|-----------|-------------|
@@ -320,7 +321,7 @@ export interface PersistenceConfig {
    * | `is_moving`            | `Boolean` | Device was moving when recorded |
    * | `timestampMeta`        | `Object`  | Timestamp metadata; see {@link GeoConfig.enableTimestampMeta} |
    *
-   * __ℹ️ See also__
+   * **See also**
    * - {@link HttpEvent | HTTP Guide}
    * - {@link geofenceTemplate}
    * - {@link HttpConfig.rootProperty}
@@ -329,23 +330,15 @@ export interface PersistenceConfig {
 
   /**
    * <!-- doc-id: PersistenceConfig.geofenceTemplate -->
-   * Optional custom template for rendering {@link GeofenceEvent}
-   * JSON request data in HTTP uploads.
+   * Optional custom ERB template for reshaping {@link GeofenceEvent} JSON in HTTP uploads.
    *
-   * The {@link geofenceTemplate} behaves like
-   * {@link locationTemplate}, but includes two
-   * additional tags: `geofence.identifier` and `geofence.action`.
-   *
-   * The template is evaluated using Ruby-style ERB tags:
+   * Behaves like {@link locationTemplate} but includes two additional tags:
+   * `geofence.identifier` and `geofence.action`. Use Ruby-style ERB tags to
+   * interpolate field values:
    *
    * ```erb
    * <%= variable_name %>
    * ```
-   *
-   * **ℹ️ See also**
-   * - {@link locationTemplate}
-   * - {@link HttpConfig.rootProperty}
-   * - {@link HttpEvent | HTTP Guide}
    *
    * @example
    * ```typescript
@@ -365,10 +358,10 @@ export interface PersistenceConfig {
    * });
    * ```
    *
-   * __⚠️ Quoting string data__
+   * ### ⚠️ Warning
    *
-   * The plugin does *not* automatically apply double-quotes around string
-   * data. Templates are JSON-encoded **exactly as written**.
+   * The SDK does not automatically apply double-quotes around string data.
+   * Templates are JSON-encoded exactly as written.
    *
    * @example Incorrect
    * ```typescript
@@ -398,10 +391,9 @@ export interface PersistenceConfig {
    * {"timestamp": "2018-01-01T12:01:01.123Z"}
    * ```
    *
-   * **Template Tags**
+   * #### Template tags
    *
-   * Identical to {@link locationTemplate} with the
-   * following additions:
+   * Identical to {@link locationTemplate} with the following additions:
    *
    * | Tag                      | Type     | Description |
    * |--------------------------|----------|-------------|
@@ -425,30 +417,32 @@ export interface PersistenceConfig {
    * | `mock`                   | `Boolean`| True when location was generated from a mock app |
    * | `is_moving`              | `Boolean`| True if recorded while in *moving* state |
    * | `timestampMeta`          | `Object` | Timestamp metadata; see {@link GeoConfig.enableTimestampMeta} |
+   *
+   * **See also**
+   * - {@link locationTemplate}
+   * - {@link HttpConfig.rootProperty}
+   * - {@link HttpEvent | HTTP Guide}
    */
   geofenceTemplate?: string;
 
   /**
    * <!-- doc-id: PersistenceConfig.maxDaysToPersist -->
-   * Maximum number of days to retain a persisted geolocation record
-   * in the plugin’s on-device SQLite database.
+   * Maximum number of days to retain a persisted record in the SDK's on-device
+   * SQLite database. Defaults to `1` day.
    *
-   * When your server fails to return **HTTP 200 OK**, the SDK will continue
-   * retrying uploads according to your {@link HttpConfig} settings. If a record
-   * remains unuploaded for longer than **maxDaysToPersist**, it will be
-   * permanently discarded to prevent unbounded database growth.
-   *
+   * When your server fails to return a `20x` response, the SDK continues retrying
+   * uploads. If a record remains unuploaded for longer than `maxDaysToPersist` days,
+   * it is permanently discarded to prevent unbounded database growth.
    */
   maxDaysToPersist?: number;
 
   /**
    * <!-- doc-id: PersistenceConfig.maxRecordsToPersist -->
-   * Maximum number of records the SDK may retain in its on-device SQLite
-   * database.
+   * Maximum number of records the SDK may retain in its on-device SQLite database.
+   * Defaults to `-1` (no limit).
    *
-   * A value of `-1` (default) means **no limit**. When a limit is set and the
-   * number of stored records would exceed this value, the oldest records are
-   * purged to make room for the newest.
+   * When a limit is set and the stored record count would exceed it, the oldest
+   * records are purged to make room for the newest.
    *
    * See {@link HttpEvent} for details on upload behavior.
    */
@@ -456,77 +450,80 @@ export interface PersistenceConfig {
 
   /**
    * <!-- doc-id: PersistenceConfig.locationsOrderDirection -->
-   * Sort order for persisted locations.
-   * `'ASC'` = oldest first; `'DESC'` = newest first.
+   * Sort order used when selecting records for upload or returning them from
+   * {@link BackgroundGeolocation.getLocations}. Defaults to `"ASC"` (oldest first).
+   *
+   * - `"ASC"` — oldest records first
+   * - `"DESC"` — newest records first
    */
   locationsOrderDirection?: 'ASC' | 'DESC';
 
   /**
    * <!-- doc-id: PersistenceConfig.persistMode -->
-   * Controls which event types the SDK will persist into its internal SQLite
-   * database: locations, geofences, or both.
+   * Controls which event types the SDK writes to its internal SQLite database.
+   * Defaults to {@link PersistMode.All}.
    *
    * All recorded events are always delivered to their live callbacks
    * ({@link BackgroundGeolocation.onLocation} and
-   * {@link BackgroundGeolocation.onGeofence}). This option only determines
-   * what is written to persistent storage. Events that are *not* persisted are
-   * also *not* eligible for HTTP uploads via {@link HttpConfig.url}.
+   * {@link BackgroundGeolocation.onGeofence}). This setting only determines
+   * what is written to persistent storage. Events that are not persisted are
+   * also not eligible for HTTP uploads via {@link HttpConfig.url}.
    *
-   * | Name                                                     | Description                       |
-   * |----------------------------------------------------------|-----------------------------------|
-   * | {@link PersistMode.All}           | **Default** — persist both geofence and location events. |
-   * | {@link PersistMode.Location}      | Persist **location** events only.                        |
-   * | {@link PersistMode.Geofence}      | Persist **geofence** events only.                        |
-   * | {@link PersistMode.None}          | Persist **nothing**.                                     |
+   * | Value | Description |
+   * |-------|-------------|
+   * | {@link PersistMode.All} | **Default** — persist both location and geofence events. |
+   * | {@link PersistMode.Location} | Persist location events only. |
+   * | {@link PersistMode.Geofence} | Persist geofence events only. |
+   * | {@link PersistMode.None} | Persist nothing. |
    *
-   * __Warning__:  
-   * 
-   * This option is intended for specialized cases. For example, if you need
-   * continuous location tracking via {@link BackgroundGeolocation.start} but
-   * only want to *store* geofence events, configure:
-   * `persistMode: PersistMode.Geofence`.
+   * ### ⚠️ Warning
+   *
+   * This setting is intended for specialized cases. For example, if you need
+   * continuous location tracking via {@link BackgroundGeolocation.start} but only
+   * want to store geofence events, configure `persistMode: PersistMode.Geofence`.
    */
   persistMode?: PersistMode;
 
   /**
    * <!-- doc-id: PersistenceConfig.extras -->
-   * Optional arbitrary key/value pairs merged into **each** recorded location.
+   * Optional arbitrary key/value pairs merged into each recorded location at
+   * write time.
    *
    * These values are persisted and included in all HTTP uploads, making them
-   * ideal for attaching contextual metadata such as `user_id`, `route_id`,
+   * ideal for attaching static contextual metadata such as `user_id`, `route_id`,
    * or `session_id`.
    *
-   * __See also:__  
-   * - 📘 {@link HttpEvent | HTTP Guide}
+   * **See also**
+   * - {@link HttpEvent | HTTP Guide}
    *
    * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   http: {
-   *     url: "https://my-server.com/locations",   
+   *     url: "https://my-server.com/locations",
    *     params: {
-   *       device_id: "abc123"  // <-- appended to root JSON of each POST request
+   *       device_id: "abc123"  // appended to root JSON of each POST request
    *     }
    *   },
    *   persistence: {
    *     extras: {
-   *       route_id: 1234       // <-- merged onto each location record
+   *       route_id: 1234       // merged onto each location record
    *     }
    *   }
    * });
    * ```
    *
-   * __Incoming request at your server:__
+   * The resulting HTTP request body:
    * ```json
    * POST /locations
    * {
-   *   "device_id": "abc123",        // from `params`
+   *   "device_id": "abc123",
    *   "location": {
    *     "coords": {
    *       "latitude": 45.51927004945047,
    *       "longitude": -73.61650072045029
    *     },
-   *     "extras": {                 // from `extras`
+   *     "extras": {
    *       "route_id": 1234
    *     }
    *   }
@@ -537,19 +534,17 @@ export interface PersistenceConfig {
 
   /**
    * <!-- doc-id: PersistenceConfig.disableProviderChangeRecord -->
-   * __Android-only__  
-   * Disable the automatic insertion of a synthetic “provider-change” location
-   * into the SDK’s SQLite database (and its subsequent HTTP upload).
+   * Disables the automatic insertion of a synthetic "provider-change" location
+   * into the SDK's SQLite database and its subsequent HTTP upload. [Android only]
    *
-   * By default, when an {@link BackgroundGeolocation.onProviderChange} event fires, the Android SDK
-   * records a special location documenting *when* and *where* the device’s
-   * location-services state changed (e.g., GPS disabled).  
-   * This behavior historically existed to support platforms with limited or
-   * unreliable Headless Task implementations (e.g., Cordova, Capacitor).
+   * By default, when an {@link BackgroundGeolocation.onProviderChange} event fires,
+   * the Android SDK records a special location documenting when and where the
+   * device's location-services state changed (e.g., GPS disabled). This behavior
+   * historically existed to support platforms with limited or unreliable Headless
+   * Task implementations (e.g., Cordova, Capacitor).
    *
-   * Some developers have strict server-side JSON schemas or use
-   * {@link locationTemplate}, making it impossible to accept the automatically
-   * injected `provider` field. In these cases, set this flag to `true`.
+   * Set this to `true` if your server-side JSON schema or {@link locationTemplate}
+   * cannot accommodate the automatically injected `provider` field.
    *
    * ![](https://www.dropbox.com/s/ljacoquuuv5sd5r/disableProviderChangeRecord.png?dl=1)
    *
