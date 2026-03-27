@@ -1,25 +1,63 @@
 /**
  * <!-- doc-id: Vertices -->
- * A list of vertices defining a Polygon geofence
- * 
- * See {@link Geofence.vertices}
+ * An array of `[latitude, longitude]` pairs defining a polygon geofence.
+ *
+ * See {@link Geofence.vertices}.
  */
 export type Vertices = [number, number][];
 
 /**
  * <!-- doc-id: Geofence -->
- * The Background Geolocation SDK implements the native iOS and Android Geofencing APIs.
+ * A geofence definition for monitoring circular or polygon regions.
  *
- * __ℹ️ Note:__
- * - Native iOS & Android API support only *circular* geofences, however the plugin does implement a custom mechanism for handling *Polygon Geofences*; see {@link Geofence.vertices}.
- * - The minimum reliable {@link Geofence.radius} is `200` meters.
- * - The native geofencing API for both iOS and Android *require* the user authorize {@link GeoConfig.locationAuthorizationRequest} **`Always`** &mdash; **`When in Use`** will **not** work.
+ * The SDK implements the native iOS and Android Geofencing APIs, extended
+ * with polygon support and a proximity-based infinite-geofencing system that
+ * overcomes the platform limits of 20 (iOS) and 100 (Android) simultaneous
+ * geofences.
  *
- * __Adding Geofences__
+ * ### Contents
+ * - [Overview](#overview)
+ * - [Adding geofences](#adding-geofences)
+ * - [Listening for events](#listening-for-events)
+ * - [Polygon geofencing](#polygon-geofencing)
+ * - [Infinite geofencing](#infinite-geofencing)
+ * - [Removing geofences](#removing-geofences)
+ * - [Geofences-only mode](#geofences-only-mode)
+ * - [Examples](#examples)
  *
- * Adding a single geofence with {@link BackgroundGeolocation.addGeofence}.
- * 
- * @example Single Geofence:
+ * ---
+ *
+ * ### Overview
+ *
+ * | Field | Required | Description |
+ * |-------|:--------:|-------------|
+ * | {@link identifier} | ✅ | Unique name for this geofence. |
+ * | {@link latitude} | ✅* | Center latitude (*omit for polygon geofences). |
+ * | {@link longitude} | ✅* | Center longitude (*omit for polygon geofences). |
+ * | {@link radius} | ✅* | Radius in meters (*omit for polygon geofences). |
+ * | {@link notifyOnEntry} | — | Fire event on entry. |
+ * | {@link notifyOnExit} | — | Fire event on exit. |
+ * | {@link notifyOnDwell} | — | Fire event after loitering for {@link loiteringDelay} ms. |
+ * | {@link vertices} | — | Polygon geofence vertices (replaces lat/lng/radius). |
+ * | {@link extras} | — | Arbitrary key-value metadata posted with each event. |
+ *
+ * ### ⚠️ Warning
+ *
+ * Both platforms require {@link GeoConfig.locationAuthorizationRequest} to be
+ * `"Always"`. Geofencing does **not** work with `"WhenInUse"` only.
+ *
+ * ---
+ *
+ * ### Adding geofences
+ *
+ * Use {@link BackgroundGeolocation.addGeofence} for a single geofence, or
+ * {@link BackgroundGeolocation.addGeofences} for bulk inserts (approximately
+ * 10× faster than inserting individually).
+ *
+ * If a geofence with the same {@link identifier} already exists in the
+ * database, it is replaced.
+ *
+ * @example Single geofence
  * ```typescript
  * BackgroundGeolocation.addGeofence({
  *   identifier: "Home",
@@ -28,19 +66,11 @@ export type Vertices = [number, number][];
  *   longitude: -73.61678581,
  *   notifyOnEntry: true,
  *   notifyOnExit: true,
- *   extras: {
- *     route_id: 1234
- *   }
- * }).then((success) => {
- *   console.log("[addGeofence] success");
- * }).catch((error) => {
- *   console.log("[addGeofence] FAILURE: ", error);
+ *   extras: { route_id: 1234 }
  * });
  * ```
  *
- * Adding multiple geofences with {@link BackgroundGeolocation.addGeofences}.
- * 
- * @example Multiple Geofences
+ * @example Multiple geofences
  * ```typescript
  * await BackgroundGeolocation.addGeofences([{
  *   identifier: "Home",
@@ -55,160 +85,151 @@ export type Vertices = [number, number][];
  *   longitude: -73.71678582,
  *   notifyOnEntry: true
  * }]);
- * console.log("[addGeofences] success");
- * 
  * ```
  *
- * __ℹ️ Note:__ Adding a geofence having an {@link Geofence.identifier} which already exists within the SDK geofence database will cause the previous record to be destroyed and the new one inserted.
+ * ---
  *
+ * ### Listening for events
  *
- * __Listening for Geofence Events__
+ * Subscribe to geofence transitions with {@link BackgroundGeolocation.onGeofence}.
+ * Subscribe to changes in the actively monitored set with
+ * {@link BackgroundGeolocation.onGeofencesChange}.
  *
- * Listen to geofence events with {@link BackgroundGeolocation.onGeofence}.
- *
- * @example 
+ * @example
  * ```typescript
- * // Listen for geofence events.
- * BackgroundGeolocation.onGeofence(geofence => {
- *   console.log("[geofence] ", geofence.identifier, geofence.action);
+ * BackgroundGeolocation.onGeofence((event) => {
+ *   console.log("[onGeofence]", event.identifier, event.action);
+ * });
+ *
+ * BackgroundGeolocation.onGeofencesChange((event) => {
+ *   const on = event.on;   // newly activated geofences
+ *   const off = event.off; // deactivated geofence identifiers
+ *
+ *   on.forEach((geofence) => createGeofenceMarker(geofence));
+ *   off.forEach((identifier) => removeGeofenceMarker(identifier));
  * });
  * ```
- * 
- * __Polygon Geofencing__
  *
- * The Background Geolocation SDK supports *Polygon Geofences* (Geofences of any shape).  See API docs {@link Geofence.vertices}.
- * * ℹ️ __*Polygon Geofencing*__ is [sold as a separate add-on](https://shop.transistorsoft.com/products/polygon-geofencing) (fully functional in *DEBUG* builds).
- *  
+ * ### Note
+ *
+ * When all geofences are removed, {@link BackgroundGeolocation.onGeofencesChange}
+ * fires with empty arrays for both `on` and `off`.
+ *
+ * ---
+ *
+ * ### Polygon geofencing
+ *
+ * The SDK supports polygon geofences of any shape via the {@link vertices}
+ * field. Polygon geofencing is
+ * [sold as a separate add-on](https://shop.transistorsoft.com/products/polygon-geofencing)
+ * but is fully functional in DEBUG builds.
+ *
+ * When defining a polygon geofence, omit {@link latitude}, {@link longitude},
+ * and {@link radius} — the SDK calculates the minimum enclosing circle
+ * automatically from the polygon geometry.
  *
  * ![](https://dl.dropbox.com/scl/fi/sboshfvar0h41azmb4tyv/polygon-geofencing-parc-outremont-400.png?rlkey=d2s0n3zbzu72e7s2gch9kxd4a&dl=1)
  * ![](https://dl.dropbox.com/scl/fi/xz48myvjnpp8ko0l2tufg/polygon-geofencing-parc-lafontaine-400.png?rlkey=sf20ns959uj0a0fq0atmj55bz&dl=1)
- *  
  *
- * __Infinite Geofencing__
+ * @example Polygon geofence
+ * ```typescript
+ * BackgroundGeolocation.addGeofence({
+ *   identifier: "Park",
+ *   notifyOnEntry: true,
+ *   notifyOnExit: true,
+ *   vertices: [
+ *     [45.518947279987714, -73.6049889209514],
+ *     [45.5182711292279,   -73.60338649600598],
+ *     [45.517082240237634, -73.60432670908212],
+ *     [45.51774871402813,  -73.60604928622278]
+ *   ]
+ * });
+ * ```
  *
- * The Background Geolocation SDK contains unique and powerful Geofencing features that allow you to monitor any number of circular geofences you wish (thousands even),
- * in spite of limits imposed by the native platform APIs (**20 for iOS; 100 for Android**).
+ * ---
  *
- * The SDK achieves this by storing your geofences in its database, using a [geospatial query](https://en.wikipedia.org/wiki/Spatial_query) to determine those geofences 
- * in proximity ({@link GeoConfig.geofenceProximityRadius}), activating only those geofences closest to the device's current location (according the limit imposed by the corresponding platform).
+ * ### Infinite geofencing
  *
- * - When the device is determined to be moving, the plugin periodically queries for geofences within the {@link GeoConfig.geofenceProximityRadius} (eg. every minute) using the latest recorded location.  This geospatial query is **very fast**, even with tens-of-thousands geofences in the database.
- * - The SDK **enforces** a *minimum* {@link GeoConfig.geofenceProximityRadius} of `1000` meters.
- * - In the following image, the *green* geofences within {@link GeoConfig.geofenceProximityRadius} are *actively* monitored.  The *grey* geofences outside {@link GeoConfig.geofenceProximityRadius} still exist within the SDK's database but are *not* actively being monitored.
+ * The SDK stores all geofences in its database and uses a
+ * [geospatial query](https://en.wikipedia.org/wiki/Spatial_query) to
+ * activate only the nearest geofences within
+ * {@link GeoConfig.geofenceProximityRadius}, staying within the platform
+ * limit. As the device moves, the active set is periodically refreshed.
+ *
+ * - The minimum {@link GeoConfig.geofenceProximityRadius} is enforced at `1000` meters.
+ * - Geofences within the radius (green in the diagram below) are actively monitored.
+ * - Geofences outside the radius (grey) remain in the database but are dormant.
  *
  * ![](https://dl.dropboxusercontent.com/s/7sggka4vcbrokwt/geofenceProximityRadius_iphone6_spacegrey_portrait.png?dl=1)
  *
+ * ---
  *
- * __Listening for changes in the actively-monitored set-of-geofences.__
+ * ### Removing geofences
  *
- * As the SDK periodically queries for geofences within the {@link GeoConfig.geofenceProximityRadius}, you can listen for changes in the actively-monitored 
- * geofences using the event {@link BackgroundGeolocation.onGeofencesChange}.  This event will let you know those geofences which have *begun* to be *actively monitored*
- * ({@link GeofencesChangeEvent.on}) in addition to those which just *ceased* to be actively monitored ({@link GeofencesChangeEvent.off}).
+ * Geofences persist in the SDK's database until explicitly removed. If
+ * {@link AppConfig.stopOnTerminate} is `false` and
+ * {@link AppConfig.startOnBoot} is `true`, geofences continue to be
+ * monitored across app termination and device reboots.
  *
- * @example
+ * @example Remove a single geofence
  * ```typescript
- * BackgroundGeolocation.onGeofencesChange((event) => {
- *   let on = event.on;     //<-- new geofences activated.
- *   let off = event.off; //<-- geofences that were just de-activated.
+ * await BackgroundGeolocation.removeGeofence("Home");
+ * ```
  *
- *   // Create map circles
- *   on.forEach((geofence) => {
- *     createGeofenceMarker(geofence)
- *   });
+ * @example Remove all geofences
+ * ```typescript
+ * await BackgroundGeolocation.removeGeofences();
+ * ```
  *
- *   // Remove map circles
- *   off.forEach((identifier) => {
- *     removeGeofenceMarker(identifier);
- *   });
+ * @example Fetch all stored geofences
+ * ```typescript
+ * const geofences = await BackgroundGeolocation.getGeofences();
+ * console.log("[getGeofences]", geofences);
+ * ```
+ *
+ * ---
+ *
+ * ### Geofences-only mode
+ *
+ * Call {@link BackgroundGeolocation.startGeofences} instead of
+ * {@link BackgroundGeolocation.start} to monitor geofences without continuous
+ * location tracking. Use {@link GeoConfig.geofenceModeHighAccuracy} to
+ * improve event responsiveness at the cost of higher power usage.
+ *
+ * The SDK can switch between full tracking and geofences-only mode at any
+ * time by calling the corresponding start method.
+ *
+ * @example Geofences-only mode
+ * ```typescript
+ * BackgroundGeolocation.onGeofence((event) => {
+ *   console.log("[onGeofence]", event);
  * });
- * ```
- * 
- * __⚠️ Note:__
- * - When **all** geofences have been removed, the {@link GeofencesChangeEvent} will provide empty lists for both {@link GeofencesChangeEvent.on} & {@link GeofencesChangeEvent.off}.
  *
- * __Removing Geofences__
- *
- * Once a geofence has been inserted into the SDK's database using {@link BackgroundGeolocation.addGeofence} or {@link BackgroundGeolocation.addGeofences}, they will be monitored *forever*
- * (as long as the plugin remains `State.enabled == true`).  If you've configured {@link AppConfig.stopOnTerminate} __`false`__ and {@link AppConfig.startOnBoot} __`true`__, geofences will continue to 
- * be monitored even if the application is terminated or device rebooted.
- * 
- * To cease monitoring a geofence or *geofences*, you must *remove* them from the SDK's database (or call {@link BackgroundGeolocation.stop}).
- *
- * - Removing a single geofence by {@link Geofence.identifier} with {@link BackgroundGeolocation.removeGeofence}:
- * @example
- * ```typescript
- * BackgroundGeolocation.removeGeofence("HOME").then(success => {
- *   console.log("[removeGeofence] success");
- * })
+ * await BackgroundGeolocation.ready({
+ *   http: { url: "https://your.server.com/geofences", autoSync: true },
+ *   geolocation: { geofenceModeHighAccuracy: true }
+ * });
+ * BackgroundGeolocation.startGeofences();
  * ```
  *
- * - Removing *all* geofences with {@link BackgroundGeolocation.removeGeofences}:
- * @example
+ * ---
+ *
+ * ### Examples
+ *
+ * @example Toggle between location tracking and geofences-only mode
  * ```typescript
- * BackgroundGeolocation.removeGeofences().then(success => {
- *   console.log("[removeGeofences] all geofences have been destroyed");
- * })
- * ```
- *
- * __Querying Geofences__
- *
- * Use the method {@link BackgroundGeolocation.getGeofences} to retrieve the entire Array of {@link Geofence} stored in the SDK's database.
- *
- * @example
- * ```typescript
- * BackgroundGeolocation.getGeofences().then(geofences => {
- *   console.log("[getGeofences] ", geofences);
- * })
- * ```
- *
- * __Monitoring *only* geofences__
- *
- * The BackgroundGeolocation SDK allows you to optionally monitor *only* geofences without constant location-tracking.  To engage *geofences-only* mode, 
- * use the method {@link BackgroundGeolocation.startGeofences} instead of {@link BackgroundGeolocation.start}.
- *
- * Use option {@link GeoConfig.geofenceModeHighAccuracy}:true to improve the responsiveness of geofence events.
- *
- * @example
- * ```typescript
- * BackgroundGeolocation.onGeofence(geofence => {
- *   console.log("[geofence] ", geofence);
- * })
- *
- * BackgroundGeolocation.ready({
- *   http: {
- *     url: "http://your.server.com/geofences",
- *     autoSync: true,
- *   },
- *   geolocation: {
- *     geofenceModeHighAccuracy: true   // <-- consumes more power; default is false.
- *   }
- * }, state => {
- *   // engage geofences-only mode:
- *   BackgroundGeolocation.startGeofences();
- * })
- * ```
- *
- * __Toggling between tracking-modes {@link BackgroundGeolocation.start} and {@link BackgroundGeolocation.startGeofences}__
- *
- * The SDK can easily be toggled between {@link State.trackingMode} simply by executing the corresponding {@link BackgroundGeolocation.start} or {@link BackgroundGeolocation.startGeofences} methods.
- *
- * @example
- * ```typescript
- * // Listen to geofence events
- * BackgroundGeolocation.onGeofence(geofence => {
- *   console.log("[geofence] ", geofence);
- *   if (geofence.identifier == "DANGER_ZONE") {
- *     if (geofence.action == "ENTER") {
- *       // Entering the danger-zone, we want to aggressively track location.
+ * BackgroundGeolocation.onGeofence((event) => {
+ *   if (event.identifier === "DANGER_ZONE") {
+ *     if (event.action === "ENTER") {
+ *       // Entering the zone — switch to full location tracking.
  *       BackgroundGeolocation.start();
- *     } else if (geofence.action == "EXIT") {
- *       // Exiting the danger-zone, we resume geofences-only tracking.
+ *     } else if (event.action === "EXIT") {
+ *       // Exiting the zone — return to geofences-only mode.
  *       BackgroundGeolocation.startGeofences();
  *     }
  *   }
- * })
+ * });
  *
- * // Add a geofence.
  * BackgroundGeolocation.addGeofence({
  *   identifier: "DANGER_ZONE",
  *   radius: 1000,
@@ -216,159 +237,172 @@ export type Vertices = [number, number][];
  *   longitude: -73.61678581,
  *   notifyOnEntry: true,
  *   notifyOnExit: true,
- * })
+ * });
  *
- * // Ready the plugin.
- * BackgroundGeolocation.ready({
+ * await BackgroundGeolocation.ready({
  *   geolocation: {
- *     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+ *     desiredAccuracy: BackgroundGeolocation.DesiredAccuracy.High,
  *     distanceFilter: 10,
  *   },
- *   http: {
- *     url: "http://your.server.com/locations",
- *     autoSync: true,
- *   }
- * }, state => {
- *   BackgroundGeolocation.startGeofences();
- * })
+ *   http: { url: "https://your.server.com/locations", autoSync: true }
+ * });
+ * BackgroundGeolocation.startGeofences();
  * ```
- * 
+ *
  * @category Data
  * @category Geofencing
  */
 export interface Geofence {
   /**
    * <!-- doc-id: Geofence.identifier -->
-   * Unique geofence identifier.
+   * Unique identifier for this geofence.
+   *
+   * Used to reference the geofence in events and removal calls. Adding a
+   * geofence with an identifier that already exists replaces the existing one.
    */
   identifier: string;
+
   /**
    * <!-- doc-id: Geofence.latitude -->
-   * Latitude of geofence center
+   * Latitude of the circular geofence center.
+   *
+   * Omit when defining a polygon geofence via {@link vertices} — the SDK
+   * calculates the center automatically.
    */
   latitude: number;
+
   /**
    * <!-- doc-id: Geofence.longitude -->
-   * Longitude of geofence center
+   * Longitude of the circular geofence center.
+   *
+   * Omit when defining a polygon geofence via {@link vertices} — the SDK
+   * calculates the center automatically.
    */
   longitude: number;
+
   /**
    * <!-- doc-id: Geofence.radius -->
-   * Radius of the circular geofence.
+   * Radius of the circular geofence in meters.
    *
-   * ⚠️ The minimum reliable `radius` is __`200`__ meters.  Anything less will likely not cause a geofence to trigger.  
-   * This is documented by Apple [here](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/LocationAwarenessPG/RegionMonitoring/RegionMonitoring.html):
-   * > *"The specific threshold distances are determined by the hardware and the location technologies that are currently available. For example, if WiFi is disabled, region monitoring
-   * is significantly less accurate. However, for testing purposes, __you can assume that the minimum distance is approximately 200 meters__*".
+   * Omit when defining a polygon geofence via {@link vertices} — the SDK
+   * calculates the enclosing radius automatically.
+   *
+   * ### ⚠️ Warning
+   *
+   * The minimum reliable radius is **`200` meters**. Below this threshold,
+   * geofences may not trigger reliably on either platform.
+   *
+   * Apple documents this explicitly:
+   * > *"For testing purposes, you can assume that the minimum distance is
+   * approximately 200 meters."*
    */
   radius: number;
+
   /**
    * <!-- doc-id: Geofence.notifyOnEntry -->
-   * Set `true` to fire event when device *enters* this geofence.
+   * Fire a {@link GeofenceEvent} when the device enters this geofence.
    *
-   * __ℹ️ See also:__
+   * **See also**
    * - {@link GeoConfig.geofenceInitialTriggerEntry}
    */
   notifyOnEntry?: boolean;
+
   /**
    * <!-- doc-id: Geofence.notifyOnExit -->
-   * Set `true` to fire event when device *exits* this geofence.
+   * Fire a {@link GeofenceEvent} when the device exits this geofence.
    */
   notifyOnExit?: boolean;
+
   /**
    * <!-- doc-id: Geofence.notifyOnDwell -->
-   * Set `true` to fire event when device "loiters" within this geofence for {@link loiteringDelay} milliseconds.
+   * Fire a {@link GeofenceEvent} when the device has remained inside this
+   * geofence for {@link loiteringDelay} milliseconds.
    */
   notifyOnDwell?: boolean;
+
   /**
    * <!-- doc-id: Geofence.loiteringDelay -->
-   * Minimum time in *milliseconds* the device must "loiter" within this geofence before {@link notifyOnDwell} event fires.
+   * Minimum time in milliseconds the device must remain inside the geofence
+   * before a {@link notifyOnDwell} event fires. Default `0`.
    */
   loiteringDelay?: number;
+
   /**
    * <!-- doc-id: Geofence.extras -->
-   * Arbitrary key-values appended to the geofence event and posted to your configured {@link HttpConfig.url}.
+   * Arbitrary key-value metadata attached to each geofence event and included
+   * in the payload posted to {@link HttpConfig.url}.
    */
   extras?: Record<string, unknown>;
+
   /**
    * <!-- doc-id: Geofence.vertices -->
-   * Optional: a list of vertices (`[ [lat, lng],...]`) defining a Polygon geofence.  By default, geofences are circular.
-   * 
-   * ℹ️ __*Polygon Geofencing*__ is [sold as a separate add-on](https://shop.transistorsoft.com/products/polygon-geofencing) (fully functional in *DEBUG* builds).
-   *     
-   * When defining a polygon geofence, you do **not** provide {@link latitude}, {@link longitude} or {@link radius} &mdash; those will be automatically calculated based upon the geometry of the polygon.
+   * Polygon geofence vertices as `[[lat, lng], ...]` pairs.
    *
-   * The following image shows polygon geofences on a map:
+   * When provided, the geofence is treated as a polygon rather than a circle.
+   * Omit {@link latitude}, {@link longitude}, and {@link radius} — the SDK
+   * solves the [minimum enclosing circle](https://en.wikipedia.org/wiki/Smallest-circle_problem)
+   * from the vertex geometry and registers that as the native circular geofence.
+   *
+   * When the device enters the enclosing circle, the SDK begins C++ hit-testing
+   * against the polygon at high frequency. When it exits the circle, polygon
+   * monitoring ceases.
+   *
+   * ### Note
+   *
+   * Polygon geofencing is [sold as a separate add-on](https://shop.transistorsoft.com/products/polygon-geofencing)
+   * but is fully functional in DEBUG builds.
    *
    * ![](https://dl.dropbox.com/scl/fi/xzf6yau5wcg1az8fy0lbm/geofencing-polygons-on-map.PNG?rlkey=e82h494msbgt8ngu4s2pjwemb&dl=1)
    *
-   * The *blue polygons* represent the *actual* polygon geofences and the containing *green circles* are traditional circular geofences provided by the native *iOS/Android* Geofencing APIs.  
-   * The background-geolocation SDK automatically calculates the containing, native cirular geofence by solving the [*minimum enclosing circle*](https://en.wikipedia.org/wiki/Smallest-circle_problem) 
-   * for the given {@link vertices}.  This is why you do not provide {@link latitude}, {@link longitude} and {@link radius}.
-   *
-   * - When the device *enters* the containing circular geofence, the SDK uses that as a signal that the device is approaching a polygon.  At this moment, the SDK begins aggressively monitoring the location to perform "hit-testing" upon the polygon using a fast algorithm implemented with C++ code.
-   * - When the device *exits* the containing circular geofence, that's the SDK's signal for it to *cease* monitoring that polygon.
-   *
    * @example
-   * ```javascript
+   * ```typescript
    * BackgroundGeolocation.addGeofence({
-   *   identifier: 'Home',
+   *   identifier: "Home",
    *   notifyOnEntry: true,
    *   notifyOnExit: true,
    *   vertices: [
-   *     [45.518947279987714, -73.6049889209514],  // <-- [lat, lng]
-   *     [45.5182711292279, -73.60338649600598],
+   *     [45.518947279987714, -73.6049889209514],
+   *     [45.5182711292279,   -73.60338649600598],
    *     [45.517082240237634, -73.60432670908212],
-   *     [45.51774871402813, -73.60604928622278]
+   *     [45.51774871402813,  -73.60604928622278]
    *   ]
    * });
-   * ```     
+   * ```
    *
-   * - __Entering / exiting a *cross-shaped* polygon geofence:__
-   * 
    * ![](https://dl.dropbox.com/scl/fi/iorrnrm0zno91jtg0ctse/polygon-geofencing-cross.PNG?rlkey=p4kufqhxgw9jrmuz4vkqisprw&dl=1)
-   * 
-   * - __Entering / exiting a park:__
-   * 
    * ![](https://dl.dropbox.com/scl/fi/qvg9n3s5iacje5szgcqfv/polygon-geofencing-parc-outremont.PNG?rlkey=c6iax7a19db2v6xdxf18k2a7k&dl=1)
-   * 
-   * - __Entering / exiting a diamond-shaped polygon:__
-   * 
    * ![](https://dl.dropbox.com/scl/fi/29m3xwb7tm0532mthgjfy/polygon-geofencing-diamond.PNG?rlkey=9ucc5hs7460ig7226iutas4cw&dl=1)
-   * 
-   * - __Designing a polygon geofence around a park using the demo app:__
-   * 
-   * ![](https://dl.dropbox.com/scl/fi/806mxnz9cdfd4ely8uwfe/polygon-geofencing-parc-lafontaine.PNG?rlkey=yrlbfisx8o5itfz6h0d0inel1&dl=1)
-   * 
    */
   vertices?: Vertices;
 
-  // Runtime fields
+  // Runtime fields — populated by the SDK; do not set manually.
 
-  /**   
+  /**
    * <!-- doc-id: Geofence.entryState -->
-   * Runtime state:  The current entry-state of the geofence.
-   * 
-   * - 0 = OUTSIDE
-   * - 1 = INSIDE
-   * 
-   * ⚠️ Readonly
+   * Current entry state of the geofence.
+   *
+   * | Value | State |
+   * |------:|-------|
+   * | `0` | Outside |
+   * | `1` | Inside |
+   *
+   * @readonly
    */
-  readonly entryState?: number;          // 0=unknown, 1=inside, 2=outside
+  readonly entryState?: number;
+
   /**
    * <!-- doc-id: Geofence.hits -->
-   * Runtime state:  Number of times this geofence has been triggered.
-   * 
-   * ⚠️ Readonly
+   * Number of times this geofence has been triggered since it was added.
+   *
+   * @readonly
    */
-  readonly hits?: number;                // number of triggers
-  /**   
+  readonly hits?: number;
+
+  /**
    * <!-- doc-id: Geofence.stateUpdatedAt -->
-   * Runtime state:  Epoch timestamp (seconds) of last geofence transition.
-   * 
-   * ⚠️ Readonly
+   * Epoch timestamp in seconds of the last geofence transition.
+   *
+   * @readonly
    */
-  readonly stateUpdatedAt?: number;      // epoch timestamp (seconds)
-
+  readonly stateUpdatedAt?: number;
 }
-
