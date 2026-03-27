@@ -1,53 +1,77 @@
 /**
  * <!-- doc-id: CurrentPositionRequest -->
- * Options provided to {@link BackgroundGeolocation.getCurrentPosition}.
+ * Options for {@link BackgroundGeolocation.getCurrentPosition}.
+ *
+ * All fields are optional. The SDK always requests location from the native
+ * API at maximum accuracy ({@link DesiredAccuracy.High}), regardless of the
+ * `desiredAccuracy` threshold set here.
  *
  * @example
  * ```typescript
- * let location = await BackgroundGeolocation.getCurrentPosition({
- *   timeout: 30,          // 30 second timeout to fetch location
- *   persist: true,        // Defaults to state.enabled
- *   maximumAge: 5000,     // Accept the last-known-location if not older than 5000 ms.
- *   desiredAccuracy: 10,  // Try to fetch a location with an accuracy of `10` meters.
- *   samples: 3,           // How many location samples to attempt.
- *   extras: {             // Custom meta-data.
- *     "route_id": 123
+ * const location = await BackgroundGeolocation.getCurrentPosition({
+ *   timeout: 30,          // seconds before giving up
+ *   maximumAge: 5000,     // accept a cached fix up to 5000 ms old
+ *   desiredAccuracy: 10,  // stop sampling when accuracy ≤ 10 m
+ *   samples: 3,           // take up to 3 samples and pick the best
+ *   extras: {
+ *     route_id: 123
  *   }
  * });
  * ```
+ *
  * @category Primary API
  */
 export interface CurrentPositionRequest {
   /**
    * <!-- doc-id: CurrentPositionRequest.samples -->
-   * Sets the maximum number of location-samples to fetch before returning the best possible location to your `callback`.  Default is `3`.  Only the final Location will be persisted.
+   * Maximum number of location samples to collect before returning the most
+   * accurate result. Default `3`. Only the final selected location is persisted.
    */
   samples?: number;
+
   /**
    * <!-- doc-id: CurrentPositionRequest.desiredAccuracy -->
-   * Sets the desired accuracy of location you're attempting to fetch. When a location having `accuracy <= desiredAccuracy` is retrieved, the plugin will stop sampling and immediately return that location. Defaults to your configured {@link GeoConfig.stationaryRadius}.
-   * 
-   * __Note__:  This `desiredAccuracy` does not have the same meaning as {@link GeoConfig.desiredAccuracy}.  The `desiredAccuracy` in this context is a threshold which the plugin uses to determine when to stop sampling locations.  For example, if you set `desiredAccuracy: 10`, the plugin will continue to fetch locations until it retrieves one with an accuracy of `10` meters or better.  `getCurrentPosition` __always__ requests locations from the native location API using the highest possible accuracy ({@link DesiredAccuracy.High}).
+   * Accuracy threshold in meters. The SDK stops sampling as soon as it
+   * receives a location with `accuracy ≤ desiredAccuracy` and returns it
+   * immediately. Defaults to {@link GeoConfig.stationaryRadius}.
+   *
+   * ### Note
+   *
+   * This value is a **stopping threshold**, not a hardware accuracy setting.
+   * The SDK always requests locations at {@link DesiredAccuracy.High} from
+   * the native API regardless of this value.
    */
   desiredAccuracy?: number;
+
   /**
    * <!-- doc-id: CurrentPositionRequest.timeout -->
-   * Location-timeout in `seconds`.  Default: `30`.  If the timeout expires before a [[Location]] is retrieved, a [[LocationError]] will fire.
+   * Maximum time in **seconds** to wait for a location fix. Default `30`.
+   *
+   * If the timeout expires before a satisfactory location is found, the
+   * Promise rejects with a {@link LocationError}.
    */
   timeout?: number;
+
   /**
    * <!-- doc-id: CurrentPositionRequest.persist -->
-   * Defaults to `true` when plugin is `enabled`; `false`, otherwise.  Set `false` to disable persisting the retrieved Location in the plugin's SQLite database.
+   * Whether to persist the returned location to the SDK's SQLite database
+   * and upload it to {@link HttpConfig.url}. Defaults to `true` when the
+   * SDK is enabled; `false` when stopped.
    */
   persist?: boolean;
+
   /**
    * <!-- doc-id: CurrentPositionRequest.maximumAge -->
-   * Accept the last-recorded-location if no older than supplied value in `milliseconds`.  Default is `0`.
+   * Accept the most recently recorded location if it is no older than this
+   * value in **milliseconds**. Default `0` (always fetch a fresh fix).
    */
   maximumAge?: number;
+
   /**
    * <!-- doc-id: CurrentPositionRequest.extras -->
-   * Optional meta-data to attach to the location. These `extras` will be merged to the configured {@link PersistenceConfig.extras} and persisted / POSTed to your server (if you've configured a {@link HttpConfig.url}).
+   * Optional key-value metadata to attach to the returned location. Merged
+   * with any configured {@link PersistenceConfig.extras} before persisting
+   * or uploading to {@link HttpConfig.url}.
    */
   extras?: Record<string, any>;
 }
