@@ -114,10 +114,9 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  * Additional arbitrary fields required by your authorization server may also
  * be included.
  *
- * `refreshHeaders` are sent with each refresh request. The default is
- * `{"Authorization": "Bearer {accessToken}"}`, where `{accessToken}` is
- * replaced with the current access token. Pass an empty object `{}` to send
- * no headers with the refresh request.
+ * If `refreshHeaders` is not set, the SDK automatically injects
+ * `Authorization: Bearer {accessToken}` into each refresh request. Pass an
+ * empty object `{}` to send no headers with the refresh request.
  *
  * ---
  *
@@ -151,11 +150,7 @@ export interface AuthorizationConfig {
    * Defaults to `"JWT"`.
    *
    * - `"JWT"` — sends the token as `Authorization: Bearer <token>`.
-   *
-   * <!-- TODO: human review — native source (TSAuthorizationConfig.h) documents
-   *      a second strategy "SAS" that sends the token as `Authorization: <token>`
-   *      (no "Bearer " prefix). Verify whether "SAS" is production-ready and
-   *      add documentation if so. -->
+   * - `"SAS"` — sends the token as `Authorization: <token>` (no `Bearer` prefix).
    */
   strategy: string;
 
@@ -248,12 +243,12 @@ export interface AuthorizationConfig {
 
   /**
    * <!-- doc-id: AuthorizationConfig.refreshHeaders -->
-   * HTTP headers sent with each request to {@link refreshUrl}. Defaults to
-   * `{"Authorization": "Bearer {accessToken}"}`.
+   * HTTP headers sent with each request to {@link refreshUrl}.
    *
-   * The template variable `{accessToken}` is replaced with the current access
-   * token at request time. To send no headers with refresh requests, provide
-   * an empty object `{}`.
+   * If not set, the SDK automatically injects
+   * `Authorization: Bearer {accessToken}` into refresh requests, where
+   * `{accessToken}` is replaced with the current access token. To send no
+   * headers with refresh requests, provide an empty object `{}`.
    *
    * @example
    * ```ts
