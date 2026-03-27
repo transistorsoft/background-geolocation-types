@@ -923,7 +923,7 @@ export interface GeoConfig {
    *
    * iOS stop-detection timing:
    *
-   * ![](https://dl.dropboxusercontent.com/s/ojjdfkmua15pskh/ios-stop-detection-timing.png?dl=1)
+   * ![](https://dl.dropbox.com/scl/fi/fhkz97f9jl4omnv7y30by/ios-stop-detection-timing.png?rlkey=cvs9h2nnngmmz9bwh1vg3796g&dl=1)
    *
    * #### Android
    * When `true`, Android location services never turn off automatically. You must
