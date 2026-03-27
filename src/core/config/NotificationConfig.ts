@@ -2,15 +2,31 @@ import { NotificationPriority } from '../../enums/NotificationPriority';
 
 /**
  * <!-- doc-id: NotificationConfig -->
- * __Android foreground notification__
+ * Foreground service notification configuration for the background geolocation SDK. [Android only]
  *
- * Android requires a persistent notification whenever the SDK runs its
- * foreground service. This notification is shown in the system status bar
- * while tracking is active.
+ * Android requires a persistent notification whenever the SDK runs its foreground
+ * service. `NotificationConfig` controls that notification's content, appearance,
+ * and behaviour while tracking is active.
  *
  * ![](https://dl.dropbox.com/s/acuhy5cu4p7uofr/android-foreground-service-default.png?dl=1)
  *
+ * ### Contents
+ * - [Overview](#overview)
+ * - [Custom layout](#custom-layout)
+ *
+ * ---
+ *
+ * ### Overview
+ *
  * Configure this via {@link NotificationConfig} on {@link AppConfig.notification}.
+ *
+ * | Area | Keys | Notes |
+ * |------|------|-------|
+ * | **Content** | `title`, `text`, `color` | Notification text and accent color. |
+ * | **Icons** | `smallIcon`, `largeIcon` | Resource references in `type/name` format. |
+ * | **Channel** | `channelName`, `channelId` | Android O+ notification channel settings. |
+ * | **Behaviour** | `sticky`, `priority` | Persistence and ordering. |
+ * | **Custom layout** | `layout`, `strings`, `actions` | Custom XML layout with text fields and buttons. |
  *
  * @example
  * ```ts
@@ -34,85 +50,76 @@ import { NotificationPriority } from '../../enums/NotificationPriority';
  * });
  * ```
  *
- * __Custom Notification Layouts__
+ * ---
  *
- * Supply a custom Android Layout XML file using {@link NotificationConfig.layout}.
- * This allows complete control over the appearance of the foreground notification.
+ * ### Custom layout
  *
- * See the guide:  
- * **Android Custom Notification Layout** — (github:wiki/Android-Custom-Notification-Layout)
+ * Supply a custom Android Layout XML file via {@link NotificationConfig.layout} for
+ * complete control over the notification appearance.
+ *
+ * See the [Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout)
+ * guide for full setup instructions.
  *
  * @category Config
  */
 export interface NotificationConfig {
   /**
    * <!-- doc-id: NotificationConfig.priority -->
-   * __Android notification priority__
+   * Controls the position and visibility of the foreground notification in the system
+   * shade. Defaults to `PRIORITY_LOW` (`-1`).
    *
-   * Android requires a persistent foreground-service notification.  
-   * The `priority` option controls both:
+   * `priority` affects both the ordering of the notification in the notification shade
+   * and the position/visibility of the small status-bar icon.
    *
-   * - The **order** of the notification in the system shade.
-   * - The **position/visibility** of the small status-bar icon.
-   *
-   * The following values are defined as static constants on
-   * {@link BackgroundGeolocation}:
-   *
-   * | Value                                                     | Description                                                                                              |
-   * |-----------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-   * | {@link NotificationPriority.Default} | Weighted toward the top of the notification list; status-bar icon left-aligned.                          |
-   * | {@link NotificationPriority.High}    | Strongly weighted to the top; icon strongly left-aligned.                                                |
-   * | {@link NotificationPriority.Low}     | Weighted toward the bottom; icon right-aligned.                                                          |
-   * | {@link NotificationPriority.Max}     | Equivalent to `NOTIFICATION_PRIORITY_HIGH`.                                                              |
-   * | {@link NotificationPriority.Min}     | Strongly weighted to the bottom; icon hidden.                                                             |
+   * | Value | Description |
+   * |-------|-------------|
+   * | {@link NotificationPriority.Default} | Weighted toward the top; status-bar icon left-aligned. |
+   * | {@link NotificationPriority.High} | Strongly weighted to the top; icon strongly left-aligned. |
+   * | {@link NotificationPriority.Low} | Weighted toward the bottom; icon right-aligned. |
+   * | {@link NotificationPriority.Max} | Equivalent to `NOTIFICATION_PRIORITY_HIGH`. |
+   * | {@link NotificationPriority.Min} | Strongly weighted to the bottom; icon hidden. |
    *
    * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
-   *     foregroundService: true,
    *     notification: {
    *       priority: NotificationPriority.High
    *     }
    *   }
    * });
    * ```
-   * 
    */
   priority?: NotificationPriority;
 
   /**
    * <!-- doc-id: NotificationConfig.sticky -->
-   * Configure the Android Foreground Service icon and notification to be displayed __always__.  Defaults to `false`.
+   * Keeps the foreground service notification visible at all times, regardless of
+   * motion state. Defaults to `false`.
    *
-   * The default behaviour is for the notification to be shown only while the SDK detects the device to be *moving*.  
-   * Some developers desire to provide full-disclosure to their users when the SDK has been enabled.
+   * By default the notification is shown only while the SDK detects the device is
+   * moving. Set to `true` to show the notification continuously — for example, when
+   * full transparency to users is a requirement.
    */
   sticky?: boolean;
 
   /**
    * <!-- doc-id: NotificationConfig.title -->
-   * Configure the *title* of the persistent notification in the Notification Bar.
-   *
-   * Defaults to the application name from `AndroidManifest`.  Android requires a persistent notification for foreground-services.  This will configure the **title** of that notification. 
+   * Title of the foreground service notification. Defaults to `"Background Geolocation"`.
    */
   title?: string;
 
   /**
    * <!-- doc-id: NotificationConfig.text -->
-   * Configure the *text* of the persistent notification in the Notification Bar.
-   *
-   * Defaults to *"Location service activated"*.  Android requires a persistent notification for foreground-services.  This will configure the **text** of that notification.
+   * Body text of the foreground service notification. Defaults to `"Tracking location"`.
    */
   text?: string;
 
   /**
    * <!-- doc-id: NotificationConfig.color -->
-   * Configure the *color* of the persistent notification icon in the Notification Bar.
+   * Accent color of the notification icon. Not set by default.
    *
-   * Defaults to `null`.  Android requires a persistent notification for foreground-services.  This will configure the **color** of the notification **icon** (API >= 21).
-   *
-   * Supported formats are:
+   * Applies to API level 21 and above. Supported formats:
    * - `#RRGGBB`
    * - `#AARRGGBB`
    */
@@ -120,107 +127,103 @@ export interface NotificationConfig {
 
   /**
    * <!-- doc-id: NotificationConfig.smallIcon -->
-   * Configure the *small icon* of the persistent notification in the Notification Bar.
+   * Small status-bar icon for the foreground notification. Defaults to
+   * `"mipmap/ic_launcher"` (the app launcher icon).
    *
-   * Android requires a persistent notification in the Notification Bar.  This allows you customize that icon.  Defaults to your application icon.
+   * ### ⚠️ Warning
+   * - Specify the resource **type** (`drawable` or `mipmap`) followed by the icon
+   *   name in the format `type/icon_name`.
+   * - Do not include the file extension (e.g. `.png`).
    *
-   * __⚠️ Warning:__
-   * - You must specify the **`type`** (`drawable|mipmap`) of resource you wish to use in the following format: `{type}/icon_name`
-   * - Do not append the file-extension (eg: `.png`)
+   * **See also**
+   * - {@link largeIcon}
    *
    * @example
-   * ```typescript
-   * // 1. drawable
+   * ```ts
+   * // drawable resource
    * BackgroundGeolocation.ready({
    *   app: {
    *     notification: {
-   *       smallIcon: "drawable/my_custom_notification_small_icon"
+   *       smallIcon: "drawable/my_notification_icon"
    *     }
    *   }
    * });
    *
-   * // 2. mipmap
+   * // mipmap resource
    * BackgroundGeolocation.ready({
    *   app: {
    *     notification: {
-   *       smallIcon: "mipmap/my_custom_notification_small_icon"
+   *       smallIcon: "mipmap/my_notification_icon"
    *     }
    *   }
    * });
    * ```
-   *
-   * __ℹ️ See also:__
-   * - {@link largeIcon}
    */
   smallIcon?: string;
 
   /**
    * <!-- doc-id: NotificationConfig.largeIcon -->
-   * Configure the *large icon* of the persistent notification in the Notification Bar.
+   * Large icon for the foreground notification. Not set by default.
    *
-   * Android requires a persistent notification in the Notification Bar.  This allows you customize that icon.  Defaults to your application icon.
+   * ### ⚠️ Warning
+   * - Specify the resource **type** (`drawable` or `mipmap`) followed by the icon
+   *   name in the format `type/icon_name`.
+   * - Do not include the file extension (e.g. `.png`).
    *
-   * __⚠️ Warning:__
-   * - You must specify the **`type`** (`drawable|mipmap`) of resource you wish to use in the following format: `{type}/icon_name`
-   * - Do not append the file-extension (eg: `.png`)
+   * **See also**
+   * - {@link smallIcon}
    *
    * @example
-   * ```typescript
-   * // 1. drawable
+   * ```ts
+   * // drawable resource
    * BackgroundGeolocation.ready({
    *   app: {
    *     notification: {
-   *       smallIcon: "drawable/my_custom_notification_small_icon"
+   *       largeIcon: "drawable/my_notification_large_icon"
    *     }
+   *   }
    * });
    *
-   * // 2. mipmap
+   * // mipmap resource
    * BackgroundGeolocation.ready({
    *   app: {
    *     notification: {
-   *       smallIcon: "mipmap/my_custom_notification_small_icon"
+   *       largeIcon: "mipmap/my_notification_large_icon"
    *     }
    *   }
    * });
    * ```
-   *
-   * __ℹ️ See also:__
-   * - {@link smallIcon}
    */
   largeIcon?: string;
 
   /**
    * <!-- doc-id: NotificationConfig.layout -->
-   * __Custom Android Notification Layout__
+   * Name of a custom Android Layout XML file for the foreground notification.
    *
-   * Specifies the name of your custom Android Layout XML file.
-   *
-   * __ℹ️ See:__
-   * - **[Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout)** for full setup instructions.
+   * **See also**
+   * - [Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout)
    *
    * ![](https://dl.dropbox.com/s/whcb6q1gxxdk9t1/android-foreground-notification-transistor.png?dl=1)
    *
-   * Even if you have no prior Android UI experience, custom layouts are very approachable.
-   * You will typically add `<TextView />`, `<ImageView />`, and `<Button />` elements.
+   * Custom layouts support `<TextView />`, `<ImageView />`, and `<Button />` elements.
+   * All `android:id` values must be prefixed with `notification`
+   * (e.g. `notificationText`, `notificationTitle`). The one exception is
+   * `applicationName`, which the SDK populates with the app name automatically.
    *
-   * **Important:** Your `android:id` values **must be prefixed** with `notification`  
-   * (e.g., `notificationText`, `notificationTitle`).  
-   * The only exception is `applicationName`, which the SDK will populate with your app name.
+   * #### Layout special elements
    *
-   * __Layout Special Elements__
+   * When rendering a custom notification, the SDK searches for the following IDs and
+   * populates them from the associated data source:
    *
-   * When the SDK renders your custom notification, it searches for the following IDs and
-   * sets their content from the associated data source:
+   * | Layout element `android:id` | Data source |
+   * |-----------------------------|-------------|
+   * | `applicationName` | Application name from AndroidManifest |
+   * | `notificationTitle` | {@link title} |
+   * | `notificationText` | {@link text} |
+   * | `notificationSmallIcon` | {@link smallIcon} |
+   * | `notificationLargeIcon` | {@link largeIcon} |
    *
-   * | Layout element `android:id`   | Data source                                |
-   * |-------------------------------|---------------------------------------------|
-   * | `applicationName`             | Application name from AndroidManifest       |
-   * | `notificationTitle`           | {@link title}            |
-   * | `notificationText`            | {@link text}             |
-   * | `notificationSmallIcon`       | {@link smallIcon}        |
-   * | `notificationLargeIcon`       | {@link largeIcon}        |
-   *
-   * @example   
+   * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
@@ -235,7 +238,7 @@ export interface NotificationConfig {
    * });
    * ```
    *
-   * __Custom `<TextView />` Elements__
+   * #### Custom `<TextView />` elements
    *
    * You may define your own custom text fields and populate them using
    * {@link strings}.
@@ -262,7 +265,7 @@ export interface NotificationConfig {
    * });
    * ```
    *
-   * __Custom `<Button />` Elements__
+   * #### Custom `<Button />` elements
    *
    * Define your own buttons and register click listeners using
    * {@link actions}.
@@ -301,9 +304,7 @@ export interface NotificationConfig {
    * });
    * ```
    *
-   * __Sample Layout__
-   *
-   * As a starting point, copy this into your XML file:
+   * #### Sample layout
    *
    * ```xml
    * <?xml version="1.0" encoding="utf-8"?>
@@ -381,8 +382,6 @@ export interface NotificationConfig {
    *
    * ![](https://dl.dropbox.com/s/k2l0oaqk86axfgu/android-custom-layout-elements.png?dl=1)
    *
-   * __Using your custom layout__
-   *
    * @example
    * ```ts
    * BackgroundGeolocation.ready({
@@ -414,27 +413,28 @@ export interface NotificationConfig {
    * ```
    */
   layout?: string;
-  
+
   /**
    * <!-- doc-id: NotificationConfig.strings -->
-   * Custom strings to render into `<TextView />` elements of a custom notification [[layout]].
+   * Custom strings to render into `<TextView />` elements of a custom notification {@link layout}.
    *
-   * ℹ️ See [Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout) for setup instructions.
-   *  
-   * You can declare your own custom `<TextView />` elements and render data into them using the `notification.strings` parameter.
+   * See [Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout)
+   * for setup instructions.
+   *
+   * Declare your own `<TextView />` elements in the layout XML and populate them by
+   * supplying matching key/value pairs in {@link strings}, where the key matches the
+   * `android:id` of the element.
    *
    * ```xml
    * <TextView
-   *     android:id="@+id/myCustomElement"  // <-- myCustomElement
-   *     android:layout_width="match_parent"
-   *     android:layout_height="wrap_content"
-   *     android:text="notificationTitle" />
+   *   android:id="@+id/myCustomElement"
+   *   android:layout_width="match_parent"
+   *   android:layout_height="wrap_content"
+   *   android:text="notificationTitle" />
    * ```
    *
-   * You can provide data to your custom elements using the [[strings]] configuration parameter:
-   *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
    *     notification: {
@@ -447,32 +447,34 @@ export interface NotificationConfig {
    * ```
    */
   strings?: Record<string, string>;
+
   /**
    * <!-- doc-id: NotificationConfig.actions -->
    * Declare click listeners for `<Button />` elements of a custom notification {@link layout}.
    *
    * ![](https://dl.dropbox.com/s/whcb6q1gxxdk9t1/android-foreground-notification-transistor.png?dl=1)
    *
-   * ℹ️ See [Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout) for setup instructions.
+   * See [Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout)
+   * for setup instructions.
    *
-   * You can declare custom Android `<Button />` elements in your layout XML and
-   * register click listeners for them using the {@link actions} parameter.
+   * Declare `<Button />` elements in your layout XML, then list their `android:id` values
+   * in the {@link actions} array to register click listeners.
    *
-   * __Example: Custom `<Button />` element__
+   * #### Custom `<Button />` element
    *
    * ```xml
    * <Button
-   *     android:id="@+id/notificationButtonPause"  <!-- notificationButtonPause -->
-   *     style="@style/Widget.AppCompat.Button.Small"
-   *     android:layout_width="60dp"
-   *     android:layout_height="40dp"
-   *     android:text="Foo" />
+   *   android:id="@+id/notificationButtonPause"
+   *   style="@style/Widget.AppCompat.Button.Small"
+   *   android:layout_width="60dp"
+   *   android:layout_height="40dp"
+   *   android:text="Foo" />
    * ```
    *
    * @example Register button listeners
    * ```ts
    * BackgroundGeolocation.ready({
-   *   app: { 
+   *   app: {
    *     notification: {
    *       actions: [
    *         "notificationButtonPause"   // <-- register button listeners
@@ -497,27 +499,26 @@ export interface NotificationConfig {
 
   /**
    * <!-- doc-id: NotificationConfig.channelName -->
-   * Configure the name of the plugin's notification-channel used to display the required, persistent foreground notification.
+   * Name of the Android notification channel used for the foreground service notification.
+   * Defaults to `"BackgroundGeolocation"`.
    *
-   * On Android O+, the plugin's foreground-service needs to create a "Notification Channel".  The name of this channel can be seen in:
-   * > `Settings->App & Notifications->Your App.`
+   * On Android O and above, foreground services require a notification channel. The channel
+   * name is visible to users under:
+   * > Settings → Apps & Notifications → Your App
    *
-   * Defaults to your application's name from `AndroidManifest`.
-   *
-   * ![](https://dl.dropboxusercontent.com/s/zgcxau7lyjfuaw9/android-notificationChannelName.png?dl=1)\
-   *
+   * ![](https://dl.dropboxusercontent.com/s/zgcxau7lyjfuaw9/android-notificationChannelName.png?dl=1)
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
    *     notification: {
    *       channelName: "Location Tracker"
    *     }
-   *  }
+   *   }
    * });
    *
-   * // or with #setConfig
+   * // Update at runtime
    * BackgroundGeolocation.setConfig({
    *   app: {
    *     notification: {
@@ -531,12 +532,19 @@ export interface NotificationConfig {
 
   /**
    * <!-- doc-id: NotificationConfig.channelId -->
-   * Customize the notification channel ID.
-   * 
-   * Defaults to `your.package.name.TSLocationManager`
+   * Identifier of the Android notification channel used for the foreground service
+   * notification. Defaults to `"bggeo"`.
    *
-   * __NOTE__:  It is not typically required to change this.  Typical use-cases are for users who use an existing Android foreground-service who wish the SDK to share an existing notification and channel.
+   * ### Note
+   * Changing this is not typically required. A use case is sharing an existing
+   * notification channel with another foreground service in the same app.
    */
   channelId?: string;
-  
+
+  // TODO: human review — the following properties exist in NotificationState.java
+  // but are not currently exposed in the TypeScript interface:
+  //   channelDescription  (default: "Location tracking")
+  //   importance          (default: IMPORTANCE_LOW = 2)
+  //   allowTap            (default: true)  — tapping notification launches app
+  //   tapActivity         (default: "")    — fully-qualified Activity name to open on tap
 }
