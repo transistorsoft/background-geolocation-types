@@ -1243,6 +1243,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    */
   setLogLevel(level: LogLevel): Promise<void>;
 
+  /** @hidden */
   setLogPersist(mode: PersistMode): Promise<void>;
 
   /// ------------------------------------------------------------------------------------------------
@@ -1495,8 +1496,13 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * <!-- doc-id: BackgroundGeolocation.playSound -->
    * Play a system sound.
    *
-   * - **iOS**: provide a numeric `SystemSoundID`.
-   * - **Android**: provide a sound name string.
+   * #### iOS
+   *
+   * Provide a numeric `SystemSoundID`.
+   *
+   * #### Android
+   *
+   * Provide a sound name string.
    */
   playSound(soundId: number | string): void;
 }
@@ -1629,10 +1635,10 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
 export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   /**
    * <!-- doc-id: BackgroundGeolocation.LogLevel -->
-   * __LogLevel__
-   * Controls verbosity of the SDK logger.
-   * Used by LoggerConfig.logLevel.
-   * Values range from silent (`Off`) to extremely verbose (`Verbose`).
+   * Enum namespace controlling verbosity of the SDK logger.
+   *
+   * Used by `LoggerConfig.logLevel`. Values range from silent (`Off`) to
+   * extremely verbose (`Verbose`).
    *
    * @example
    * ```ts
@@ -1648,10 +1654,9 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.DesiredAccuracy -->
-   * __DesiredAccuracy__
-   * Controls the native location engine's target accuracy.
-   * Higher accuracy consumes more battery.
-   * Used by GeoConfig.desiredAccuracy.
+   * Enum namespace controlling the native location engine's target accuracy.
+   *
+   * Higher accuracy consumes more battery. Used by `GeoConfig.desiredAccuracy`.
    *
    * @example
    * ```ts
@@ -1667,10 +1672,10 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.PersistMode -->
-   * __PersistMode__
-   * Controls which records the SDK persists to SQLite:
+   * Enum namespace controlling which records the SDK persists to SQLite:
    * locations only, geofences only, both, or none.
-   * Used by PersistenceConfig.persistMode.
+   *
+   * Used by `PersistenceConfig.persistMode`.
    *
    * @example
    * ```ts
@@ -1686,10 +1691,9 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.AuthorizationStrategy -->
-   * __AuthorizationStrategy__
-   * Defines how the HTTP service performs authorization.
-   * Includes basic, JWT, and custom strategies.
-   * Used by AuthorizationConfig.strategy.
+   * Enum namespace defining how the HTTP service performs authorization.
+   *
+   * Includes basic, JWT, and custom strategies. Used by `AuthorizationConfig.strategy`.
    *
    * @example
    * ```ts
@@ -1705,9 +1709,9 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.LocationFilterPolicy -->
-   * __LocationFilterPolicy__
-   * Selects the filtering engine policy for noise-reduction and smoothing.
-   * Used by LocationFilter.policy.
+   * Enum namespace selecting the filtering engine policy for noise-reduction and smoothing.
+   *
+   * Used by `LocationFilter.policy`.
    *
    * @example
    * ```ts
@@ -1725,10 +1729,10 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.KalmanProfile -->
-   * __KalmanProfile__
-   * Selects a preset tuning profile for the Kalman filter used in the
-   * filtering engine (aggressive, moderate, or relaxed smoothing).
-   * Used by LocationFilter.kalmanProfile.
+   * Enum namespace selecting a preset Kalman filter tuning profile
+   * (aggressive, moderate, or relaxed smoothing).
+   *
+   * Used by `LocationFilter.kalmanProfile`.
    *
    * @example
    * ```ts
@@ -1746,9 +1750,9 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.HttpMethod -->
-   * __HttpMethod__
-   * Defines the HTTP method used for uploads (POST, PUT, etc).
-   * Used by HttpConfig.method.
+   * Enum namespace defining the HTTP method used for location uploads (POST, PUT, etc).
+   *
+   * Used by `HttpConfig.method`.
    *
    * @example
    * ```ts
@@ -1764,10 +1768,10 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.TriggerActivity -->
-   * __TriggerActivity__
-   * Defines which physical motion activities can trigger motion-detection
-   * transitions (still → moving).
-   * Used by ActivityConfig.triggerActivities.
+   * Enum namespace defining which physical motion activities can trigger
+   * motion-detection transitions (still → moving).
+   *
+   * Used by `ActivityConfig.triggerActivities`.
    *
    * @example
    * ```ts
@@ -1785,10 +1789,10 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.NotificationPriority -->
-   * __NotificationPriority__
-   * Controls Android foreground-service notification priority and icon
-   * placement (top, bottom, hidden).
-   * Used by NotificationConfig.priority.
+   * Enum namespace controlling Android foreground-service notification priority
+   * and icon placement (top, bottom, hidden). [Android only]
+   *
+   * Used by `NotificationConfig.priority`.
    *
    * @example
    * ```ts
@@ -1806,9 +1810,8 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.Event -->
-   * __Event__
-   * Enumerates all event names emitted by the SDK (location, geofence,
-   * motionchange, heartbeat, etc).
+   * Enum namespace of all event names emitted by the SDK
+   * (`location`, `geofence`, `motionchange`, `heartbeat`, etc).
    *
    * @readonly
    */
@@ -1816,10 +1819,10 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.LocationRequest -->
-   * __LocationRequest__
-   * Defines the type of permission request made to iOS (Always, WhenInUse,
-   * or Any).
-   * Used by GeoConfig.locationAuthorizationRequest.
+   * Enum namespace defining the type of location permission request
+   * (Always, WhenInUse, or Any). [iOS only]
+   *
+   * Used by `GeoConfig.locationAuthorizationRequest`.
    *
    * @example
    * ```ts
@@ -1835,10 +1838,11 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.AccuracyAuthorization -->
-   * __AccuracyAuthorization__
-   * iOS 14+: Indicates whether the user granted full or reduced accuracy.
-   * Used by ProviderChangeEvent.accuracyAuthorization and
-   * requestTemporaryFullAccuracy.
+   * Enum namespace indicating whether the user granted full or reduced location
+   * accuracy. [iOS 14+]
+   *
+   * Used by `ProviderChangeEvent.accuracyAuthorization` and
+   * `requestTemporaryFullAccuracy`.
    *
    * @example
    * ```ts
@@ -1855,10 +1859,10 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.AuthorizationStatus -->
-   * __AuthorizationStatus__
-   * Represents OS-level authorization state for location-services
-   * (Denied, Restricted, Always, WhenInUse).
-   * Returned from requestPermission() and onProviderChange.
+   * Enum namespace representing the OS-level authorization state for
+   * location services (Denied, Restricted, Always, WhenInUse).
+   *
+   * Returned from `requestPermission()` and `onProviderChange`.
    *
    * @example
    * ```ts
@@ -1873,9 +1877,9 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
 
   /**
    * <!-- doc-id: BackgroundGeolocation.ActivityType -->
-   * __ActivityType__
-   * iOS-only: Specifies the type of user activity (AutomotiveNavigation,
-   * Fitness, OtherNavigation, etc).
+   * Enum namespace specifying the type of user activity
+   * (AutomotiveNavigation, Fitness, OtherNavigation, etc). [iOS only]
+   *
    * Used by {@link GeoConfig.activityType}.
    */
   ActivityType: typeof import('../../enums/ActivityType').ActivityType;
