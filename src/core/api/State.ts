@@ -4,31 +4,34 @@ import type { TrackingMode } from '../../enums/TrackingMode';
 
 /**
  * <!-- doc-id: State -->
- * Effective runtime state returned by `BackgroundGeolocation.ready/getState`.
+ * Effective runtime state returned by {@link BackgroundGeolocation.ready} and
+ * {@link BackgroundGeolocation.getState}.
  *
- * `State` **is** the active {@link Config} (compound), plus runtime-only fields.
- * 
+ * `State` extends {@link Config} with all active configuration values, plus a
+ * set of runtime-only fields that reflect the SDK's current operating status.
+ *
  * @category Primary API
  */
 export interface State extends Config {
-  /** 
+  /**
    * <!-- doc-id: State.enabled -->
-   * Whether the SDK has been enabled via `start` or `startGeofences`. 
-   */ 
+   * `true` when the SDK is actively tracking — i.e. {@link BackgroundGeolocation.start}
+   * or {@link BackgroundGeolocation.startGeofences} has been called and not yet stopped.
+   */
   enabled: boolean;
 
-  /** 
+  /**
    * <!-- doc-id: State.isMoving -->
-   * Whether the SDK is currently in the *moving* state (vs stationary). 
-   * 
+   * `true` when the SDK is in the **moving** state (location services active);
+   * `false` when stationary.
+   *
    * @example
    * ```typescript
-   * // If the SDK is currently in the *stationary* state, with State.isMoving == false:
-   * 
-   * BackgroundGeolocation.onMotionChange((isMoving) => {
-   *   console.log('[onMotionChange] isMoving?', isMoving);
+   * // Toggle the SDK's motion state from stationary to moving.
+   * BackgroundGeolocation.onMotionChange((event) => {
+   *   console.log('[onMotionChange] isMoving?', event.isMoving);
    * });
-   * 
+   *
    * await BackgroundGeolocation.changePace(true);
    * // State.isMoving is now true.
    * ```
@@ -37,59 +40,68 @@ export interface State extends Config {
 
   /**
    * <!-- doc-id: State.schedulerEnabled -->
-   * `true` when a schedule is configured and `startSchedule()` executed.
-   * `stopSchedule()` will set this to `false`.
+   * `true` when a {@link AppConfig.schedule} is configured and
+   * {@link BackgroundGeolocation.startSchedule} has been called.
+   * {@link BackgroundGeolocation.stopSchedule} sets this to `false`.
    */
   schedulerEnabled: boolean;
 
   /**
    * <!-- doc-id: State.trackingMode -->
-   * Tracking mode.
+   * Current tracking mode.
    *
-   * | Value | Name       | Description                   |
-   * |------:|------------|-------------------------------|
-   * | 0     | Geofences  | Monitor geofences only.       |
-   * | 1     | Location   | Monitor location + geofences. |
-   * 
+   * | Value | Mode | Description |
+   * |------:|------|-------------|
+   * | `0` | Geofences | Geofence monitoring only — no active location tracking. |
+   * | `1` | Location | Location tracking and geofence monitoring. |
+   *
    * @example
    * ```typescript
    * await BackgroundGeolocation.start();
-   * 
-   * const state = await BackgroundGeolocation.getState();
+   * let state = await BackgroundGeolocation.getState();
    * console.log('Tracking mode:', state.trackingMode);
-   * > 'Tracking mode: 1'
-   * 
+   * // > 'Tracking mode: 1'
+   *
    * await BackgroundGeolocation.startGeofences();
+   * state = await BackgroundGeolocation.getState();
    * console.log('Tracking mode:', state.trackingMode);
-   * > 'Tracking mode: 0'
+   * // > 'Tracking mode: 0'
    * ```
    */
   trackingMode: TrackingMode;
 
   /**
    * <!-- doc-id: State.odometer -->
-   * Current distance-traveled in meters.
-   * See: {@link odometerError}, {@link BackgroundGeolocation.setOdometer}, {@link BackgroundGeolocation.getOdometer}.
+   * Accumulated distance traveled since the last odometer reset, in meters.
+   *
+   * **See also**
+   * - {@link odometerError}
+   * - {@link BackgroundGeolocation.setOdometer}
+   * - {@link BackgroundGeolocation.getOdometer}
    */
   odometer: number;
 
   /**
    * <!-- doc-id: State.odometerError -->
-   * The accumulated error in the odometer (in meters).
+   * Accumulated positional error in the odometer measurement, in meters.
+   *
+   * Reflects noise introduced by low-accuracy location samples. Use
+   * {@link LocationFilter.odometerAccuracyThreshold} to filter out
+   * low-accuracy samples from odometer calculations.
    */
   odometerError: number;
 
   /**
    * <!-- doc-id: State.didLaunchInBackground -->
-   * iOS only. `true` when the app was launched in the background due to a
-   * background event (fetch, geofence exit, stationary geofence exit).
-   * Always `false` on Android.
+   * `true` when the app was relaunched in the background by the OS — for
+   * example, due to a background fetch, geofence exit, or stationary geofence
+   * transition. Always `false` on Android. [iOS only]
    */
   didLaunchInBackground: boolean;
 
-  /** 
+  /**
    * <!-- doc-id: State.didDeviceReboot -->
-   * Indicates if the app was launched after a device reboot. 
+   * `true` when the app was launched after a device reboot.
    */
-  didDeviceReboot: boolean;  
+  didDeviceReboot: boolean;
 }
