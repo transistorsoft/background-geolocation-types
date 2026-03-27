@@ -3,102 +3,106 @@ import type { Config } from '../config/Config';
 
 /**
  * <!-- doc-id: TransistorAuthorizationToken -->
- * Represents an authorization token issued by a Transistorsoft Tracking Server.
+ * Authorization token issued by a Transistor Software tracking server.
  *
- * Returned from {@link TransistorAuthorizationService.findOrCreate} and consumed by
- * `Config.authorization` / `transistorAuthorizationToken` flows.
+ * Returned from {@link TransistorAuthorizationService.findOrCreate} and used
+ * to configure the SDK's HTTP and authorization settings for the demo tracker.
  *
  * @category Demo / Debug Server
  */
 export interface TransistorAuthorizationToken {
-  /** 
+  /**
    * <!-- doc-id: TransistorAuthorizationToken.accessToken -->
-   * JWT access token used for `Authorization: Bearer <token>`. 
-   */ 
+   * JWT access token sent as `Authorization: Bearer <token>` on each upload.
+   */
   accessToken: string;
 
-  /** 
+  /**
    * <!-- doc-id: TransistorAuthorizationToken.refreshToken -->
-   * JWT refresh token used at the `refreshUrl` endpoint.    
+   * JWT refresh token presented to the {@link AuthorizationConfig.refreshUrl}
+   * endpoint when the access token expires.
    */
   refreshToken: string;
 
   /**
    * <!-- doc-id: TransistorAuthorizationToken.expires -->
-   * Expiry time of the access token (epoch milliseconds).
-   * Typically used to drive {@link AuthorizationConfig.expires}.
+   * Expiry time of the access token (epoch milliseconds). Typically used to
+   * populate {@link AuthorizationConfig.expires}.
    */
   expires: number;
 
-  /** 
+  /**
    * <!-- doc-id: TransistorAuthorizationToken.url -->
-   * Base tracker server URL that issued this token. 
-   */ 
+   * Base URL of the tracker server that issued this token.
+   */
   url: string;
 }
 
 /**
  * <!-- doc-id: TransistorAuthorizationService -->
- * Transistor Software hosts a demo server at [tracker.transistorsoft.com](http://tracker.transistorsoft.com) which is 
- * designed to consume location data from devices running the Background Geolocation SDK.
+ * Client for the Transistor Software demo tracking server.
  *
- * You may also run your own instance of Demo Server locally.  See [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console)
+ * Transistor Software hosts a public demo server at
+ * [tracker.transistorsoft.com](http://tracker.transistorsoft.com) that
+ * consumes location data from devices running the Background Geolocation SDK.
+ * You can also run a local instance — see
+ * [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console).
  *
- * The test server is a great way to debug location problems or evalute the SDK's behaviour, since the results can easily 
- * be shared with *Transistor Software* when requesting support.
+ * The demo server is useful for evaluating the SDK or for sharing tracking
+ * results with Transistor Support when debugging.
  *
  * ![](https://dl.dropboxusercontent.com/s/3abuyyhioyypk8c/screenshot-tracker-transistorsoft.png?dl=1)
  *
+ * ### Viewing results
+ *
+ * To view tracking results in a browser, visit:
+ *
+ * `http://tracker.transistorsoft.com/<your-organization-name>`
  *
  * @example
  * ```typescript
- * // Url to demo server.
  * const url = "http://tracker.transistorsoft.com";
  * const orgname = "my-company-name";
  * const username = "my-username";
  *
- * // Fetch an authoriztion token from server.  The SDK will cache the received token.
- * const token = await
- *   BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(orgname, username, url);
+ * // Fetch a token from the server (the SDK caches it automatically).
+ * const token = await BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(
+ *   orgname, username, url
+ * );
  *
  * BackgroundGeolocation.ready({
  *   transistorAuthorizationToken: token
- * })
+ * });
  * ```
- *
- * __Viewing Your Tracking Results__
- *
- * To *view* your tracking results in the browser, use your configured "Organization Name" and visit:
- *
- * http://tracker.transistorsoft.com/my-organization-name
  *
  * @category Demo / Debug Server
  */
 export interface TransistorAuthorizationService {
   /**
    * <!-- doc-id: TransistorAuthorizationService.findOrCreate -->
-   * Find or create a token for the given organization and username.
+   * Find or create an authorization token for the given organization and username.
    *
-   * @param orgName - Organization / company identifier.
-   * @param username - Username or device label.
-   * @param url - Optional tracker base URL. Defaults to the SDK's built‑in value.
+   * If a token already exists in the local cache for this `orgName` + `url`
+   * combination, the cached token is returned. Otherwise a new token is
+   * requested from the server and cached for future calls.
    *
-   * @returns A Promise resolving with a {@link TransistorAuthorizationToken} instance.
+   * @param orgName - Organization or company identifier.
+   * @param username - Username or device label shown on the tracker map.
+   * @param url - Optional tracker base URL. Defaults to `tracker.transistorsoft.com`.
+   *
+   * @returns A Promise resolving with a {@link TransistorAuthorizationToken}.
    *
    * @example
    * ```typescript
-   * // Url to demo server.
-   * const url = "http://tracker.transistorsoft.com";
-   * const orgname = "my-company-name";
-   * const username = "my-username";
-   *
-   * // Fetch an authoriztion token from server.  The SDK will cache the received token.
-   * const token = await
-   *   BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(orgname, username, url);
+   * const token = await BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(
+   *   "my-company-name",
+   *   "my-username",
+   *   "http://tracker.transistorsoft.com"
+   * );
    *
    * BackgroundGeolocation.ready({
    *   transistorAuthorizationToken: token
-   * })
+   * });
    * ```
    */
   findOrCreate(
@@ -109,39 +113,33 @@ export interface TransistorAuthorizationService {
 
   /**
    * <!-- doc-id: TransistorAuthorizationService.destroy -->
-   * Destroy the token associated with the given tracker base URL.
+   * Remove the cached token associated with the given tracker URL.
    *
-   * @param url - Tracker base URL. Defaults to the SDK's built‑in value.
+   * @param url - Tracker base URL. Defaults to `tracker.transistorsoft.com`.
    */
   destroy(url?: string): Promise<void>;
 
   /**
-   * Mutates a {@link Config} to apply the given Transistor token if present.
+   * Mutate a {@link Config} to apply a `transistorAuthorizationToken` if present.
    *
-   * The JS implementation typically:
-   * - Reads `config.transistorAuthorizationToken`
-   * - Deletes that property
-   * - Sets `config.http.url` or `config.url` to `"<token.url>/api/locations"`
-   * - Sets `config.authorization = { strategy: "jwt", ... }`
-   *
-   * If no `transistorAuthorizationToken` is found, the `config` is returned unchanged.
+   * The implementation reads `config.transistorAuthorizationToken`, removes that
+   * property, sets `config.http.url` to `"<token.url>/api/locations"`, and
+   * injects `config.authorization` with a JWT strategy derived from the token.
+   * If no `transistorAuthorizationToken` is found, the config is returned unchanged.
    *
    * @param config - A config that may contain a `transistorAuthorizationToken` field.
-   * @returns A {@link Config} with HTTP + authorization wired to the token, if present.
+   * @returns A {@link Config} with HTTP and authorization wired to the token, if present.
    *
    * @example
    * ```ts
-   * async function applyDemoToken(
-   *   service: TransistorAuthorizationService,
-   *   config: Config
-   * ): Promise<Config> {
-   *   const token = await service.findOrCreate('my-org', 'user@example.com');
+   * const token = await service.findOrCreate('my-org', 'user@example.com');
    *
-   *   return service.applyIf({
-   *     ...config,
-   *     transistorAuthorizationToken: token
-   *   });
-   * }
+   * const config = service.applyIf({
+   *   ...myConfig,
+   *   transistorAuthorizationToken: token
+   * });
+   *
+   * BackgroundGeolocation.ready(config);
    * ```
    */
   applyIf<T extends Config & {
