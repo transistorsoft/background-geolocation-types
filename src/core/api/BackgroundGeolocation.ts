@@ -236,15 +236,15 @@ export interface BackgroundGeolocationEvents {
    *   console.log("[onProviderChange]: ", event);
    *
    *   switch (event.status) {
-   *     case BackgroundGeolocation.AUTHORIZATION_STATUS_DENIED:
+   *     case BackgroundGeolocation.AuthorizationStatus.Denied:
    *       // Android & iOS
    *       console.log("- Location authorization denied");
    *       break;
-   *     case BackgroundGeolocation.AUTHORIZATION_STATUS_ALWAYS:
+   *     case BackgroundGeolocation.AuthorizationStatus.Always:
    *       // Android & iOS
    *       console.log("- Location always granted");
    *       break;
-   *     case BackgroundGeolocation.AUTHORIZATION_STATUS_WHEN_IN_USE:
+   *     case BackgroundGeolocation.AuthorizationStatus.WhenInUse:
    *       // iOS only
    *       console.log("- Location WhenInUse granted");
    *       break;
@@ -743,10 +743,10 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * change settings dynamically.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const state = await BackgroundGeolocation.setConfig({
    *   geolocation: {
-   *     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+   *     desiredAccuracy: BackgroundGeolocation.DesiredAccuracy.High,
    *     distanceFilter: 100.0,
    *   },
    *   app: {
@@ -1005,12 +1005,12 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link ProviderChangeEvent.accuracyAuthorization}
    *
    * @example
-   * ```javascript
+   * ```ts
    * BackgroundGeolocation.onProviderChange((event) => {
-   *   if (event.accuracyAuthorization == BackgroundGeolocation.ACCURACY_AUTHORIZATION_REDUCED) {
+   *   if (event.accuracyAuthorization == BackgroundGeolocation.AccuracyAuthorization.Reduced) {
    *     // Supply "Purpose" key from Info.plist as 1st argument.
    *     BackgroundGeolocation.requestTemporaryFullAccuracy("Delivery").then((accuracyAuthorization) => {
-   *       if (accuracyAuthorization == BackgroundGeolocation.ACCURACY_AUTHORIZATION_FULL) {
+   *       if (accuracyAuthorization == BackgroundGeolocation.AccuracyAuthorization.Full) {
    *         console.log('[requestTemporaryFullAccuracy] GRANTED: ', accuracyAuthorization);
    *       } else {
    *         console.log('[requestTemporaryFullAccuracy] DENIED: ', accuracyAuthorization);
