@@ -20,8 +20,8 @@ import { NotificationPriority } from '../../enums/NotificationPriority';
  *
  * Configure this via {@link NotificationConfig} on {@link AppConfig.notification}.
  *
- * | Area | Keys | Notes |
- * |------|------|-------|
+ * | Category | Properties | Notes |
+ * |----------|------------|-------|
  * | **Content** | `title`, `text`, `color` | Notification text and accent color. |
  * | **Icons** | `smallIcon`, `largeIcon` | Resource references in `type/name` format. |
  * | **Channel** | `channelName`, `channelId` | Android O+ notification channel settings. |
