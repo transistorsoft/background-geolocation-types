@@ -152,7 +152,7 @@ import { ActivityType } from '../../enums/ActivityType';
  * ```ts
  * // Legacy (deprecated)
  * BackgroundGeolocation.ready({
- *   desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+ *   desiredAccuracy: BackgroundGeolocation.DesiredAccuracy.High,
  *   distanceFilter: 10,
  *   stopTimeout: 5,
  *   stationaryRadius: 150,
