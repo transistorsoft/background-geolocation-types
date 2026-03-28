@@ -1541,13 +1541,30 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  *
  * ### Lifecycle
  *
- * Call {@link ready} exactly once per app launch — before any other SDK
- * method. It applies your configuration, restores persisted state, and
- * prepares the SDK to track. Then call {@link start} to begin tracking, and
- * {@link stop} to halt it.
+ * Think of the SDK like a stereo receiver:
  *
- * The SDK automatically restores its last-known configuration from persistent
- * storage after first install, so only the initial configuration is required.
+ * - **Wiring the speakers** — Register event listeners ({@link onLocation}, {@link onGeofence}, etc.)
+ *   before calling {@link ready}. The SDK buffers events until {@link ready} resolves, so listeners
+ *   registered afterward may miss them. You do not need to remove listeners when you call
+ *   {@link stop} — the SDK simply stops emitting events when it isn't running.
+ *
+ * - **Plugging in the power cord** — {@link ready} initializes the SDK, restores
+ *   persisted state, and applies your configuration. Call it once per launch, before any
+ *   method that acquires a location or requests permissions. Your config is not applied
+ *   until {@link ready} resolves.
+ *
+ * - **The power button** — {@link start} and {@link stop} begin and halt location tracking. The SDK
+ *   persists its enabled state across launches. If the app is terminated while tracking
+ *   is active, the next call to {@link ready} will automatically resume tracking — you do not
+ *   need to call {@link start} again.
+ *
+ * Calling methods before {@link ready} resolves is perfectly fine, provided they do not request
+ * a location or trigger a permission dialog. Methods that only read from the SDK's SQLite
+ * database are safe — for example {@link getState}, {@link getLocations}, {@link getGeofences},
+ * {@link removeGeofences}. Avoid {@link start}, {@link requestPermission}, {@link getCurrentPosition}, and
+ * {@link watchPosition} until after {@link ready} resolves. The SDK defaults apply until your config
+ * arrives — calling a permission-sensitive method too early will use those defaults, not
+ * your configured values.
  *
  * ---
  *
