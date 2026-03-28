@@ -35,8 +35,7 @@ export interface HttpEvent {
    * Raw response body returned by the server.
    *
    * Parse this string to extract server-side data, error messages, or
-   * {@link HttpConfig.remoteControl | remote-control} commands embedded in the
-   * response.
+   * remote-control commands embedded in the response.
    */
   responseText: string;
 }
