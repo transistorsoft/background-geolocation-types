@@ -1588,6 +1588,11 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  *   HttpConfig
  * } from "{{pluginName}}";
  *
+ * // Register event-listeners before calling .ready()
+ * BackgroundGeolocation.onLocation((location) => {
+ *   console.log("[onLocation]", location);
+ * });
+ *
  * const config: Config = {
  *   geolocation: {
  *     desiredAccuracy: BackgroundGeolocation.DesiredAccuracy.High,
