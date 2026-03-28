@@ -81,23 +81,40 @@ import { LogLevel } from '../../enums/LogLevel';
  * - Development: 5–7 days  
  * - Production: 1–3 days  
  *
- * __Retrieving Logs__
+ * ### Diagnostics
+ *
+ * Logs are your first resource when something unexpected happens. The SDK writes a
+ * detailed trace of every lifecycle event — location recording, motion transitions,
+ * HTTP uploads, geofence activity — to an internal SQLite database. When behaviour
+ * is unclear, set `logLevel` to {@link LogLevel.Verbose} and fetch the log before
+ * doing anything else:
  *
  * ```ts
- * // Retrieve full log as a string
- * const log = await BackgroundGeolocation.logger.getLog({});
- *
- * // Email the log as an attachment
- * await BackgroundGeolocation.logger.emailLog("support@yourcompany.com");
+ * await BackgroundGeolocation.setConfig({
+ *   logger: { logLevel: BackgroundGeolocation.LogLevel.Verbose }
+ * });
  * ```
  *
- * Logs include:
- * - SQLite-backed diagnostic history  
- * - Event traces  
- * - HTTP upload events  
- * - Configuration transitions  
+ * Use {@link Logger.emailLog} to send `logMaxDays` worth of logs as an email
+ * attachment directly from the device:
  *
- * **See also:** {@link logMaxDays}, {@link logLevel}
+ * ```ts
+ * await BackgroundGeolocation.logger.emailLog("you@example.com");
+ * ```
+ *
+ * #### Android
+ *
+ * Stream live SDK output directly to your terminal with `adb`:
+ *
+ * ```bash
+ * adb logcat *:S TSLocationManager:V
+ * ```
+ *
+ * #### iOS
+ *
+ * Run the app from Xcode to stream SDK output to the console in real time. For
+ * issues that only reproduce in the background, attach the device and monitor
+ * the Xcode console while the app runs in the background.
  *
  * __Examples__
  *
