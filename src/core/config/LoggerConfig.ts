@@ -121,7 +121,7 @@ import { LogLevel } from '../../enums/LogLevel';
  * Stream live SDK output directly to your terminal with `adb`:
  *
  * ```bash
- * adb logcat *:S TSLocationManager:V
+ * adb logcat "*:S" TSLocationManager:V
  * ```
  *
  * #### iOS
