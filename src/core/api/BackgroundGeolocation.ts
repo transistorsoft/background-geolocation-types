@@ -1558,6 +1558,13 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  *   is active, the next call to {@link ready} will automatically resume tracking — you do not
  *   need to call {@link start} again.
  *
+ * Always call `ready` on every launch — no exceptions. The SDK buffers all events from the
+ * moment the app starts, and holds them until `ready` is called. If your app launches and
+ * never calls `ready`, the SDK sits silently waiting: no events fire, no locations are
+ * recorded, no uploads are attempted. It does not matter whether tracking was already active
+ * from a previous session — `ready` is the signal that tells the SDK your app is alive and
+ * listening. This is why the method is named `ready`.
+ *
  * Calling methods before {@link ready} resolves is perfectly fine, provided they do not request
  * a location or trigger a permission dialog. Methods that only read from the SDK's SQLite
  * database are safe — for example {@link getState}, {@link getLocations}, {@link getGeofences},
