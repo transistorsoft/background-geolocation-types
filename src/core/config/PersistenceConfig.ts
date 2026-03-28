@@ -123,7 +123,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *   locationsOrderDirection: 'ASC',
  *   locationTemplate: '{...}',
  *   geofenceTemplate: '{...}',
- *   persistMode: Config.PERSIST_MODE_ALL,
+ *   persistMode: BackgroundGeolocation.PersistMode.All,
  *   extras: {'user_id': 123},
  *   disableProviderChangeRecord: true,
  * };
