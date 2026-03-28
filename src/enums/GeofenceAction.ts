@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: GeofenceAction -->
  * Geofence transition actions emitted by the SDK 
  * 
  * Used with {@link GeofenceEvent} from {@link BackgroundGeolocation.onGeofence}.   
@@ -14,17 +13,14 @@
  */
 export const GeofenceAction = {
   /**
-   * <!-- doc-id: GeofenceAction.Enter -->
    * Device entered the geofence. 
    */
   Enter: 'ENTER',
   /**
-   * <!-- doc-id: GeofenceAction.Exit -->
    * Device exited the geofence. 
    */
   Exit: 'EXIT',
   /**
-   * <!-- doc-id: GeofenceAction.Dwell -->
    * Device dwelled inside the geofence for at least the configured `Config.geofenceProximityRadius`. 
    */
   Dwell: 'DWELL'

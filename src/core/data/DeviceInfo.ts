@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: DeviceInfo -->
  * Simple device information, as returned by {@link BackgroundGeolocation.getDeviceInfo}.
  *
  * This provides basic model and platform info without needing external native dependencies.
@@ -16,7 +15,6 @@
  */
 export interface DeviceInfo {
   /**
-   * <!-- doc-id: DeviceInfo.model -->
    * Device model.
    * 
    * Examples:
@@ -26,7 +24,6 @@ export interface DeviceInfo {
   model: string;
 
   /**
-   * <!-- doc-id: DeviceInfo.manufacturer -->
    * Device manufacturer.
    * 
    * Examples:
@@ -37,7 +34,6 @@ export interface DeviceInfo {
   manufacturer: string;
 
   /**
-   * <!-- doc-id: DeviceInfo.version -->
    * OS Version (human readable string).
    *
    * Examples:
@@ -48,7 +44,6 @@ export interface DeviceInfo {
   version: string;
 
   /**
-   * <!-- doc-id: DeviceInfo.platform -->
    * OS platform name.
    *
    * One of:
@@ -58,7 +53,6 @@ export interface DeviceInfo {
   platform: string;
 
   /**
-   * <!-- doc-id: DeviceInfo.framework -->
    * Development framework hosting the SDK.
    *
    * For example:

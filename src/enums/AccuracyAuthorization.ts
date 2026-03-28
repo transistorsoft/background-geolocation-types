@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: AccuracyAuthorization -->
  * Accuracy authorization granted by the user.
  *
  * | Name                | Value | Description                |
@@ -13,12 +12,10 @@
  */
 export const AccuracyAuthorization = {
   /**
-   * <!-- doc-id: AccuracyAuthorization.Full -->
    * Full accuracy authorized. 
    */
   Full: 0,
   /**
-   * <!-- doc-id: AccuracyAuthorization.Reduced -->
    * Reduced accuracy granted.    
    */
   Reduced: 1,

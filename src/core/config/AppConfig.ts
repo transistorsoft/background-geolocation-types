@@ -1,7 +1,6 @@
 import { NotificationConfig } from './NotificationConfig';
 
 /**
- * <!-- doc-id: PermissionRationale -->
  * (__Android 11+__) Configure the dialog shown when requesting **Always** background
  * location permission.
  *
@@ -70,23 +69,19 @@ import { NotificationConfig } from './NotificationConfig';
  */
 export interface PermissionRationale {
   /** 
-   * <!-- doc-id: PermissionRationale.title -->
    * Title for the Android background location permission dialog. 
    */
   title?: string;
   /**
-   * <!-- doc-id: PermissionRationale.message -->
    * The body text of the dialog.
    * Provide an explanation of why you need this permission, similar in purpose to iOS' __`NSLocationAlwaysAndWhenInUseUsageDescription`__.
    */
   message?: string;
   /**
-   * <!-- doc-id: PermissionRationale.positiveAction -->
    * The text to display on the *positive action* button.
    */
   positiveAction?: string;
   /**
-   * <!-- doc-id: PermissionRationale.negativeAction -->
    * The text to display on the *negative action* button (eg: *Cancel*)
    */
   negativeAction?: string;
@@ -94,7 +89,6 @@ export interface PermissionRationale {
 
 
 /**
- * <!-- doc-id: AppConfig -->
  * Application & lifecycle configuration.
  *
  * `AppConfig` groups options that control how the SDK integrates with your app’s
@@ -201,7 +195,6 @@ export interface PermissionRationale {
  */
 export interface AppConfig {
   /**
-   * <!-- doc-id: AppConfig.stopOnTerminate -->
    * Controls whether to continue location-tracking after the application is **terminated**.
    *
    * Defaults to **`true`**.  
@@ -245,7 +238,6 @@ export interface AppConfig {
   stopOnTerminate?: boolean;
 
   /**
-   * <!-- doc-id: AppConfig.startOnBoot -->
    * Controls whether to resume location-tracking after the device is **rebooted**.
    *
    * Defaults to **`false`**.  
@@ -274,7 +266,6 @@ export interface AppConfig {
   startOnBoot?: boolean;
 
   /**
-   * <!-- doc-id: AppConfig.enableHeadless -->
    * __`[Android only]`__ Enables "Headless" operation allowing you to respond to events after you app has been terminated with [[stopOnTerminate]] __`false`__.
    *
    * Defaults to __`false`__.  In this Android terminated state, where only the plugin's foreground-service remains running, you can respond to all the plugin's events with your own callback.  For more information, see [[BackgroundGeolocation.registerHeadlessTask]].
@@ -290,7 +281,6 @@ export interface AppConfig {
   enableHeadless?: boolean;
 
   /**
-   * <!-- doc-id: AppConfig.heartbeatInterval -->
    * Controls the rate (in seconds) at which {@link BackgroundGeolocation.onHeartbeat}
    * 
    * events will fire.
@@ -329,7 +319,6 @@ export interface AppConfig {
   heartbeatInterval?: number;
 
   /**
-   * <!-- doc-id: AppConfig.schedule -->
    * Configures a cron-like automated schedule telling the SDK when to
    * {@link BackgroundGeolocation.start | start} and
    * {@link BackgroundGeolocation.stop | stop} tracking.
@@ -480,7 +469,6 @@ export interface AppConfig {
   schedule?: string[];
 
   /**
-   * <!-- doc-id: AppConfig.scheduleUseAlarmManager -->
    * __Android only__ Force the Android scheduler to use `AlarmManager` (more precise) instead of `JobScheduler`.  Defaults to `false`.
    *
    * @example
@@ -496,7 +484,6 @@ export interface AppConfig {
   scheduleUseAlarmManager?: boolean;
 
   /**
-   * <!-- doc-id: AppConfig.notification -->
    * [__Android only]__ Configures the persistent foreground-service [[Notification]] required by Android.
    *
    * ![](https://dl.dropbox.com/s/acuhy5cu4p7uofr/android-foreground-service-default.png?dl=1)
@@ -518,7 +505,6 @@ export interface AppConfig {
   notification?: NotificationConfig;
 
   /**
-   * <!-- doc-id: AppConfig.backgroundPermissionRationale -->
    * (__Android 11+__) Configures the dialog shown when requesting *Always* location
    * permission on Android 11+.
    *
@@ -579,7 +565,6 @@ export interface AppConfig {
   backgroundPermissionRationale?: PermissionRationale;
 
   /**
-   * <!-- doc-id: AppConfig.preventSuspend -->
    * **iOS only** — Prevent iOS from suspending your application after location-services
    * have been turned off while running in the background.
    *

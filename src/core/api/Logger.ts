@@ -1,7 +1,6 @@
 import { SQLQueryOrder } from "../../enums/SQLQueryOrder";
 
 /**
- * <!-- doc-id: SQLQuery -->
  * Used for selecting a range of records from the SDK's log database.
  *
  * Used with:
@@ -45,31 +44,26 @@ import { SQLQueryOrder } from "../../enums/SQLQueryOrder";
  */
 export interface SQLQuery {
   /**
-   * <!-- doc-id: SQLQuery.start -->
    * Start date of logs to select (unix timestamp in **milliseconds**).
    */
   start?: number;
 
   /**
-   * <!-- doc-id: SQLQuery.end -->
    * End date of logs to select (unix timestamp in **milliseconds**).
    */
   end?: number;
 
   /**
-   * <!-- doc-id: SQLQuery.limit -->
    * Limit number of records returned.
    */
   limit?: number;
 
   /**
-   * <!-- doc-id: SQLQuery.offset -->
    * Offset into the result set (for paging).
    */
   offset?: number;
 
   /**
-   * <!-- doc-id: SQLQuery.order -->
    * Sort order for results.
    *
    * - `SQLQueryOrder.Asc`  → ascending by time
@@ -83,7 +77,6 @@ export interface SQLQuery {
 }
 
 /**
- * <!-- doc-id: Logger -->
  * Logger API
  *
  * The Background Geolocation SDK includes powerful logging features for debugging location-tracking problems.  The SDK stores log-entries for a period of {@link LoggerConfig.logMaxDays} (default `3`).  The volume of logging events
@@ -179,19 +172,16 @@ export interface SQLQuery {
  */
 export interface Logger {
   /** 
-   * <!-- doc-id: Logger.ORDER_ASC -->
    * Sort ascending when querying logs. Mirrors {@link Logger.ORDER_ASC} constant. 
    */
  
   readonly ORDER_ASC: 1;
   /** 
-   * <!-- doc-id: Logger.ORDER_DESC -->
    * Sort descending when querying logs. Mirrors {@link Logger.ORDER_DESC} constant. 
    */
   readonly ORDER_DESC: -1;
 
   /**
-   * <!-- doc-id: Logger.debug -->
    * Inserts a debug log message into the SDK's log database
    *
    * @example
@@ -206,7 +196,6 @@ export interface Logger {
   debug(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.error -->
    * Inserts an "error" log message into the SDK's log database
    *
    * @example
@@ -222,7 +211,6 @@ export interface Logger {
   error(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.warn -->
    * Inserts a "warning" log message into the SDK's log database
    *
    * @example
@@ -239,7 +227,6 @@ export interface Logger {
   warn(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.info -->
    * Inserts an "info" log message into the SDK's log database
    *
    * @example
@@ -255,7 +242,6 @@ export interface Logger {
   info(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.notice -->
    * Inserts a "notice" log message into the SDK's log database
    *
    * @example
@@ -271,7 +257,6 @@ export interface Logger {
   notice(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.getLog -->
    * Returns the records from log database as a `String`.  Provide an optional {@link SQLQuery} to contrain results between dates.
    *
    * Depending on the configured {@link LoggerConfig.logLevel}, the plugin can store an *immense* amount of helpful logging information for debugging location-tracking
@@ -353,7 +338,6 @@ export interface Logger {
   getLog(query?: SQLQuery): Promise<string>;
 
   /**
-   * <!-- doc-id: Logger.emailLog -->
    * Email the result of {@link Logger.getLog} using device's mail client.
    *
    * @example
@@ -383,7 +367,6 @@ export interface Logger {
   emailLog(email: string, query?: SQLQuery): Promise<void | boolean>;
 
   /**
-   * <!-- doc-id: Logger.uploadLog -->
    * Upload the result of {@link getLog} to provided url.  Provide an optional {@link SQLQuery} to contrain results between dates.  The file-upload
    * request will attach your configured {@link HttpConfig.headers} for authentication.
    *
@@ -441,7 +424,6 @@ export interface Logger {
   uploadLog(url: string, query?: SQLQuery): Promise<void | boolean>;
 
   /**
-   * <!-- doc-id: Logger.destroyLog -->
    * Destroy the entire contents of SDK's log database.
    *
    * @example

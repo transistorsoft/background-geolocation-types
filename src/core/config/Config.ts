@@ -7,7 +7,6 @@ import { ActivityConfig } from './ActivityConfig';
 import { AuthorizationConfig } from './AuthorizationConfig';
 import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationService';
 /**
- * <!-- doc-id: Config -->
  * Configuration API.
  *
  * The `Config` class defines all SDK options, grouped into compound
@@ -109,7 +108,6 @@ import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationServ
  */
 export interface Config {
   /**
-   * <!-- doc-id: Config.reset -->
    * Reset the plugin to its initial state before applying this configuration.  This is probably what you want.
    *   
    * Defaults to `true`
@@ -121,42 +119,34 @@ export interface Config {
    */
   reset?: boolean;
   /**
-   * <!-- doc-id: Config.logger -->
    * Logger configuration.
    */
   logger?: LoggerConfig;
   /**
-   * <!-- doc-id: Config.geolocation -->
    * Geolocation configuration.
    */
   geolocation?: GeoConfig;
   /**
-   * <!-- doc-id: Config.http -->
    * HTTP configuration.
    */
   http?: HttpConfig;
   /**
-   * <!-- doc-id: Config.app -->
    * App configuration.
    */
   app?: AppConfig;
   /**
-   * <!-- doc-id: Config.persistence -->
    * Persistence configuration.
    */
   persistence?: PersistenceConfig;
   /**
-   * <!-- doc-id: Config.activity -->
    * Motion Activity configuration.
    */
   activity?: ActivityConfig;
   /**
-   * <!-- doc-id: Config.authorization -->
    * Authorization configuration.
    */
   authorization?: AuthorizationConfig;
   /**
-    * <!-- doc-id: Config.transistorAuthorizationToken -->
     * *Convenience* option to automatically configures the SDK to upload locations to the Transistor Software demo server 
     * at http://tracker.transistorsoft.com (or your own local instance of [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console))
     *

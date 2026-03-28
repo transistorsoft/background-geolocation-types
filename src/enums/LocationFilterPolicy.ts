@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: LocationFilterPolicy -->
  * Defines the filtering policy applied to incoming raw GPS samples before they
  * are accepted, averaged, or rejected by the {@link LocationFilter}.
  *
@@ -73,13 +72,11 @@
  */
 export const LocationFilterPolicy = {
   /** 
-   * <!-- doc-id: LocationFilterPolicy.PassThrough -->
    * No filtering — accept all samples. Useful for debugging.
    */ 
   PassThrough: 0,
 
   /**
-   * <!-- doc-id: LocationFilterPolicy.Adjust -->
    * Balanced (default) — applies moderate filtering to reject noisy samples.
    *
    * Dynamically adjusts acceptance thresholds for incoming samples, but **never**
@@ -108,7 +105,6 @@ export const LocationFilterPolicy = {
   Adjust: 1,
 
   /** 
-   * <!-- doc-id: LocationFilterPolicy.Conservative -->
    * Aggressive — filters heavily, preferring stability over responsiveness. 
    * */ 
   Conservative: 2

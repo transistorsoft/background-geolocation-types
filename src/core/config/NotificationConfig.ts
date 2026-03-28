@@ -1,7 +1,6 @@
 import { NotificationPriority } from '../../enums/NotificationPriority';
 
 /**
- * <!-- doc-id: NotificationConfig -->
  * __Android foreground notification__
  *
  * Android requires a persistent notification whenever the SDK runs its
@@ -46,7 +45,6 @@ import { NotificationPriority } from '../../enums/NotificationPriority';
  */
 export interface NotificationConfig {
   /**
-   * <!-- doc-id: NotificationConfig.priority -->
    * __Android notification priority__
    *
    * Android requires a persistent foreground-service notification.  
@@ -82,7 +80,6 @@ export interface NotificationConfig {
   priority?: NotificationPriority;
 
   /**
-   * <!-- doc-id: NotificationConfig.sticky -->
    * Configure the Android Foreground Service icon and notification to be displayed __always__.  Defaults to `false`.
    *
    * The default behaviour is for the notification to be shown only while the SDK detects the device to be *moving*.  
@@ -91,7 +88,6 @@ export interface NotificationConfig {
   sticky?: boolean;
 
   /**
-   * <!-- doc-id: NotificationConfig.title -->
    * Configure the *title* of the persistent notification in the Notification Bar.
    *
    * Defaults to the application name from `AndroidManifest`.  Android requires a persistent notification for foreground-services.  This will configure the **title** of that notification. 
@@ -99,7 +95,6 @@ export interface NotificationConfig {
   title?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.text -->
    * Configure the *text* of the persistent notification in the Notification Bar.
    *
    * Defaults to *"Location service activated"*.  Android requires a persistent notification for foreground-services.  This will configure the **text** of that notification.
@@ -107,7 +102,6 @@ export interface NotificationConfig {
   text?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.color -->
    * Configure the *color* of the persistent notification icon in the Notification Bar.
    *
    * Defaults to `null`.  Android requires a persistent notification for foreground-services.  This will configure the **color** of the notification **icon** (API >= 21).
@@ -119,7 +113,6 @@ export interface NotificationConfig {
   color?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.smallIcon -->
    * Configure the *small icon* of the persistent notification in the Notification Bar.
    *
    * Android requires a persistent notification in the Notification Bar.  This allows you customize that icon.  Defaults to your application icon.
@@ -155,7 +148,6 @@ export interface NotificationConfig {
   smallIcon?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.largeIcon -->
    * Configure the *large icon* of the persistent notification in the Notification Bar.
    *
    * Android requires a persistent notification in the Notification Bar.  This allows you customize that icon.  Defaults to your application icon.
@@ -190,7 +182,6 @@ export interface NotificationConfig {
   largeIcon?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.layout -->
    * __Custom Android Notification Layout__
    *
    * Specifies the name of your custom Android Layout XML file.
@@ -416,7 +407,6 @@ export interface NotificationConfig {
   layout?: string;
   
   /**
-   * <!-- doc-id: NotificationConfig.strings -->
    * Custom strings to render into `<TextView />` elements of a custom notification [[layout]].
    *
    * ℹ️ See [Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout) for setup instructions.
@@ -448,7 +438,6 @@ export interface NotificationConfig {
    */
   strings?: Record<string, string>;
   /**
-   * <!-- doc-id: NotificationConfig.actions -->
    * Declare click listeners for `<Button />` elements of a custom notification {@link layout}.
    *
    * ![](https://dl.dropbox.com/s/whcb6q1gxxdk9t1/android-foreground-notification-transistor.png?dl=1)
@@ -496,7 +485,6 @@ export interface NotificationConfig {
   actions?: string[];
 
   /**
-   * <!-- doc-id: NotificationConfig.channelName -->
    * Configure the name of the plugin's notification-channel used to display the required, persistent foreground notification.
    *
    * On Android O+, the plugin's foreground-service needs to create a "Notification Channel".  The name of this channel can be seen in:
@@ -530,7 +518,6 @@ export interface NotificationConfig {
   channelName?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.channelId -->
    * Customize the notification channel ID.
    * 
    * Defaults to `your.package.name.TSLocationManager`

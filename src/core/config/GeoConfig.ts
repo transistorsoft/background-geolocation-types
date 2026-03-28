@@ -2,7 +2,6 @@ import { DesiredAccuracy } from '../../enums/DesiredAccuracy';
 import { LocationFilter } from './LocationFilter';
 import { ActivityType } from '../../enums/ActivityType';
 /**
- * <!-- doc-id: GeoConfig -->
  * **Geolocation Configuration**
  *
  * {@link GeoConfig} defines all geolocation-related options for the
@@ -152,7 +151,6 @@ import { ActivityType } from '../../enums/ActivityType';
 export interface GeoConfig {
 
   /**
-   * <!-- doc-id: GeoConfig.desiredAccuracy -->
    * Specify the desired-accuracy of the geolocation system.
    *
    * The following constants are defined upon the {@link BackgroundGeolocation} class:
@@ -182,7 +180,6 @@ export interface GeoConfig {
   desiredAccuracy?: DesiredAccuracy;
 
   /**
-   * <!-- doc-id: GeoConfig.activityType -->
    * **`[iOS only]`** Specifies the Core Motion activity type used by iOS to
    * optimize its internal stop-detection algorithm.
    *
@@ -216,7 +213,6 @@ export interface GeoConfig {
    */
   activityType?: ActivityType;
   /**
-   * <!-- doc-id: GeoConfig.distanceFilter -->
    * The minimum distance (measured in meters) a device must move horizontally before an update event is generated.
    *
    * However, by default, **`distanceFilter`** is elastically auto-calculated by the plugin:  When speed increases, **`distanceFilter`** increases;  when speed decreases, so too does **`distanceFilter`**.
@@ -265,7 +261,6 @@ export interface GeoConfig {
   distanceFilter?: number;
 
   /**   
-   * <!-- doc-id: GeoConfig.stationaryRadius -->
    * The minimum distance the device must move beyond the stationary location for aggressive background-tracking to engage.
    * 
    * ⚠️ Note: The device will not detect the exact moment it moves out of the stationary-radius.  In normal conditions, it will typically
@@ -287,7 +282,6 @@ export interface GeoConfig {
   stationaryRadius?: number;
 
   /**   
-   * <!-- doc-id: GeoConfig.stopTimeout -->
    * Minutes to wait in *moving* state with no movement before considering the device *stationary*.
    *
    * Defaults to `5` minutes.  When in the *moving* state, specifies the number of minutes to wait before turning off location-services and
@@ -303,7 +297,6 @@ export interface GeoConfig {
   stopTimeout?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.stopOnStationary -->
    * Automatically {@link BackgroundGeolocation.stop} when the {@link stopTimeout} elapses.
    *
    * The plugin can optionally automatically stop tracking when the {@link stopTimeout} timer elapses.  For example, when the plugin
@@ -326,7 +319,6 @@ export interface GeoConfig {
   stopOnStationary?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.pausesLocationUpdatesAutomatically -->
    * **`[iOS only]`** Prevent the iOS location API from *ever* automatically turning off.
    *
    * **⚠️ WARNING:**  
@@ -350,7 +342,6 @@ export interface GeoConfig {
   pausesLocationUpdatesAutomatically?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.disableElasticity -->
    * Defaults to **`false`**.  Set **`true`** to disable automatic, speed-based {@link distanceFilter} auto-scaling.  By default, the SDK automatically
    * increases {@link distanceFilter} as speed increases (and decreases it as speed *decreases*) in order to record fewer locations and conserve energy.
    *
@@ -366,7 +357,6 @@ export interface GeoConfig {
   disableElasticity?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.elasticityMultiplier -->
    * Controls the scale of automatic speed-based {@link distanceFilter} elasticity.
    *
    * Increasing `elasticityMultiplier` will result in fewer location samples as speed increases.  A value of `0` has the same effect as
@@ -375,7 +365,6 @@ export interface GeoConfig {
   elasticityMultiplier?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.stopAfterElapsedMinutes -->
    * Automatically {@link BackgroundGeolocation.stop} tracking after *x* minutes.
    *
    * The plugin can optionally automatically {@link BackgroundGeolocation.stop} after some number of minutes elapses after the {@link BackgroundGeolocation.start} method was called.
@@ -392,7 +381,6 @@ export interface GeoConfig {
   stopAfterElapsedMinutes?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.useSignificantChangesOnly -->
    * Set `true` in order to disable constant background-tracking.  Locations will be recorded only periodically.
    *
    * Defaults to `false`.  A location will be recorded only every `500` to `1000` meters (can be higher in non urban environments; depends upon the spacing of Cellular towers).  Many of the plugin's configuration parameters **will have no effect**, such as {@link distanceFilter}, {@link stationaryRadius}, {@link activityType}, etc.
@@ -420,7 +408,6 @@ export interface GeoConfig {
   useSignificantChangesOnly?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.disableLocationAuthorizationAlert -->
    * Disables automatic authorization alert when plugin detects the user has disabled location authorization.
    *
    * You will be responsible for handling disabled location authorization by listening to the {@link BackgroundGeolocation.onProviderChange} event.
@@ -462,7 +449,6 @@ export interface GeoConfig {
   disableLocationAuthorizationAlert?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.locationAuthorizationRequest -->
    * Defines the *desired* location-authorization level your app expects from the user:
    *
    * - **`"Always"`**
@@ -594,7 +580,6 @@ export interface GeoConfig {
   locationAuthorizationRequest?: 'Always' | 'WhenInUse' | 'Any';
 
   /**
-   * <!-- doc-id: GeoConfig.locationAuthorizationAlert -->
    * **[iOS only]** Customize the text displayed in the SDK’s
    * location-authorization alert dialog.
    *
@@ -632,7 +617,6 @@ export interface GeoConfig {
   locationAuthorizationAlert?: Record<string, any>;
 
   /**
-   * <!-- doc-id: GeoConfig.showsBackgroundLocationIndicator -->
    * [__iOS Only__] A Boolean indicating whether the status bar changes its appearance when an app uses location services in the background with `Always` authorization.
    *
    * The default value of this property is `true`. The background location usage indicator is a blue bar or a blue pill in the status bar on iOS; on watchOS the indicator is a small icon. Users can tap the indicator to return to your app.
@@ -644,7 +628,6 @@ export interface GeoConfig {
   showsBackgroundLocationIndicator?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.locationUpdateInterval -->
    * **[Android only]** Desired interval for *active* location updates, in milliseconds.
    *
    * **⚠️ Important**
@@ -677,7 +660,6 @@ export interface GeoConfig {
   locationUpdateInterval?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.fastestLocationUpdateInterval -->
    * __`[Android only]`__ Explicitly sets the *fastest* interval for location updates,
    * in milliseconds.
    *
@@ -719,7 +701,6 @@ export interface GeoConfig {
   fastestLocationUpdateInterval?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.deferTime -->
    * __`[Android only]`__ Sets the maximum wait time in milliseconds for location updates.
    *
    * Defaults to `0` (no defer).  
@@ -734,7 +715,6 @@ export interface GeoConfig {
   deferTime?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.allowIdenticalLocations -->
    * __`[Android only]`__ Allow recording locations which are duplicates of the previous.
    *
    * By default, the Android plugin will ignore a received location when it is *identical* to the previous location.  Set `true` to override this behavior 
@@ -754,7 +734,6 @@ export interface GeoConfig {
   allowIdenticalLocations?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.geofenceProximityRadius -->
    * Defines the radius (in meters) around the device used to query for geofences
    * that should be actively monitored.
    *
@@ -780,7 +759,6 @@ export interface GeoConfig {
   geofenceProximityRadius?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.geofenceModeHighAccuracy -->
    * __`[Android only]`__ Enable high-accuracy for **geofence-only** mode (See {@link BackgroundGeolocation.startGeofences}).
    *
    * __⚠️ Warning: Will consume more power.__
@@ -823,7 +801,6 @@ export interface GeoConfig {
   geofenceModeHighAccuracy?:boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.disableStopDetection -->
    * Disable the motion-activity–based stop-detection system.
    *
    * When enabled (`true`), the SDK ignores platform motion-activity signals when
@@ -874,7 +851,6 @@ export interface GeoConfig {
   disableStopDetection?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.geofenceInitialTriggerEntry -->
    * When a device is already within a just-created geofence, fire the **enter** transition immediately.
    *
    * Defaults to `true`.  Set `false` to disable triggering a geofence immediately if device is already inside it.
@@ -885,7 +861,6 @@ export interface GeoConfig {
   geofenceInitialTriggerEntry?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.filter -->
    * Defines how raw GPS samples are filtered, denoised, and smoothed before being
    * recorded or used for odometer calculations.
    *
@@ -962,7 +937,6 @@ export interface GeoConfig {
    */
   filter?: LocationFilter;  
   /**
-   * <!-- doc-id: GeoConfig.enableTimestampMeta -->
    * Enable extra timestamp meta data to be appended to each recorded location, including system-time.
    *
    * Some developers have reported GPS {@link Location.timestamp} issues with some Android devices.  This option will append extra meta-data related to the device's system time.
