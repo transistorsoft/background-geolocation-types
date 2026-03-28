@@ -28,8 +28,8 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * consumes this queue in the background, surviving app termination and device
  * reboot. When connectivity returns it resumes automatically.
  *
- * | Area | Keys | Notes |
- * |------|------|-------|
+ * | Category | Properties | Notes |
+ * |----------|------------|-------|
  * | **Destination** | {@link url}, {@link method} | `method` defaults to `POST`. |
  * | **Payload** | {@link rootProperty}, {@link params}, {@link headers} | Controls JSON body and headers. |
  * | **Sync cadence** | {@link autoSync}, {@link autoSyncThreshold}, {@link batchSync}, {@link maxBatchSize} | Immediate vs batched uploads. |

@@ -119,8 +119,8 @@ export interface PermissionRationale {
  *
  * ### Overview
  *
- * | Area | Keys | Notes |
- * |------|------|-------|
+ * | Category | Properties | Notes |
+ * |----------|------------|-------|
  * | **Lifecycle** | `stopOnTerminate`, `startOnBoot` | Controls tracking across app terminate and device reboot. |
  * | **Headless** | `enableHeadless` | [Android only] Tracking continues with no JS/UI process. |
  * | **Heartbeat** | `heartbeatInterval`, `preventSuspend` | Periodic background callbacks. `preventSuspend` is [iOS only]. |

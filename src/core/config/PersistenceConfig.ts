@@ -26,8 +26,8 @@ import { PersistMode } from '../../enums/PersistMode';
  * deleted by downstream services. The SDK prefers an empty database — records exist
  * only while awaiting upload or retrieval.
  *
- * | Area | Keys | Notes |
- * |------|------|-------|
+ * | Category | Properties | Notes |
+ * |----------|------------|-------|
  * | **Retention** | {@link maxDaysToPersist}, {@link maxRecordsToPersist} | TTL and count-based purge limits. |
  * | **Ordering** | {@link locationsOrderDirection} | Controls upload and retrieval order. |
  * | **Templates** | {@link locationTemplate}, {@link geofenceTemplate} | Custom JSON structure for uploads. |

@@ -29,8 +29,8 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  * {@link AuthorizationConfig.refreshPayload}, the SDK can automatically refresh
  * expired tokens when a `401 Unauthorized` response is received.
  *
- * | Area | Keys | Notes |
- * |------|------|-------|
+ * | Category | Properties | Notes |
+ * |----------|------------|-------|
  * | **Token** | `strategy`, `accessToken`, `expires` | Token value and expiry. |
  * | **Refresh** | `refreshUrl`, `refreshToken`, `refreshPayload`, `refreshHeaders` | Auto-refresh on `401` or expiry. |
  *
