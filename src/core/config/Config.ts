@@ -13,13 +13,13 @@ import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationServ
  * `Config` groups all SDK options into typed sub-interfaces. Each key maps to a
  * dedicated configuration area — set only the keys relevant to your use case.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Examples](#examples)
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * | Key | Type | Description |
  * |-----|------|-------------|
@@ -38,7 +38,7 @@ import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationServ
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example Minimal configuration
  * ```ts
@@ -135,7 +135,7 @@ export interface Config {
    * it ignores the `Config` argument entirely — the only way to change settings is
    * via {@link BackgroundGeolocation.setConfig}.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * During development, always leave `reset: true` (or omit it). Setting `reset:
    * false` causes the SDK to ignore your `Config` after the first launch, so

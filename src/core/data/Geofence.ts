@@ -13,7 +13,7 @@ export type Vertices = [number, number][];
  * overcomes the platform limits of 20 (iOS) and 100 (Android) simultaneous
  * geofences.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Adding geofences](#adding-geofences)
  * - [Listening for events](#listening-for-events)
@@ -25,7 +25,7 @@ export type Vertices = [number, number][];
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * | Field | Required | Description |
  * |-------|:--------:|-------------|
@@ -39,14 +39,14 @@ export type Vertices = [number, number][];
  * | {@link vertices} | — | Polygon geofence vertices (replaces lat/lng/radius). |
  * | {@link extras} | — | Arbitrary key-value metadata posted with each event. |
  *
- * ### ⚠️ Warning
+ * ## ⚠️ Warning
  *
  * Both platforms require {@link GeoConfig.locationAuthorizationRequest} to be
  * `"Always"`. Geofencing does **not** work with `"WhenInUse"` only.
  *
  * ---
  *
- * ### Adding geofences
+ * ## Adding geofences
  *
  * Use {@link BackgroundGeolocation.addGeofence} for a single geofence, or
  * {@link BackgroundGeolocation.addGeofences} for bulk inserts (approximately
@@ -87,7 +87,7 @@ export type Vertices = [number, number][];
  *
  * ---
  *
- * ### Listening for events
+ * ## Listening for events
  *
  * Subscribe to geofence transitions with {@link BackgroundGeolocation.onGeofence}.
  * Subscribe to changes in the actively monitored set with
@@ -108,14 +108,14 @@ export type Vertices = [number, number][];
  * });
  * ```
  *
- * ### Note
+ * ## Note
  *
  * When all geofences are removed, {@link BackgroundGeolocation.onGeofencesChange}
  * fires with empty arrays for both `on` and `off`.
  *
  * ---
  *
- * ### Polygon geofencing
+ * ## Polygon geofencing
  *
  * The SDK supports polygon geofences of any shape via the {@link vertices}
  * field. Polygon geofencing is
@@ -146,7 +146,7 @@ export type Vertices = [number, number][];
  *
  * ---
  *
- * ### Infinite geofencing
+ * ## Infinite geofencing
  *
  * The SDK stores all geofences in its database and uses a
  * [geospatial query](https://en.wikipedia.org/wiki/Spatial_query) to
@@ -162,7 +162,7 @@ export type Vertices = [number, number][];
  *
  * ---
  *
- * ### Removing geofences
+ * ## Removing geofences
  *
  * Geofences persist in the SDK's database until explicitly removed. If
  * {@link AppConfig.stopOnTerminate} is `false` and
@@ -187,7 +187,7 @@ export type Vertices = [number, number][];
  *
  * ---
  *
- * ### Geofences-only mode
+ * ## Geofences-only mode
  *
  * Call {@link BackgroundGeolocation.startGeofences} instead of
  * {@link BackgroundGeolocation.start} to monitor geofences without continuous
@@ -212,7 +212,7 @@ export type Vertices = [number, number][];
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example Toggle between location tracking and geofences-only mode
  * ```typescript
@@ -281,7 +281,7 @@ export interface Geofence {
    * Omit when defining a polygon geofence via {@link vertices} — the SDK
    * calculates the enclosing radius automatically.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * The minimum reliable radius is **`200` meters**. Below this threshold,
    * geofences may not trigger reliably on either platform.
@@ -335,7 +335,7 @@ export interface Geofence {
    * against the polygon at high frequency. When it exits the circle, polygon
    * monitoring ceases.
    *
-   * ### Note
+   * ## Note
    *
    * Polygon geofencing is [sold as a separate add-on](https://shop.transistorsoft.com/products/polygon-geofencing)
    * but is fully functional in DEBUG builds.

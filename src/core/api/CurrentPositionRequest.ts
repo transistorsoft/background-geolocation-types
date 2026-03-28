@@ -32,7 +32,7 @@ export interface CurrentPositionRequest {
    * receives a location with `accuracy ≤ desiredAccuracy` and returns it
    * immediately. Defaults to {@link GeoConfig.stationaryRadius}.
    *
-   * ### Note
+   * ## Note
    *
    * This value is a **stopping threshold**, not a hardware accuracy setting.
    * The SDK always requests locations at {@link DesiredAccuracy.High} from

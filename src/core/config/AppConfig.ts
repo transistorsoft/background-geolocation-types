@@ -9,13 +9,13 @@ import { NotificationConfig } from './NotificationConfig';
  * why background access is needed and routes the user to the system Location
  * Permissions screen to grant it explicitly.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Template tags](#template-tags)
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * The SDK presents this dialog automatically when
  * {@link GeoConfig.locationAuthorizationRequest} is `"Always"` and
@@ -55,7 +55,7 @@ import { NotificationConfig } from './NotificationConfig';
  *
  * ---
  *
- * ### Template tags
+ * ## Template tags
  *
  * Embed the following variables inside any rationale field using `{tagName}` syntax:
  *
@@ -100,7 +100,7 @@ export interface PermissionRationale {
  * automated scheduler windows, foreground notifications, and the Android
  * background-permission rationale dialog.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Lifecycle](#lifecycle)
  * - [Heartbeat](#heartbeat)
@@ -111,7 +111,7 @@ export interface PermissionRationale {
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * | Category | Properties | Notes |
  * |----------|------------|-------|
@@ -134,7 +134,7 @@ export interface PermissionRationale {
  *
  * ---
  *
- * ### Lifecycle
+ * ## Lifecycle
  *
  * {@link AppConfig.stopOnTerminate} (default `true`) controls whether tracking
  * stops when the user terminates the app. Set to `false` to continue tracking
@@ -156,7 +156,7 @@ export interface PermissionRationale {
  *
  * ---
  *
- * ### Heartbeat
+ * ## Heartbeat
  *
  * {@link AppConfig.heartbeatInterval} fires {@link BackgroundGeolocation.onHeartbeat}
  * periodically while the app is in the background. On iOS, this requires
@@ -170,7 +170,7 @@ export interface PermissionRationale {
  *
  * ---
  *
- * ### Scheduler
+ * ## Scheduler
  *
  * {@link AppConfig.schedule} accepts an array of schedule strings that tell the
  * SDK when to automatically start and stop tracking. Each string follows the
@@ -186,7 +186,7 @@ export interface PermissionRationale {
  *
  * ---
  *
- * ### Background permission
+ * ## Background permission
  *
  * Android 11 removed the **Allow all the time** option from the system location
  * dialog. Configure {@link AppConfig.backgroundPermissionRationale} to show a
@@ -198,7 +198,7 @@ export interface PermissionRationale {
  *
  * ---
  *
- * ### Migration
+ * ## Migration
  *
  * The following properties were previously on the root `Config` object and are
  * now deprecated there. Supply them via `Config.app` instead:
@@ -215,7 +215,7 @@ export interface PermissionRationale {
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example Configure once at startup:
  *
@@ -273,7 +273,7 @@ export interface AppConfig {
    * to keep tracking alive after termination — iOS and Android behave differently
    * in this state.
    *
-   * #### iOS
+   * ## iOS
    *
    * Before termination, the SDK registers a stationary geofence of
    * {@link GeoConfig.stationaryRadius} meters around the last known position.
@@ -285,7 +285,7 @@ export interface AppConfig {
    *
    * ![](https://dl.dropboxusercontent.com/s/1uip231l3gds68z/screenshot-stopOnTerminate-ios.png?dl=0)
    *
-   * #### Android
+   * ## Android
    *
    * Android does not pause tracking when the user terminates the app. The native
    * background service continues running headlessly without the JS/UI process.
@@ -302,7 +302,7 @@ export interface AppConfig {
    * Controls whether tracking resumes automatically after the device reboots.
    * Defaults to `false`.
    *
-   * #### iOS
+   * ## iOS
    *
    * iOS cannot begin tracking immediately after a reboot. Similar to
    * {@link AppConfig.stopOnTerminate} `false`, the SDK waits until one of the
@@ -311,7 +311,7 @@ export interface AppConfig {
    *   location.
    * - A system Background Fetch event fires (typically every ~15 minutes).
    *
-   * #### Android
+   * ## Android
    *
    * When `true`, Android relaunches the SDK background service after reboot and
    * initial device unlock. If {@link AppConfig.enableHeadless} is also `true`,
@@ -333,7 +333,7 @@ export interface AppConfig {
    * {@link BackgroundGeolocation.registerHeadlessTask} to handle events in this
    * state.
    *
-   * ### Note
+   * ## Note
    *
    * - Requires {@link AppConfig.stopOnTerminate} `false`.
    * - With `stopOnTerminate: false`, the SDK records and uploads locations
@@ -351,17 +351,17 @@ export interface AppConfig {
    * Rate in seconds at which {@link BackgroundGeolocation.onHeartbeat} events
    * fire while the app is in the background.
    *
-   * #### iOS
+   * ## iOS
    *
    * Requires {@link AppConfig.preventSuspend} `true`. Defaults to `60` seconds
    * when enabled.
    *
-   * #### Android
+   * ## Android
    *
    * Heartbeat is disabled by default (`-1`). Set to a positive integer of at
    * least `60` to enable it. Values below `60` are not supported.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * - On iOS, heartbeat fires only when {@link AppConfig.preventSuspend} is
    *   `true`.
@@ -451,7 +451,7 @@ export interface AppConfig {
    * });
    * ```
    *
-   * #### Literal dates
+   * ## Literal dates
    *
    * A schedule entry may use a literal date range:
    *
@@ -487,7 +487,7 @@ export interface AppConfig {
    * });
    * ```
    *
-   * #### Scheduling modes
+   * ## Scheduling modes
    *
    * Append `geofence` or `location` to explicitly choose a tracking mode.
    * `location` is the default and may be omitted:
@@ -504,7 +504,7 @@ export interface AppConfig {
    * });
    * ```
    *
-   * #### iOS
+   * ## iOS
    *
    * - iOS cannot evaluate the schedule exactly at the configured time.
    *   Evaluation occurs only when the app is awakened.
@@ -515,7 +515,7 @@ export interface AppConfig {
    * - Schedule evaluation occurs when the app pauses/resumes, any location is
    *   recorded (including SLC), or a Background Fetch event fires.
    *
-   * #### Android
+   * ## Android
    *
    * Uses `AlarmManager.setExactAndAllowWhileIdle`, typically evaluating
    * on-the-minute.
@@ -605,7 +605,7 @@ export interface AppConfig {
    * });
    * ```
    *
-   * #### Template tags
+   * ## Template tags
    *
    * Embed the following variables inside {@link PermissionRationale | PermissionRationale}
    * fields using `{tagName}` syntax:
@@ -631,7 +631,7 @@ export interface AppConfig {
    * disables location services. This is required for
    * {@link AppConfig.heartbeatInterval} to fire on iOS.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * `preventSuspend: true` has a large and noticeable impact on battery
    * consumption. Use it only for specific, time-limited use cases — it is not

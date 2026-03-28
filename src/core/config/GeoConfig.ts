@@ -8,7 +8,7 @@ import { ActivityType } from '../../enums/ActivityType';
  * the accuracy tier, sampling rate, speed-based elasticity, stop-detection, platform
  * permissions, geofence proximity, and GPS noise filtering.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Accuracy and sampling](#accuracy-and-sampling)
  * - [Elasticity](#elasticity)
@@ -21,7 +21,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * `GeoConfig` is supplied via {@link Config.geolocation} when calling
  * {@link BackgroundGeolocation.ready} or {@link BackgroundGeolocation.setConfig}.
@@ -49,7 +49,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Accuracy and sampling
+ * ## Accuracy and sampling
  *
  * {@link desiredAccuracy} selects the location-provider tier. Only
  * {@link DesiredAccuracy.High} activates GPS — lower tiers use Wi-Fi and cell towers
@@ -69,7 +69,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Elasticity
+ * ## Elasticity
  *
  * By default, the SDK scales {@link distanceFilter} automatically as the device's speed
  * changes — recording fewer locations at highway speed and more at walking speed.
@@ -85,7 +85,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Motion detection
+ * ## Motion detection
  *
  * The SDK uses platform motion APIs to switch between *moving* and *stationary* states,
  * turning location services off when the device is idle to save power.
@@ -104,7 +104,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Permissions
+ * ## Permissions
  *
  * {@link locationAuthorizationRequest} declares which authorization level your app
  * requires (`"Always"`, `"WhenInUse"`, or `"Any"`). The SDK guides users through the
@@ -117,7 +117,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Geofencing
+ * ## Geofencing
  *
  * The SDK removes the platform limit on monitored geofences by maintaining a spatial
  * database and activating only the geofences within {@link geofenceProximityRadius} of
@@ -132,7 +132,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Filtering
+ * ## Filtering
  *
  * {@link filter} applies Kalman smoothing, rolling-window averaging, and accuracy and
  * speed constraints to raw platform samples before they are recorded. This reduces GPS
@@ -141,7 +141,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Migration
+ * ## Migration
  *
  * Geolocation options previously lived at the root of `Config`. They are now grouped
  * under the `geolocation` key. Legacy flat keys remain supported but are **deprecated**
@@ -172,7 +172,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example High-accuracy tracking
  * ```ts
@@ -228,7 +228,7 @@ export interface GeoConfig {
    * | {@link DesiredAccuracy.VeryLow}   | Cellular only                        | Lowest power; lowest accuracy   |
    * | {@link DesiredAccuracy.Lowest}     | (**iOS only**)                       | Lowest power; lowest accuracy   |
    *
-   * ### Note
+   * ## Note
    * Only {@link DesiredAccuracy.High} uses GPS. `speed`, `heading`, and `altitude` are
    * available only when GPS is active.
    *
@@ -265,7 +265,7 @@ export interface GeoConfig {
    * | {@link ActivityType.OtherNavigation}             |
    * | {@link ActivityType.Airborne}                    |
    *
-   * ### Note
+   * ## Note
    * For more details, see Apple's documentation:
    * https://developer.apple.com/reference/corelocation/cllocationmanager/1620567-activitytype
    *
@@ -292,14 +292,14 @@ export interface GeoConfig {
    * increases, `distanceFilter` increases; when speed decreases, so too does
    * `distanceFilter`.
    *
-   * ### Note
+   * ## Note
    * - To disable auto-scaling, set {@link disableElasticity} to `true`.
    * - To control the scale of the automatic calculation, see {@link elasticityMultiplier}.
    *
    * `distanceFilter` is auto-scaled by rounding speed to the nearest `5 m/s` and
    * multiplying `distanceFilter` by the result:
    *
-   * #### At biking speed (7.7 m/s, distanceFilter: 30)
+   * ## At biking speed (7.7 m/s, distanceFilter: 30)
    * ```
    * rounded_speed = round(7.7, 5)  => 10
    * multiplier = rounded_speed / 5  => 10 / 5 = 2
@@ -307,7 +307,7 @@ export interface GeoConfig {
    *   => 2 * 30 = 60 meters
    * ```
    *
-   * #### At highway speed (27 m/s, distanceFilter: 50)
+   * ## At highway speed (27 m/s, distanceFilter: 50)
    * ```
    * rounded_speed = round(27, 5)    => 30
    * multiplier = rounded_speed / 5  => 30 / 5 = 6
@@ -331,15 +331,15 @@ export interface GeoConfig {
    * The minimum distance the device must move beyond the stationary location before
    * aggressive background-tracking re-engages.
    *
-   * #### iOS
+   * ## iOS
    * Defaults to `25` meters. In practice, iOS requires approximately **200 meters**
    * of movement before triggering exit from the stationary state — the platform does not
    * detect departure at the exact radius boundary.
    *
-   * #### Android
+   * ## Android
    * Defaults to `150` meters (minimum `25`, maximum `1000`).
    *
-   * ### Warning
+   * ## Warning
    * Setting `stationaryRadius: 0` has no effect — a minimum of `25` meters is enforced.
    * In practice, the native API does not respond until the device has moved approximately
    * 200 meters.
@@ -366,7 +366,7 @@ export interface GeoConfig {
    * recognition system reports `STILL` before turning off location services. A common
    * use-case is to delay GPS OFF while a car is stopped at a traffic light.
    *
-   * ### Warning
+   * ## Warning
    * Setting a very long `stopTimeout` keeps location services active while the device is
    * potentially motionless for extended periods, which may significantly impact battery
    * life.
@@ -384,7 +384,7 @@ export interface GeoConfig {
    * When `true`, the SDK stops itself the next time {@link BackgroundGeolocation.onMotionChange}
    * fires into the *stationary* state after the {@link stopTimeout} timer elapses.
    *
-   * ### Warning
+   * ## Warning
    * `stopOnStationary` fires only when the SDK transitions to the stationary state due
    * to {@link stopTimeout} expiry. It does **not** fire when you manually call
    * {@link BackgroundGeolocation.changePace} with `false`.
@@ -416,7 +416,7 @@ export interface GeoConfig {
    * - {@link ActivityConfig.disableStopDetection} to `true` automatically
    * - You to manage tracking lifetime manually
    *
-   * ### Warning
+   * ## Warning
    * Setting this to `false` can cause **severe battery drain**. Only use this for
    * highly specialised use-cases where you fully control tracking lifecycle (for
    * example, a workout app that calls {@link BackgroundGeolocation.changePace} directly).
@@ -484,15 +484,15 @@ export interface GeoConfig {
    * Using `useSignificantChangesOnly: true` provides significant power savings at the
    * expense of fewer recorded locations.
    *
-   * #### iOS
+   * ## iOS
    * Engages the iOS [Significant Location Changes API](https://developer.apple.com/reference/corelocation/cllocationmanager/1423531-startmonitoringsignificantlocati?language=objc),
    * delivering updates every 500–1000 meters.
    *
-   * ### Note
+   * ## Note
    * If Apple has rejected your app for using `UIBackgroundMode: "location"`, this mode
    * can be a viable alternative.
    *
-   * #### Android
+   * ## Android
    * A location is recorded several times per hour while the device is in the *moving*
    * state. No foreground service is run (and no persistent {@link NotificationConfig}
    * notification is shown).
@@ -517,12 +517,12 @@ export interface GeoConfig {
    * When set to `true`, you are responsible for handling authorization changes by
    * listening to {@link BackgroundGeolocation.onProviderChange}.
    *
-   * #### iOS
+   * ## iOS
    * The alert dialog text can be customized via {@link locationAuthorizationAlert}.
    *
    * ![](https://dl.dropbox.com/s/wk66ave2mzq6m6a/ios-locationAuthorizationAlert.jpg?dl=1)
    *
-   * #### Android
+   * ## Android
    * Android detects when the device's *Settings → Location* mode does not satisfy your
    * location request. For example, if the user selects *Battery Saving* (Wi-Fi only) but
    * you requested {@link DesiredAccuracy.High} (GPS), Android shows a resolution dialog
@@ -566,7 +566,7 @@ export interface GeoConfig {
    * {@link locationAuthorizationAlert} unless suppressed via
    * {@link disableLocationAuthorizationAlert}.
    *
-   * #### iOS
+   * ## iOS
    *
    * iOS 13+ no longer grants **Always Allow** on the initial dialog. After granting
    * **While Using the App**, iOS may later prompt the user to upgrade.
@@ -616,7 +616,7 @@ export interface GeoConfig {
    * }
    * ```
    *
-   * #### Android
+   * ## Android
    *
    * **Android 11+ (targetSdkVersion ≥ 30)**
    *
@@ -677,7 +677,7 @@ export interface GeoConfig {
    *
    * ![](https://dl.dropboxusercontent.com/s/wyoaf16buwsw7ed/docs-locationAuthorizationAlert.jpg?dl=1)
    *
-   * ### Warning
+   * ## Warning
    * You must supply **all** fields — not just a subset. Omitting any field will cause the
    * alert to display an empty or unexpected string.
    *
@@ -722,7 +722,7 @@ export interface GeoConfig {
    *
    * Apps with only coarse location permission may have this interval silently throttled.
    *
-   * ### Warning
+   * ## Warning
    * `locationUpdateInterval` is ignored when {@link distanceFilter} is greater than `0`.
    * Set `distanceFilter` to `0` to activate time-based sampling.
    *
@@ -751,7 +751,7 @@ export interface GeoConfig {
    * Unlike {@link locationUpdateInterval}, this value is a hard cap — the SDK never
    * receives updates faster than this interval.
    *
-   * ### Note
+   * ## Note
    * - A value of `0` is allowed but not recommended, since some devices may deliver
    *   extremely rapid updates.
    * - If `fastestLocationUpdateInterval` is slower than {@link locationUpdateInterval},
@@ -796,7 +796,7 @@ export interface GeoConfig {
    * TSLocationManager:   ℹ️  IGNORED: same as last location
    * ```
    *
-   * ### Note
+   * ## Note
    * Identical locations are common when transitioning from *stationary* → *moving*
    * (where a single fix is requested before continuous updates begin) or when
    * geolocation config parameters change (e.g., {@link distanceFilter}).
@@ -813,10 +813,10 @@ export interface GeoConfig {
    * radius. As the device moves, the active set updates automatically, firing
    * {@link BackgroundGeolocation.onGeofencesChange}.
    *
-   * #### iOS
+   * ## iOS
    * Defaults to `2000` meters (minimum `100` meters for reliable detection).
    *
-   * #### Android
+   * ## Android
    * Defaults to `1000` meters.
    *
    * **See also**
@@ -840,7 +840,7 @@ export interface GeoConfig {
    * - {@link GeoConfig.distanceFilter}
    * - {@link GeoConfig.deferTime}
    *
-   * ### Warning
+   * ## Warning
    * High-accuracy mode consumes more power. The more aggressively you configure the
    * location-update params above, the more responsive geofence triggering will be — and
    * the higher the power cost.
@@ -874,7 +874,7 @@ export interface GeoConfig {
    * whether the device is stationary. This affects how and when location services are
    * automatically turned off on both platforms.
    *
-   * #### iOS
+   * ## iOS
    * Disables the accelerometer-based stop-detection system. iOS location services then
    * turn off automatically after **exactly 15 minutes** of no motion — you lose control
    * over {@link stopTimeout}.
@@ -892,7 +892,7 @@ export interface GeoConfig {
    * });
    * ```
    *
-   * ### Warning
+   * ## Warning
    * With `disableStopDetection: true` and `pausesLocationUpdatesAutomatically: false`,
    * iOS location services **never** turn off. This can severely drain the battery.
    * Only use this configuration if you fully control tracking manually (for example, a
@@ -902,7 +902,7 @@ export interface GeoConfig {
    *
    * ![](https://dl.dropbox.com/scl/fi/fhkz97f9jl4omnv7y30by/ios-stop-detection-timing.png?rlkey=cvs9h2nnngmmz9bwh1vg3796g&dl=1)
    *
-   * #### Android
+   * ## Android
    * When `true`, Android location services never turn off automatically. You must
    * disable tracking manually by calling {@link BackgroundGeolocation.changePace} with
    * `false`, or {@link BackgroundGeolocation.stop}.
@@ -934,7 +934,7 @@ export interface GeoConfig {
    * and speed, distance, and accuracy constraints to produce smoother paths, reduce
    * jitter, and improve odometer stability.
    *
-   * #### Filtering flow
+   * ## Filtering flow
    *
    * ![](https://dl.dropbox.com/scl/fi/71rkzdo2tr3qm651ulou8/location-filter-flowchart.svg?rlkey=16zxs3lnqvlrw137974jbsoj7&dl=1)
    *
@@ -953,7 +953,7 @@ export interface GeoConfig {
    * | **{@link LocationFilter.odometerUseKalmanFilter}** | Applies Kalman smoothing to odometer calculations. |
    * | **{@link LocationFilter.odometerAccuracyThreshold}** | Maximum accuracy (meters) allowed for a sample to affect the odometer. Default: `100`. |
    *
-   * ### Note
+   * ## Note
    * - Distances are in **meters**.
    * - Time fields are in **milliseconds** unless otherwise specified.
    * - Filtering affects **recorded** locations only — it does not influence real-time motion detection.
@@ -996,7 +996,7 @@ export interface GeoConfig {
    * differ from the device's system clock. Enabling this option appends additional
    * timing fields to each location for debugging and cross-referencing.
    *
-   * #### Android
+   * ## Android
    * ```java
    * JSONObject timestampMeta = new JSONObject();
    * timestampMeta.put("time", mLocation.getTime());
@@ -1008,7 +1008,7 @@ export interface GeoConfig {
    * }
    * ```
    *
-   * #### iOS
+   * ## iOS
    * ```objc
    * long long systemTime = (long long)([[NSDate date] timeIntervalSince1970] * 1000.0);
    * long long locationTime = (long long)([_location.timestamp timeIntervalSince1970] * 1000.0);

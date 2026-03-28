@@ -7,7 +7,7 @@ import { PersistMode } from '../../enums/PersistMode';
  * records in its on-device SQLite database — the durable buffer between data
  * producers (locations, geofences) and consumers (your app and the HTTP service).
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Storage lifecycle](#storage-lifecycle)
  * - [Ordering](#ordering)
@@ -18,7 +18,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * The SDK maintains an internal SQLite database as a rolling queue. Each recorded
  * {@link Location} and geofence event is written immediately, then consumed and
@@ -51,7 +51,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *
  * ---
  *
- * ### Storage lifecycle
+ * ## Storage lifecycle
  *
  * Records are written to SQLite immediately upon recording and deleted when **any**
  * of the following occur:
@@ -66,7 +66,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *
  * ---
  *
- * ### Ordering
+ * ## Ordering
  *
  * {@link locationsOrderDirection} controls the order in which records are selected
  * for upload or returned by {@link BackgroundGeolocation.getLocations}:
@@ -76,7 +76,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *
  * ---
  *
- * ### Templates
+ * ## Templates
  *
  * By default the SDK serializes locations and geofence events using its standard
  * JSON schema. Use {@link locationTemplate} and {@link geofenceTemplate} to
@@ -87,7 +87,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *
  * ---
  *
- * ### Persist mode
+ * ## Persist mode
  *
  * {@link persistMode} controls which event types are written to SQLite. All events
  * are still delivered to their live callbacks ({@link BackgroundGeolocation.onLocation},
@@ -107,7 +107,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *
  * ---
  *
- * ### Migration
+ * ## Migration
  *
  * Persistence options previously lived at the root of `Config`. They are now grouped
  * under the `persistence` key. Legacy flat keys remain available but are **deprecated**
@@ -148,7 +148,7 @@ import { PersistMode } from '../../enums/PersistMode';
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example Configure persistence behavior
  * ```ts
@@ -227,7 +227,7 @@ export interface PersistenceConfig {
    * });
    * ```
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * The SDK does not automatically insert quotes around string values. Templates
    * are JSON-encoded exactly as written.
@@ -265,7 +265,7 @@ export interface PersistenceConfig {
    * {"timestamp": "2018-01-01T12:01:01.123Z"}
    * ```
    *
-   * #### Configured {@link PersistenceConfig.extras | extras}
+   * ## Configured {@link PersistenceConfig.extras | extras}
    *
    * If {@link extras} are configured, the key/value pairs are merged directly
    * into the rendered location JSON.
@@ -296,7 +296,7 @@ export interface PersistenceConfig {
    * }
    * ```
    *
-   * #### Template tags
+   * ## Template tags
    *
    * | Tag                    | Type      | Description |
    * |------------------------|-----------|-------------|
@@ -355,7 +355,7 @@ export interface PersistenceConfig {
    * });
    * ```
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * The SDK does not automatically apply double-quotes around string data.
    * Templates are JSON-encoded exactly as written.
@@ -388,7 +388,7 @@ export interface PersistenceConfig {
    * {"timestamp": "2018-01-01T12:01:01.123Z"}
    * ```
    *
-   * #### Template tags
+   * ## Template tags
    *
    * Identical to {@link locationTemplate} with the following additions:
    *
@@ -469,7 +469,7 @@ export interface PersistenceConfig {
    * | {@link PersistMode.Geofence} | Persist geofence events only. |
    * | {@link PersistMode.None} | Persist nothing. |
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * This setting is intended for specialized cases. For example, if you need
    * continuous location tracking via {@link BackgroundGeolocation.start} but only

@@ -9,13 +9,13 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  * fine-grained control over how the SDK handles noisy or inconsistent location
  * data from the underlying platform.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Examples](#examples)
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * The SDK applies several processing stages to each raw GPS sample before
  * recording it: Kalman filtering, rolling-window burst averaging, and
@@ -60,7 +60,7 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example
  * ```ts
@@ -98,7 +98,7 @@ export interface LocationFilter {
    * - Survey or analytics apps may prefer `Conservative` for maximum stability,
    *   or `PassThrough` to capture unmodified raw samples.
    *
-   * ### Note
+   * ## Note
    * This policy affects only the SDK's internal filtering pipeline. It does
    * **not** modify the raw values returned to {@link BackgroundGeolocation.onLocation}.
    * For more granular tuning, see {@link LocationFilter.trackingAccuracyThreshold},

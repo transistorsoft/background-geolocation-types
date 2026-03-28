@@ -6,7 +6,7 @@ import type { DesiredAccuracy } from '../../enums/DesiredAccuracy';
  * Configures the interval, accuracy, persistence, and metadata for a
  * continuous location stream. All fields are optional.
  *
- * ### ⚠️ Warning
+ * ## ⚠️ Warning
  *
  * `watchPosition` is intended for foreground use. On iOS it prevents the app
  * from being suspended, which drains the battery. Remove the subscription when

@@ -32,11 +32,11 @@ export interface Coords {
   /**
    * Altitude above a reference plane in meters.
    *
-   * #### iOS
+   * ## iOS
    *
    * Altitude above mean sea level.
    *
-   * #### Android
+   * ## Android
    *
    * Altitude above the WGS84 reference ellipsoid. See also
    * {@link ellipsoidal_altitude}.
@@ -51,14 +51,14 @@ export interface Coords {
   /**
    * Vertical accuracy in meters. Returns `-1` if unavailable.
    *
-   * #### iOS
+   * ## iOS
    *
    * When positive, the `altitude` value is within ±`altitude_accuracy` meters.
    * When negative, `altitude` is invalid. Determining altitude accuracy
    * requires a GPS-capable device; on some devices this value is always
    * negative.
    *
-   * #### Android
+   * ## Android
    *
    * Defined as the 1-sigma vertical accuracy at 68% confidence — the
    * half-width of the range above and below `altitude` within which the true
@@ -69,7 +69,7 @@ export interface Coords {
   /**
    * Direction of travel in degrees (0–360, clockwise from true north).
    *
-   * ### Note
+   * ## Note
    *
    * Only present when the location came from GPS. Returns `-1` otherwise.
    */
@@ -78,7 +78,7 @@ export interface Coords {
   /**
    * Heading accuracy in degrees.
    *
-   * ### Note
+   * ## Note
    *
    * Only present when the location came from GPS. Returns `-1` otherwise.
    */
@@ -87,7 +87,7 @@ export interface Coords {
   /**
    * Ground speed in meters per second.
    *
-   * ### Note
+   * ## Note
    *
    * Only present when the location came from GPS. Returns `-1` otherwise.
    */
@@ -96,7 +96,7 @@ export interface Coords {
   /**
    * Speed accuracy in meters per second.
    *
-   * ### Note
+   * ## Note
    *
    * Only present when the location came from GPS. Returns `-1` otherwise.
    */
@@ -145,14 +145,14 @@ export interface MotionActivity {
  * iOS uses `CLLocationManager` / `CLLocation`; Android uses
  * `FusedLocationProviderClient` / `android.location.Location`.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [JavaScript schema](#javascript-schema)
  * - [HTTP POST schema](#http-post-schema)
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * | Field | Description |
  * |-------|-------------|
@@ -169,7 +169,7 @@ export interface MotionActivity {
  *
  * ---
  *
- * ### JavaScript schema
+ * ## JavaScript schema
  *
  * @example
  * ```json
@@ -196,7 +196,7 @@ export interface MotionActivity {
  *
  * ---
  *
- * ### HTTP POST schema
+ * ## HTTP POST schema
  *
  * @example
  * ```json
@@ -249,7 +249,7 @@ export interface Location {
    * to maintain a running total. This value survives app restarts unless
    * explicitly reset.
    *
-   * #### How it's calculated
+   * ## How it's calculated
    *
    * - Distance is computed between each consecutive pair of accepted locations.
    * - The {@link LocationFilter} evaluates accuracy and motion context for
@@ -257,13 +257,13 @@ export interface Location {
    *   based on {@link LocationFilter.odometerAccuracyThreshold}.
    * - Accumulated drift is exposed via {@link Location.odometer_error}.
    *
-   * #### When it increases
+   * ## When it increases
    *
    * - After the device moves and a new location is recorded.
    * - During both moving and stationary states when minor motion is detected.
    * - In geofences-only mode, at each geofence transition or stationary exit.
    *
-   * #### When it does not increase
+   * ## When it does not increase
    *
    * - When a sample fails accuracy thresholds.
    * - When the device is stationary and no sufficient movement is detected.
@@ -292,7 +292,7 @@ export interface Location {
    * Represents the uncertainty that has built up in the {@link odometer}
    * value due to GPS noise, tunnel blackouts, and other inaccurate samples.
    *
-   * #### How to use it
+   * ## How to use it
    *
    * Treat this as a confidence interval for {@link odometer}. For example,
    * if `odometer = 12000` and `odometer_error = 40`, the true traveled

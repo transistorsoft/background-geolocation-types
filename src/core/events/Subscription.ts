@@ -5,7 +5,7 @@
  * listening to an event and free associated resources. Always call `remove()`
  * when a listener is no longer needed to prevent memory leaks.
  *
- * ### Removing an event-listener
+ * ## Removing an event-listener
  *
  * @example
  * ```ts
@@ -17,7 +17,7 @@
  * subscription.remove();
  * ```
  *
- * ### Managing multiple subscriptions
+ * ## Managing multiple subscriptions
  *
  * Collect subscriptions in an array and remove them all at once — for example
  * when a view is destroyed.

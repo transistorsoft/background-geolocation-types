@@ -38,7 +38,7 @@ export interface DeviceSettingsRequest {
   /**
    * The Android Intent action used to open the target settings screen.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * This field is set automatically by the native layer. Do not set it manually.
    */
@@ -94,7 +94,7 @@ export interface DeviceSettings {
    * so you can inspect {@link DeviceSettingsRequest.seen} and decide whether to
    * prompt the user.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * On some devices and OS versions this screen may not be available. Always
    * wrap calls to {@link DeviceSettings.show} in a `try/catch`.
@@ -111,7 +111,7 @@ export interface DeviceSettings {
    *
    * Returns a {@link DeviceSettingsRequest} rather than immediately redirecting.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * Not all manufacturers or OS versions implement this screen. Always wrap
    * calls to {@link DeviceSettings.show} in a `try/catch`.

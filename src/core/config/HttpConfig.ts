@@ -7,7 +7,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * `HttpConfig` controls how recorded locations are uploaded to your server —
  * the endpoint, HTTP verb, headers, params, batching behaviour, and request timeouts.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Upload lifecycle](#upload-lifecycle)
  * - [Payload composition](#payload-composition)
@@ -20,7 +20,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * The SDK persistently stores each recorded location in an internal SQLite
  * database before attempting to upload it. The HTTP service continuously
@@ -47,7 +47,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Upload lifecycle
+ * ## Upload lifecycle
  *
  * Each location follows this path from recording to delivery:
  *
@@ -69,7 +69,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Payload composition
+ * ## Payload composition
  *
  * - **Body:** JSON. If {@link batchSync} is `true`, an array of records is sent.
  *   If {@link rootProperty} is set, the payload becomes `{ "<rootProperty>": [...] }`.
@@ -83,7 +83,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Sync strategy
+ * ## Sync strategy
  *
  * | Option | Behaviour |
  * |--------|-----------|
@@ -96,7 +96,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Error handling
+ * ## Error handling
  *
  * On a non-2xx response or network failure, records remain locked in the queue
  * and are retried when:
@@ -115,7 +115,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Remote control
+ * ## Remote control
  *
  * Your server can instruct the SDK to execute commands by including a
  * `background_geolocation` key in any HTTP response body.
@@ -146,7 +146,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Logging
+ * ## Logging
  *
  * The SDK log provides a trace of the full HTTP lifecycle:
  *
@@ -170,7 +170,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Migration
+ * ## Migration
  *
  * HTTP options previously lived at the root of `Config`. They are now grouped
  * under the `http` key. Legacy flat keys remain available but are **deprecated**
@@ -198,7 +198,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example Simple upload
  * ```ts
@@ -255,7 +255,7 @@ export interface HttpConfig {
    * locations to your server in the background, surviving app termination and
    * device reboot.
    *
-   * ### Warning
+   * ## Warning
    * Use the SDK's built-in HTTP service rather than posting locations from your
    * own code. When {@link AppConfig.stopOnTerminate} is `false`, your app
    * component terminates but the native background service continues recording
@@ -387,7 +387,7 @@ export interface HttpConfig {
    * When `autoSync` is `false`, call {@link BackgroundGeolocation.sync} to trigger
    * uploads manually.
    *
-   * ### Note
+   * ## Note
    * With `autoSync: false`, the queue grows until you call
    * {@link BackgroundGeolocation.sync} or until uploads succeed automatically
    * on the next retry trigger.
@@ -409,7 +409,7 @@ export interface HttpConfig {
    * significantly reduces battery consumption by minimizing the number of HTTP
    * requests.
    *
-   * ### Warning
+   * ## Warning
    * `autoSyncThreshold` is ignored during {@link BackgroundGeolocation.onMotionChange}
    * transitions. When the device enters the *moving* state, any queued locations
    * are uploaded immediately. When it enters the *stationary* state, all remaining
@@ -428,7 +428,7 @@ export interface HttpConfig {
    * a Wi-Fi connection is active. Locations continue to be recorded and queued
    * while on cellular — they are uploaded once Wi-Fi becomes available.
    *
-   * ### Warning
+   * ## Warning
    * This setting is ignored when calling {@link BackgroundGeolocation.sync}
    * manually. Manual syncs always proceed regardless of connection type.
    *

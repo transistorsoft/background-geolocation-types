@@ -67,7 +67,7 @@ export interface SQLQuery {
  * controlled by {@link LoggerConfig.logLevel} (default `LogLevel.Off`). Logs
  * can be fetched as a string, emailed from the device, or uploaded to a URL.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Retrieving logs](#retrieving-logs)
  * - [Writing log entries](#writing-log-entries)
@@ -75,7 +75,7 @@ export interface SQLQuery {
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * | Method | Description |
  * |--------|-------------|
@@ -93,7 +93,7 @@ export interface SQLQuery {
  *
  * ---
  *
- * ### Retrieving logs
+ * ## Retrieving logs
  *
  * All three retrieval methods accept an optional {@link SQLQuery} to constrain
  * results by date range, sort order, and record count. Without a query, all
@@ -126,7 +126,7 @@ export interface SQLQuery {
  *
  * ---
  *
- * ### Writing log entries
+ * ## Writing log entries
  *
  * Insert custom messages into the SDK's log database at any severity level.
  * Custom entries appear inline with SDK entries, making it easy to correlate
@@ -150,7 +150,7 @@ export interface SQLQuery {
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example Fetch and display the full log
  * ```ts
@@ -329,7 +329,7 @@ export interface Logger {
    * The upload includes your configured {@link HttpConfig.headers} for
    * authentication.
    *
-   * ### Multipart upload
+   * ## Multipart upload
    *
    * The log is posted as a gzipped multipart file — the same file produced by
    * {@link emailLog}. The request body also includes a form with the following

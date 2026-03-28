@@ -47,7 +47,7 @@ export interface TransistorAuthorizationToken {
  *
  * ![](https://dl.dropboxusercontent.com/s/3abuyyhioyypk8c/screenshot-tracker-transistorsoft.png?dl=1)
  *
- * ### Viewing results
+ * ## Viewing results
  *
  * To view tracking results in a browser, visit:
  *

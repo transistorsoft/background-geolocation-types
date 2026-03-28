@@ -79,12 +79,12 @@ export interface BackgroundGeolocationEvents {
    * locations from {@link onMotionChange}, {@link getCurrentPosition}, and
    * {@link watchPosition}.
    *
-   * ### Error Codes
+   * ## Error Codes
    *
    * If the native location API fails, the error callback receives a
    * {@link LocationError} code.
    *
-   * ### Note
+   * ## Note
    *
    * During {@link onMotionChange} and {@link getCurrentPosition}, the SDK
    * requests multiple location samples to find the most accurate fix. These
@@ -111,7 +111,7 @@ export interface BackgroundGeolocationEvents {
    * Fires each time the device transitions between the **moving** and
    * **stationary** states.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * When a motion-change event fires, {@link HttpConfig.autoSyncThreshold} is
    * ignored — all queued locations are uploaded immediately. The SDK flushes
@@ -198,7 +198,7 @@ export interface BackgroundGeolocationEvents {
    * Fires each time the activity-recognition system reports a new activity
    * (`still`, `on_foot`, `in_vehicle`, `on_bicycle`, `running`).
    *
-   * #### Android
+   * ## Android
    *
    * {@link MotionActivityEvent.confidence} always reports `100`.
    *
@@ -257,7 +257,7 @@ export interface BackgroundGeolocationEvents {
    * the **stationary** state. On iOS, {@link AppConfig.preventSuspend} must
    * also be `true` to receive heartbeats in the background.
    *
-   * ### Note
+   * ## Note
    *
    * The {@link Location} provided by the {@link HeartbeatEvent} is only the
    * last-known location — the heartbeat does not engage location services. To
@@ -361,14 +361,14 @@ export interface BackgroundGeolocationEvents {
    * **See also**
    * - {@link isPowerSaveMode}
    *
-   * #### iOS
+   * ## iOS
    *
    * Power Saving mode is enabled manually in **Settings → Battery** or via an
    * automatic OS prompt.
    *
    * ![](https://dl.dropboxusercontent.com/s/lz3zl2jg4nzstg3/Screenshot%202017-09-19%2010.34.21.png?dl=1)
    *
-   * #### Android
+   * ## Android
    *
    * Battery Saver is enabled manually in **Settings → Battery → Battery Saver**
    * or automatically when the battery drops below a configured threshold.
@@ -467,21 +467,21 @@ export interface BackgroundGeolocationEvents {
    * The callback receives a {@link HeadlessEvent} with a `name` (event name)
    * and `params` (event data).
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * You must call `registerHeadlessTask` in your application root file (e.g.
    * `index.js`), not inside a component or behind a UI action.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * Your function must be declared `async`. Await all work inside it — the
    * headless task is automatically terminated after the last line executes.
    *
-   * ### Note
+   * ## Note
    *
    * Javascript headless callbacks are not supported by Cordova or Capacitor.
    *
-   * ### Debugging
+   * ## Debugging
    *
    * While implementing your headless task, observe Android logs via:
    *
@@ -546,7 +546,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * persisted configuration and merges your supplied {@link Config} on top.
    * See {@link Config.reset} for finer control over this behaviour.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * Call `ready` once per app launch from your application root — not inside a
    * component or behind a UI action. On iOS, the OS can relaunch your app in
@@ -603,7 +603,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * for motion; on iOS, a stationary geofence is created around the current
    * location.
    *
-   * ### Note
+   * ## Note
    *
    * If a {@link AppConfig.schedule} is configured, `start` overrides the
    * schedule and begins tracking immediately.
@@ -625,7 +625,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    *
    * This is the SDK's power **OFF** switch.
    *
-   * ### Note
+   * ## Note
    *
    * If a {@link AppConfig.schedule} is configured, `stop` does **not** halt
    * the scheduler. Call {@link stopSchedule} explicitly if you also want to
@@ -748,15 +748,15 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * {@link HttpConfig.url} just like any other recorded location. If an error
    * occurs, the promise rejects with a {@link LocationError}.
    *
-   * ### Options
+   * ## Options
    *
    * See {@link CurrentPositionRequest}.
    *
-   * ### Error Codes
+   * ## Error Codes
    *
    * See {@link LocationError}.
    *
-   * ### Note
+   * ## Note
    *
    * The SDK requests multiple location samples internally to find the best
    * fix. All intermediate samples are delivered to {@link onLocation} with
@@ -785,13 +785,13 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * and posted to {@link HttpConfig.url} if HTTP is configured. Returns a
    * {@link Subscription} that must be retained to halt the stream.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * `watchPosition` is designed for foreground use only — not for long-term
    * background monitoring. The SDK's motion-based tracking model does not
    * require it.
    *
-   * #### iOS
+   * ## iOS
    *
    * `watchPosition` continues running in the background, preventing iOS from
    * suspending your app. Remove the subscription in your app's suspend handler
@@ -865,7 +865,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * The SDK continuously accumulates distance traveled between recorded
    * locations.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * Odometer accuracy depends on location accuracy. Noisy or inaccurate
    * locations introduce error into accumulated distance. Use
@@ -909,7 +909,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * match the configured request, the SDK presents an alert offering to
    * direct the user to your app's Settings page.
    *
-   * ### Note
+   * ## Note
    *
    * The SDK automatically requests permission when you call {@link start},
    * {@link startGeofences}, or {@link getCurrentPosition}. You do not need to
@@ -952,7 +952,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    *
    * ![](https://dl.dropbox.com/s/8cc0sniv3pvpetl/ios-14-requestTemporaryFullAccuracy.png?dl=1)
    *
-   * #### Configuration — Info.plist
+   * ## Configuration — Info.plist
    *
    * Add the `Privacy - Location Temporary Usage Description Dictionary` key
    * to your `Info.plist`:
@@ -968,7 +968,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - The app is already authorized for full accuracy.
    * - The app is in the background.
    *
-   * ### Note
+   * ## Note
    *
    * On Android and iOS versions below 14, this method returns
    * {@link AccuracyAuthorization.Full} immediately without presenting a dialog.
@@ -1003,7 +1003,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /**
    * Add a {@link Geofence} to be monitored by the native geofencing API.
    *
-   * ### Note
+   * ## Note
    *
    * If a geofence with the same {@link Geofence.identifier} already exists,
    * it is deleted before the new one is inserted. When adding multiple
@@ -1038,7 +1038,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /**
    * Add a list of {@link Geofence} to be monitored by the native geofencing API.
    *
-   * ### Note
+   * ## Note
    *
    * If any geofence already exists with a matching {@link Geofence.identifier},
    * it is deleted before the new one is inserted.
@@ -1170,7 +1170,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /**
    * Halt scheduled tracking.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * `stopSchedule` does **not** call {@link stop} if the SDK is currently
    * tracking. Call {@link stop} explicitly if you also want to end the current
@@ -1248,14 +1248,14 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * **See also**
    * - {@link onPowerSaveChange} to subscribe to future changes.
    *
-   * #### iOS
+   * ## iOS
    *
    * Power Saving mode is enabled manually in **Settings → Battery** or via an
    * automatic OS prompt.
    *
    * ![](https://dl.dropboxusercontent.com/s/lz3zl2jg4nzstg3/Screenshot%202017-09-19%2010.34.21.png?dl=1)
    *
-   * #### Android
+   * ## Android
    *
    * Battery Saver is enabled manually in **Settings → Battery → Battery Saver**
    * or automatically when the battery drops below a configured threshold.
@@ -1356,7 +1356,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * you must pass to `stopBackgroundTask` when finished — always call it,
    * even if an error occurs, to avoid hanging the background task.
    *
-   * #### iOS
+   * ## iOS
    *
    * Uses [`beginBackgroundTaskWithExpirationHandler`](https://developer.apple.com/documentation/uikit/uiapplication/1623031-beginbackgroundtaskwithexpiratio).
    * iOS provides exactly **180 seconds** of background time. The SDK
@@ -1367,7 +1367,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * ✅-[BackgroundTaskManager stopBackgroundTask:]_block_invoke 1 OF (1)
    * ```
    *
-   * #### Android
+   * ## Android
    *
    * Uses [`WorkManager`](https://developer.android.com/topic/libraries/architecture/workmanager).
    * The SDK imposes a **3-minute** limit before automatically force-killing
@@ -1445,11 +1445,11 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /**
    * Play a system sound.
    *
-   * #### iOS
+   * ## iOS
    *
    * Provide a numeric `SystemSoundID`.
    *
-   * #### Android
+   * ## Android
    *
    * Provide a sound name string.
    */
@@ -1460,7 +1460,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  * Primary SDK API — the single entry point for all geolocation, geofencing,
  * HTTP sync, and configuration operations.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Lifecycle](#lifecycle)
  * - [Configuration](#configuration)
@@ -1469,7 +1469,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * The SDK operates around a **motion-based state machine**: it tracks
  * aggressively while the device is moving and pauses location services when
@@ -1487,7 +1487,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  *
  * ---
  *
- * ### Lifecycle
+ * ## Lifecycle
  *
  * Think of the SDK like a stereo receiver:
  *
@@ -1523,7 +1523,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  *
  * ---
  *
- * ### Configuration
+ * ## Configuration
  *
  * The SDK uses a compound-configuration model. Options are grouped into typed
  * sub-interfaces ({@link GeoConfig}, {@link HttpConfig}, {@link AppConfig},
@@ -1567,7 +1567,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  *
  * ---
  *
- * ### Events
+ * ## Events
  *
  * Each `onX` method returns a {@link Subscription} that must be removed when
  * no longer needed:
@@ -1591,7 +1591,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example Getting started
  * ```ts

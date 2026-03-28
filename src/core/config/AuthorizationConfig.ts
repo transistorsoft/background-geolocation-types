@@ -12,7 +12,7 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  * inside {@link HttpConfig.headers} — the SDK manages the authorization header
  * automatically.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Token refresh](#token-refresh)
  * - [Refresh payload](#refresh-payload)
@@ -20,7 +20,7 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * The SDK attaches the configured access token to every HTTP upload request as
  * an `Authorization` header. If you supply {@link AuthorizationConfig.refreshUrl},
@@ -65,7 +65,7 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  *
  * ---
  *
- * ### Token refresh
+ * ## Token refresh
  *
  * When a `401 Unauthorized` response is received, or when `expires` is
  * reached, the SDK sends an `application/x-www-form-urlencoded` POST to
@@ -105,7 +105,7 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  *
  * ---
  *
- * ### Refresh payload
+ * ## Refresh payload
  *
  * `refreshPayload` is a key/value map sent as form fields in the refresh POST.
  * At least one field must use the template variable `"{refreshToken}"`, which
@@ -119,7 +119,7 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  *
  * ---
  *
- * ### Authorization events
+ * ## Authorization events
  *
  * Whenever the SDK receives a response from {@link refreshUrl}, it fires
  * {@link BackgroundGeolocation.onAuthorization} with an

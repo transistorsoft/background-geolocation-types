@@ -7,7 +7,7 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  * and *stationary* states using platform motion APIs (Android Activity Recognition
  * and iOS Core Motion).
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Stop detection](#stop-detection)
  * - [Motion trigger](#motion-trigger)
@@ -15,7 +15,7 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * | Category | Properties | Notes |
  * |----------|------------|-------|
@@ -54,7 +54,7 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  *
  * ---
  *
- * ### Stop detection
+ * ## Stop detection
  *
  * The SDK uses platform motion APIs to detect when the device has stopped moving
  * and transitions to the *stationary* state. In that state, location services are
@@ -71,7 +71,7 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  *
  * ---
  *
- * ### Motion trigger
+ * ## Motion trigger
  *
  * When in the *stationary* state, the SDK waits for a motion event before
  * re-engaging location tracking:
@@ -84,7 +84,7 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  *
  * ---
  *
- * ### Migration
+ * ## Migration
  *
  * Activity recognition options previously lived at the root of `Config`. They are
  * now grouped under the `activity` key. Legacy flat keys remain available but are
@@ -141,7 +141,7 @@ export interface ActivityConfig {
    * Disables the motion-activity-based stop-detection system. Defaults to
    * `false`.
    *
-   * #### iOS
+   * ## iOS
    *
    * Disables the accelerometer-based stop-detection system. When disabled,
    * the SDK falls back to the default iOS behaviour of automatically turning
@@ -163,7 +163,7 @@ export interface ActivityConfig {
    * });
    * ```
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * With the above configuration, iOS location services will never turn off
    * and the battery will drain rapidly. Use this only when you have explicit
@@ -172,7 +172,7 @@ export interface ActivityConfig {
    *
    * ![](https://dl.dropbox.com/scl/fi/fhkz97f9jl4omnv7y30by/ios-stop-detection-timing.png?rlkey=cvs9h2nnngmmz9bwh1vg3796g&dl=1)
    *
-   * #### Android
+   * ## Android
    *
    * Location services will never turn off while `disableStopDetection` is
    * `true`. The only way to stop tracking is to call
@@ -189,7 +189,7 @@ export interface ActivityConfig {
    * `stopTimeout` timer expires, the SDK calls `stop()` on itself — ending
    * all tracking. The next tracking session must be started manually.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * `stopOnStationary` fires only when the {@link GeoConfig.stopTimeout}
    * timer elapses naturally. It does **not** fire when
@@ -265,7 +265,7 @@ export interface ActivityConfig {
    *
    * See {@link TriggerActivity} for all valid activity names.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * Using `triggerActivities` requires the user to grant the
    * **Motion & Fitness** (iOS) or **Physical Activity** (Android 10+)
@@ -298,7 +298,7 @@ export interface ActivityConfig {
    * functional but without motion data it relies on less efficient fallback
    * mechanisms to detect moving/stationary transitions.
    *
-   * #### iOS
+   * ## iOS
    *
    * The SDK is highly optimized around motion-activity updates. Disabling
    * them increases battery consumption. Provide an
@@ -310,7 +310,7 @@ export interface ActivityConfig {
    *
    * ![](https://dl.dropbox.com/s/v3qt7ry1k4b3iir/ios-motion-permission.png?dl=1)
    *
-   * #### Android
+   * ## Android
    *
    * Android 10+ requires runtime permission for Physical Activity. Without
    * it, the SDK falls back to a stationary geofence mechanism — the device

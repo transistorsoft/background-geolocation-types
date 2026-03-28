@@ -7,7 +7,7 @@ import { LogLevel } from '../../enums/LogLevel';
  * entries are retained on device, and whether developer debug aids such as
  * audible soundFX are active.
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Log levels](#log-levels)
  * - [Debug mode](#debug-mode)
@@ -18,7 +18,7 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * The SDK maintains a persistent, SQLite-backed log that survives app restarts.
  * Logging serves two purposes:
@@ -50,7 +50,7 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * ---
  *
- * ### Log levels
+ * ## Log levels
  *
  * Choose the level appropriate for your environment:
  *
@@ -69,21 +69,21 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * ---
  *
- * ### Debug mode
+ * ## Debug mode
  *
  * When {@link debug} is `true`, the SDK plays short, distinct soundFX as key
  * events occur — location recorded, motion change, geofence enter/exit/dwell,
  * HTTP upload — and may show transient developer notifications on Android to
  * visualize state transitions.
  *
- * ### ⚠️ Warning
+ * ## ⚠️ Warning
  *
  * Never enable `debug` in a production build. Disable it before submitting
  * your app to the App Store or Google Play.
  *
  * ---
  *
- * ### Retention
+ * ## Retention
  *
  * {@link logMaxDays} controls how long log entries remain on device. Entries
  * older than the configured limit are purged automatically on a rolling basis.
@@ -94,7 +94,7 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * ---
  *
- * ### Diagnostics
+ * ## Diagnostics
  *
  * Logs are your first resource when something unexpected happens. The SDK writes a
  * detailed trace of every lifecycle event — location recording, motion transitions,
@@ -115,7 +115,7 @@ import { LogLevel } from '../../enums/LogLevel';
  * await BackgroundGeolocation.logger.emailLog("you@example.com");
  * ```
  *
- * #### Android
+ * ## Android
  *
  * Stream live SDK output directly to your terminal with `adb`:
  *
@@ -123,7 +123,7 @@ import { LogLevel } from '../../enums/LogLevel';
  * adb logcat "*:S" TSLocationManager:V
  * ```
  *
- * #### iOS
+ * ## iOS
  *
  * Run the app from Xcode to stream SDK output to the console in real time. For
  * issues that only reproduce in the background, attach the device and monitor
@@ -131,7 +131,7 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * ---
  *
- * ### Migration
+ * ## Migration
  *
  * Logging options previously lived at the root of `Config`. They are now grouped
  * under the `logger` key. Legacy flat keys remain available but are **deprecated**
@@ -158,7 +158,7 @@ import { LogLevel } from '../../enums/LogLevel';
  *
  * ---
  *
- * ### Examples
+ * ## Examples
  *
  * @example Development profile
  * ```ts
@@ -203,13 +203,13 @@ export interface LoggerConfig {
    *
    * Defaults to `false`.
    *
-   * #### iOS
+   * ## iOS
    *
    * To hear debug sounds while the app is in the background, enable the
    * **Audio and AirPlay** background mode in Xcode under *Signing & Capabilities →
    * Background Modes*.
    *
-   * #### Debug sound events
+   * ## Debug sound events
    *
    * | Event | iOS | Android |
    * |-------|-----|---------|
@@ -236,7 +236,7 @@ export interface LoggerConfig {
    * | `WARNING` | n/a | <mediaplayer:https://dl.dropboxusercontent.com/s/wadrz2x6elhc65l/tslocationmanager_digi_warn.mp3?dl=0> |
    * | `BACKGROUND_FETCH` | <mediaplayer:https://dl.dropbox.com/s/mcsjqye0xx2kapk/background-fetch.mp3?dl=0> | n/a |
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * Never enable `debug` in a production build.
    */
@@ -273,7 +273,7 @@ export interface LoggerConfig {
    * 09-19 11:12:22.100   ✅  DESTROY: bca5acc8-e358-4d8f-827f-b8c0d556b7bb
    * ```
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    *
    * Set `logLevel` to {@link LogLevel.Error} or lower before submitting to
    * production. At `Verbose`, logs can grow to several megabytes over

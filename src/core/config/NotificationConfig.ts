@@ -9,13 +9,13 @@ import { NotificationPriority } from '../../enums/NotificationPriority';
  *
  * ![](https://dl.dropbox.com/s/acuhy5cu4p7uofr/android-foreground-service-default.png?dl=1)
  *
- * ### Contents
+ * ## Contents
  * - [Overview](#overview)
  * - [Custom layout](#custom-layout)
  *
  * ---
  *
- * ### Overview
+ * ## Overview
  *
  * Configure this via {@link NotificationConfig} on {@link AppConfig.notification}.
  *
@@ -51,7 +51,7 @@ import { NotificationPriority } from '../../enums/NotificationPriority';
  *
  * ---
  *
- * ### Custom layout
+ * ## Custom layout
  *
  * Supply a custom Android Layout XML file via {@link NotificationConfig.layout} for
  * complete control over the notification appearance.
@@ -123,7 +123,7 @@ export interface NotificationConfig {
    * Small status-bar icon for the foreground notification. Defaults to
    * `"mipmap/ic_launcher"` (the app launcher icon).
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    * - Specify the resource **type** (`drawable` or `mipmap`) followed by the icon
    *   name in the format `type/icon_name`.
    * - Do not include the file extension (e.g. `.png`).
@@ -157,7 +157,7 @@ export interface NotificationConfig {
   /**
    * Large icon for the foreground notification. Not set by default.
    *
-   * ### ⚠️ Warning
+   * ## ⚠️ Warning
    * - Specify the resource **type** (`drawable` or `mipmap`) followed by the icon
    *   name in the format `type/icon_name`.
    * - Do not include the file extension (e.g. `.png`).
@@ -201,7 +201,7 @@ export interface NotificationConfig {
    * (e.g. `notificationText`, `notificationTitle`). The one exception is
    * `applicationName`, which the SDK populates with the app name automatically.
    *
-   * #### Layout special elements
+   * ## Layout special elements
    *
    * When rendering a custom notification, the SDK searches for the following IDs and
    * populates them from the associated data source:
@@ -229,7 +229,7 @@ export interface NotificationConfig {
    * });
    * ```
    *
-   * #### Custom `<TextView />` elements
+   * ## Custom `<TextView />` elements
    *
    * You may define your own custom text fields and populate them using
    * {@link strings}.
@@ -256,7 +256,7 @@ export interface NotificationConfig {
    * });
    * ```
    *
-   * #### Custom `<Button />` elements
+   * ## Custom `<Button />` elements
    *
    * Define your own buttons and register click listeners using
    * {@link actions}.
@@ -295,7 +295,7 @@ export interface NotificationConfig {
    * });
    * ```
    *
-   * #### Sample layout
+   * ## Sample layout
    *
    * ```xml
    * <?xml version="1.0" encoding="utf-8"?>
@@ -449,7 +449,7 @@ export interface NotificationConfig {
    * Declare `<Button />` elements in your layout XML, then list their `android:id` values
    * in the {@link actions} array to register click listeners.
    *
-   * #### Custom `<Button />` element
+   * ## Custom `<Button />` element
    *
    * ```xml
    * <Button
@@ -522,7 +522,7 @@ export interface NotificationConfig {
    * Identifier of the Android notification channel used for the foreground service
    * notification. Defaults to `"bggeo"`.
    *
-   * ### Note
+   * ## Note
    * Changing this is not typically required. A use case is sharing an existing
    * notification channel with another foreground service in the same app.
    */
