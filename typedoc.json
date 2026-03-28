@@ -6,7 +6,7 @@
   "githubUser": "transistorsoft",
   "out": "docs",
   "readme": "none",
-  "highlightLanguages": ["ts", "js", "json", "xml", "bash", "console", "erb", "java"],
+  "highlightLanguages": ["ts", "js", "json", "xml", "bash", "console", "erb", "java", "objc"],
   "disableSources": true,	
   "includeVersion": true,
   "sort": ["source-order"],
@@ -24,5 +24,15 @@
     "./tools/typedoc-plugin-gitlink/index.cjs",
     "./tools/typedoc-plugin-mediaplayer/index.cjs",
     "./tools/typedoc-plugin-site/index.cjs"
-  ]
+  ],
+  "customCss": "./assets/css/theme.css",
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": false,
+    "compactFolders": true,
+    "excludeReferences": true
+  },
+  "categorizeByGroup": true
+
 }
