@@ -1,27 +1,27 @@
 /**
- * Geofence transition actions emitted by the SDK 
- * 
- * Used with {@link GeofenceEvent} from {@link BackgroundGeolocation.onGeofence}.   
- *  
+ * Geofence transition actions emitted by the SDK
+ *
+ * Used with {@link GeofenceEvent} from {@link BackgroundGeolocation.onGeofence}.
+ *
  * | Action | Meaning                      |
  * |--------|------------------------------|
  * | ENTER  | Device entered the geofence  |
  * | EXIT   | Device exited the geofence   |
  * | DWELL  | Device dwelled inside        |
- * 
+ *
  * @category Events
  */
 export const GeofenceAction = {
   /**
-   * Device entered the geofence. 
+   * Device entered the geofence.
    */
   Enter: 'ENTER',
   /**
-   * Device exited the geofence. 
+   * Device exited the geofence.
    */
   Exit: 'EXIT',
   /**
-   * Device dwelled inside the geofence for at least the configured `Config.geofenceProximityRadius`. 
+   * Device dwelled inside the geofence for at least the configured `Config.geofenceProximityRadius`.
    */
   Dwell: 'DWELL'
 } as const;

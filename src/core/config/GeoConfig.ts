@@ -237,7 +237,7 @@ export interface GeoConfig {
    * - [iOS desiredAccuracy](https://developer.apple.com/reference/corelocation/cllocationmanager/1423836-desiredaccuracy?language=objc)
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
    *     desiredAccuracy: DesiredAccuracy.High,
@@ -390,7 +390,7 @@ export interface GeoConfig {
    * {@link BackgroundGeolocation.changePace} with `false`.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
    *     stopOnStationary: true,
@@ -460,7 +460,7 @@ export interface GeoConfig {
    * {@link BackgroundGeolocation.start} was called.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
    *     stopAfterElapsedMinutes: 30
@@ -536,7 +536,7 @@ export interface GeoConfig {
    * - {@link BackgroundGeolocation.requestPermission}
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.onProviderChange((event) => {
    *   console.log("[onProviderChange] ", event);
    *
@@ -852,7 +852,7 @@ export interface GeoConfig {
    * ![](https://dl.dropbox.com/s/w53hqn7f7n1ug1o/geofenceModeHighAccuracy-true.png?dl=1)
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {
    *     geofenceModeHighAccuracy: true,
@@ -880,7 +880,6 @@ export interface GeoConfig {
    * over {@link stopTimeout}.
    *
    * To prevent iOS from ever automatically disabling location services, also set
-   * {@link pausesLocationUpdatesAutomatically} to `false`:
    *
    * @example
    * ```ts
@@ -972,8 +971,6 @@ export interface GeoConfig {
    *   }
    * });
    * ```
-   *
-   * To disable all filtering:
    *
    * @example
    * ```ts

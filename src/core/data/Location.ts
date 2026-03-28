@@ -6,7 +6,7 @@ import { GeofenceEvent } from '../events/GeofenceEvent';
  * Geographic coordinates attached to a {@link Location}.
  *
  * @category Data
-*/
+ */
 export interface Coords {
   /**
    * Floor within a building, when indoor-positioning hardware (e.g. Bluetooth
@@ -172,25 +172,31 @@ export interface MotionActivity {
  * ## JavaScript schema
  *
  * @example
- * ```json
+ * ```ts
  * {
- *   "timestamp":  "2015-05-05T04:31:54.123Z",
- *   "event":      "motionchange",
- *   "is_moving":  true,
- *   "uuid":       "904e9958-4828-4e4e-b380-be403c964a7e",
- *   "age":        1200,
- *   "coords": {
- *     "latitude":             45.519239,
- *     "longitude":           -73.617058,
- *     "accuracy":             15,
- *     "speed":                1.2,
- *     "heading":              270,
- *     "altitude":             45.2,
- *     "ellipsoidal_altitude": 45.3
- *   },
- *   "activity": { "type": "on_foot", "confidence": 85 },
- *   "battery":  { "level": 0.72, "is_charging": false },
- *   "odometer": 12543.8
+ *    "timestamp":     [Date],     // <-- Javascript Date instance
+ *    "event":         [String],   // <-- motionchange|geofence|heartbeat
+ *    "is_moving":     [Boolean],  // <-- The motion-state when location was recorded.
+ *    "uuid":          [String],   // <-- Universally unique identifier
+ *    "age":           [Integer],  // <-- Age of the location in milliseconds
+ *    "coords": {
+ *        "latitude":  [Double],
+ *        "longitude": [Double],
+ *        "accuracy":  [Double],
+ *        "speed":     [Double],
+ *        "heading":   [Double],
+ *        "altitude":  [Double]
+ *        "ellipsoidal_altitude":  [Double]
+ *    },
+ *    "activity": {
+ *        "type": [still|on_foot|walking|running|in_vehicle|on_bicycle],
+ *        "confidence": [0-100%]
+ *    },
+ *    "battery": {
+ *        "level": [Double],
+ *        "is_charging": [Boolean]
+ *    },
+ *    "odometer": [Double/meters]
  * }
  * ```
  *
@@ -199,30 +205,41 @@ export interface MotionActivity {
  * ## HTTP POST schema
  *
  * @example
- * ```json
+ * ```ts
  * {
- *   "location": {
- *     "timestamp":  "2015-05-05T04:31:54.123Z",
- *     "event":      "motionchange",
- *     "is_moving":  true,
- *     "uuid":       "904e9958-4828-4e4e-b380-be403c964a7e",
- *     "age":        1200,
- *     "odometer":   12543.8,
- *     "coords": {
- *       "latitude":             45.519239,
- *       "longitude":           -73.617058,
- *       "accuracy":             15,
- *       "speed":                1.2,
- *       "heading":              270,
- *       "altitude":             45.2,
- *       "ellipsoidal_altitude": 45.3
- *     },
- *     "extras":   { "foo": "bar" },
- *     "activity": { "type": "on_foot", "confidence": 85 },
- *     "geofence": { "identifier": "Home", "action": "ENTER" },
- *     "battery":  { "level": 0.72, "is_charging": false }
- *   }
- * }
+ *     "location": {
+ *         "coords": {
+ *             "latitude":   [Double],
+ *             "longitude":  [Double],
+ *             "accuracy":   [Double],
+ *             "speed":      [Double],
+ *             "heading":    [Double],
+ *             "altitude":   [Double],
+ *             "ellipsoidal_altitude": [Double]
+ *         },
+ *         "extras": {   // <-- optional meta-data
+ *             "foo": "bar"
+ *         },
+ *         "activity": {
+ *             "type": [still|on_foot|walking|running|in_vehicle|on_bicycle|unknown],
+ *             "confidence": [0-100%]
+ *         },
+ *         "geofence": {  // <-- Present only if a geofence was triggered at this location
+ *             "identifier": [String],
+ *             "action": [String ENTER|EXIT]
+ *         },
+ *         "battery": {
+ *             "level": [Double],
+ *             "is_charging": [Boolean]
+ *         },
+ *         "timestamp": [ISO-8601 UTC], // eg:  "2015-05-05T04:31:54.123Z"
+ *         "age":       [Integer],      // <-- Age of the location in milliseconds
+ *         "uuid":      [String],       // <-- Universally unique identifier
+ *         "event"      [String],       // <-- motionchange|geofence|heartbeat
+ *         "is_moving": [Boolean],      // <-- The motion-state when recorded.
+ *         "odometer": [Double/meters]
+ *     }
+ *  }
  * ```
  *
  * @category Data

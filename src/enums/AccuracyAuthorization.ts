@@ -7,16 +7,16 @@
  * | Reduced             |  1    | Reduced accuracy granted.  |
  *
  * Mirrors iOS `CLAccuracyAuthorization` and Android location accuracy permission levels.
- * 
+ *
  * @category Events
  */
 export const AccuracyAuthorization = {
   /**
-   * Full accuracy authorized. 
+   * Full accuracy authorized.
    */
   Full: 0,
   /**
-   * Reduced accuracy granted.    
+   * Reduced accuracy granted.
    */
   Reduced: 1,
 } as const;

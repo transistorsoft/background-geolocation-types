@@ -120,16 +120,6 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * Your server can instruct the SDK to execute commands by including a
  * `background_geolocation` key in any HTTP response body.
  *
- * @example
- * ```json
- * {
- *   "background_geolocation": [
- *     ["setConfig", { "geolocation": { "distanceFilter": 25 } }],
- *     ["start"]
- *   ]
- * }
- * ```
- *
  * | Command | Arguments | Effect |
  * |---------|-----------|--------|
  * | `"start"` | — | {@link BackgroundGeolocation.start} |
@@ -148,9 +138,10 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * ## Logging
  *
- * The SDK log provides a trace of the full HTTP lifecycle:
+ * The SDK log provides a trace of the full HTTP lifecycle.
  *
- * ```
+ * @example HTTP lifecycle log
+ * ```ts
  * Location
  * INSERT: record stored
  * Locked 1 records
@@ -474,7 +465,6 @@ export interface HttpConfig {
    * Wraps the location payload under a named root key in the JSON body.
    *
    * Defaults to `"location"`. When set, outgoing payloads nest the serialized
-   * location record under this key:
    *
    * @example
    * ```ts

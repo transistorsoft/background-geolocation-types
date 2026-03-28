@@ -13,7 +13,7 @@ import type { DesiredAccuracy } from '../../enums/DesiredAccuracy';
  * your app moves to the background.
  *
  * @example
- * ```typescript
+ * ```ts
  * const subscription = BackgroundGeolocation.watchPosition(
  *   { interval: 1000, desiredAccuracy: DesiredAccuracy.High },
  *   (location) => {

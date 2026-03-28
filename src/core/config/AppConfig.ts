@@ -218,7 +218,6 @@ export interface PermissionRationale {
  * ## Examples
  *
  * @example Configure once at startup:
- *
  * ```ts
  * import BackgroundGeolocation, {
  *   type Config,
@@ -253,7 +252,6 @@ export interface PermissionRationale {
  * ```
  *
  * @example Update later at runtime:
- *
  * ```ts
  * await BackgroundGeolocation.setConfig({
  *   app: {
@@ -399,8 +397,6 @@ export interface AppConfig {
    * {@link BackgroundGeolocation.start | start} and
    * {@link BackgroundGeolocation.stop | stop} tracking.
    *
-   * Each schedule string uses the format:
-   *
    * @example
    * ```ts
    * "{DAY(s)} {START_TIME}-{END_TIME}"
@@ -490,7 +486,6 @@ export interface AppConfig {
    * ## Scheduling modes
    *
    * Append `geofence` or `location` to explicitly choose a tracking mode.
-   * `location` is the default and may be omitted:
    *
    * @example
    * ```ts
@@ -551,7 +546,7 @@ export interface AppConfig {
    * See {@link NotificationConfig} for detailed usage.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
    *     notification: {

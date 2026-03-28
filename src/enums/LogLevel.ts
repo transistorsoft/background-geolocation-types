@@ -19,15 +19,15 @@ export const LogLevel = {
    * Disable all logging.
    */
   Off: 0,
-  /** 
+  /**
    * Log only critical failures.
    */
   Error: 1,
-  /** 
+  /**
    * Log warnings + errors.
    */
   Warning: 2,
-  /** 
+  /**
    * Operational information.
    */
   Info: 3,

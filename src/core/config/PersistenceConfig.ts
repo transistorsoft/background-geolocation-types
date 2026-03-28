@@ -233,10 +233,9 @@ export interface PersistenceConfig {
    * are JSON-encoded exactly as written.
    *
    * The following produces invalid JSON because `timestamp` is a string but is
-   * rendered unquoted:
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   persistence: {
    *     locationTemplate: '{"timestamp": <%= timestamp %>}'
@@ -250,10 +249,8 @@ export interface PersistenceConfig {
    * {"timestamp": 2018-01-01T12:01:01.123Z}
    * ```
    *
-   * Correct usage:
-   *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *  persistence: {
    *   locationTemplate: '{"timestamp": "<%= timestamp %>"}'
@@ -271,7 +268,7 @@ export interface PersistenceConfig {
    * into the rendered location JSON.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   http: {
    *     url: 'https://my.server.com/locations',
@@ -338,7 +335,7 @@ export interface PersistenceConfig {
    * ```
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   persistence: {
    *     geofenceTemplate:
@@ -361,7 +358,7 @@ export interface PersistenceConfig {
    * Templates are JSON-encoded exactly as written.
    *
    * @example Incorrect
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   persistence: {
    *     geofenceTemplate: '{"timestamp": <%= timestamp %>}'
@@ -376,7 +373,7 @@ export interface PersistenceConfig {
    * ```
    *
    * @example Correct
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   persistence: {
    *     geofenceTemplate: '{"timestamp": "<%= timestamp %>"}'
@@ -540,7 +537,7 @@ export interface PersistenceConfig {
    * ![](https://www.dropbox.com/s/ljacoquuuv5sd5r/disableProviderChangeRecord.png?dl=1)
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   persistence: {
    *     disableProviderChangeRecord: true

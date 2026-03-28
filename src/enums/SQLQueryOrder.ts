@@ -5,16 +5,16 @@
  * |---------------|-------|
  * | Asc           | `1`   |
  * | Desc          | `-1`  |
- * 
+ *
  * @category Logger
  */
 export const SQLQueryOrder = {
   /**
-   * Ascending order (oldest to newest). 
+   * Ascending order (oldest to newest).
    */
   Asc: 1,
   /**
-   * Descending order (newest to oldest). 
+   * Descending order (newest to oldest).
    */
   Desc: -1,
 } as const;

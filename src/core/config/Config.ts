@@ -175,26 +175,26 @@ export interface Config {
    */
   authorization?: AuthorizationConfig;
   /**
-    * Convenience option that automatically configures the SDK to upload locations
-    * to the Transistor Software demo server at tracker.transistorsoft.com, or a
-    * local instance of [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console).
-    *
-    * Setting this option automatically sets {@link HttpConfig.url} and the required
-    * {@link AuthorizationConfig} values. See {@link TransistorAuthorizationService}
-    * for how to obtain a token.
-    *
-    * @example
-    * ```typescript
-    * const token = await BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(
-    *   "my-company-name",
-    *   "my-username"
-    * );
-    *
-    * BackgroundGeolocation.ready({
-    *   transistorAuthorizationToken: token
-    * });
-    * ```
-    */
+   * Convenience option that automatically configures the SDK to upload locations
+   * to the Transistor Software demo server at tracker.transistorsoft.com, or a
+   * local instance of [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console).
+   *
+   * Setting this option automatically sets {@link HttpConfig.url} and the required
+   * {@link AuthorizationConfig} values. See {@link TransistorAuthorizationService}
+   * for how to obtain a token.
+   *
+   * @example
+   * ```ts
+   * const token = await BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(
+   *   "my-company-name",
+   *   "my-username"
+   * );
+   *
+   * BackgroundGeolocation.ready({
+   *   transistorAuthorizationToken: token
+   * });
+   * ```
+   */
   transistorAuthorizationToken?: TransistorAuthorizationToken;
 
 }

@@ -54,7 +54,7 @@ export interface TransistorAuthorizationToken {
  * `http://tracker.transistorsoft.com/<your-organization-name>`
  *
  * @example
- * ```typescript
+ * ```ts
  * const url = "http://tracker.transistorsoft.com";
  * const orgname = "my-company-name";
  * const username = "my-username";
@@ -86,7 +86,7 @@ export interface TransistorAuthorizationService {
    * @returns A Promise resolving with a {@link TransistorAuthorizationToken}.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const token = await BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(
    *   "my-company-name",
    *   "my-username",

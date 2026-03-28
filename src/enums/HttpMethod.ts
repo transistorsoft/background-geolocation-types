@@ -1,20 +1,20 @@
 /**
  * Allowed HTTP methods for uploading data.
  * Mirrors Flutter's HttpConfig.method and native support.
- * 
+ *
  * @category Config
  */
 export const HttpMethod = {  
   /**
-   * HTTP POST method. 
+   * HTTP POST method.
    */
   Post: 'POST',
   /**
-   * HTTP PUT method. 
+   * HTTP PUT method.
    */
   Put: 'PUT',
   /**
-   * HTTP PATCH method. 
+   * HTTP PATCH method.
    */
   Patch: 'PATCH'
 } as const;

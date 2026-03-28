@@ -5,16 +5,16 @@
  * |------:|------------|-------------------------------|
  * | 0     | Geofences  | Monitor geofences only.       |
  * | 1     | Location   | Monitor location + geofences. |
- * 
+ *
  * @category Config
  */
 export const TrackingMode = {
   /**
-   * Monitor geofences only. 
+   * Monitor geofences only.
    */
   Geofences: 0,
   /**
-   * Monitor location + geofences. 
+   * Monitor location + geofences.
    */
   Location: 1
 } as const;

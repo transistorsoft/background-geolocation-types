@@ -235,15 +235,6 @@ export interface NotificationConfig {
    * {@link strings}.
    *
    * @example
-   * ```xml
-   * <TextView
-   *   android:id="@+id/myCustomElement"
-   *   android:layout_width="match_parent"
-   *   android:layout_height="wrap_content"
-   *   android:text="notificationTitle" />
-   * ```
-   *
-   * @example
    * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
@@ -260,16 +251,6 @@ export interface NotificationConfig {
    *
    * Define your own buttons and register click listeners using
    * {@link actions}.
-   *
-   * @example
-   * ```xml
-   * <Button
-   *   android:id="@+id/notificationButtonFoo"
-   *   style="@style/Widget.AppCompat.Button.Small"
-   *   android:layout_width="60dp"
-   *   android:layout_height="40dp"
-   *   android:text="Foo" />
-   * ```
    *
    * @example
    * ```ts

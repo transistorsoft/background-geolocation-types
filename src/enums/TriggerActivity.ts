@@ -1,7 +1,7 @@
 /**
  * Allowed motion activity names that can trigger motion detection.
  * Mirrors Flutter's TriggerActivity set.
- * 
+ *
  * @category Config
  */
 export const TriggerActivity = {

@@ -73,6 +73,7 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  *   }
  * });
  * ```
+ *
  * @category Config
  */
 export interface LocationFilter {

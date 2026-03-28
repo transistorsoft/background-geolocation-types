@@ -1,31 +1,31 @@
 /**
  * Supported event names emitted by the SDK.
- * 
+ *
  * @category Events
  */
 export const Event = {
-  /** 
-   * Emitted when the plugin boots. 
+  /**
+   * Emitted when the plugin boots.
    */
   Boot: 'boot',
-  /** 
-   * Emitted when the plugin is terminated. 
+  /**
+   * Emitted when the plugin is terminated.
    */
   Terminate: 'terminate',
   /**
-   * Emitted when a location is recorded.    
+   * Emitted when a location is recorded.
    */
   Location: 'location',
-  /** 
-   * Emitted when a motion-change is detected. 
+  /**
+   * Emitted when a motion-change is detected.
    */
   MotionChange: 'motionchange',
-  /** 
-   * Emitted when a motion-activity change is detected. 
+  /**
+   * Emitted when a motion-activity change is detected.
    */
   ActivityChange: 'activitychange',
   /**
-   * Emitted when a geofence transition occurs.    
+   * Emitted when a geofence transition occurs.
    */
   Geofence: 'geofence',
   /**
@@ -37,7 +37,7 @@ export const Event = {
    */
   Http: 'http',
   /**
-   * Emitted at the configured `Config.heartbeatInterval` when the plugin is running. 
+   * Emitted at the configured `Config.heartbeatInterval` when the plugin is running.
    */
   Heartbeat: 'heartbeat',
   /**
@@ -45,27 +45,27 @@ export const Event = {
    */
   ProviderChange: 'providerchange',
   /**
-   * Emitted when a configured schedule is triggered. 
+   * Emitted when a configured schedule is triggered.
    */
   Schedule: 'schedule',
   /**
-   * Emitted when a user interacts with a plugin-generated notification. 
+   * Emitted when a user interacts with a plugin-generated notification.
    */
   Notification: 'notification',
   /**
-   * Emitted when the plugin's authorization state changes.   
+   * Emitted when the plugin's authorization state changes.
    */
   Authorization: 'authorization',
   /**
-   * Emitted when the device's network connectivity changes. 
+   * Emitted when the device's network connectivity changes.
    */
   ConnectivityChange: 'connectivitychange',
   /**
-   * Emitted when the plugin's enabled-state changes. 
+   * Emitted when the plugin's enabled-state changes.
    */
   EnabledChange: 'enabledchange',
   /**
-   * Emitted when the device enters or exits power-saving mode. 
+   * Emitted when the device enters or exits power-saving mode.
    */
   PowerSaveChange: 'powersavechange'    
 } as const;

@@ -6,7 +6,7 @@
  * `desiredAccuracy` threshold set here.
  *
  * @example
- * ```typescript
+ * ```ts
  * const location = await BackgroundGeolocation.getCurrentPosition({
  *   timeout: 30,          // seconds before giving up
  *   maximumAge: 5000,     // accept a cached fix up to 5000 ms old

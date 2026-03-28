@@ -93,7 +93,7 @@ export interface BackgroundGeolocationEvents {
    * locations before manually posting to your server.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onLocation((location) => {
    *   console.log("[onLocation] success: ", location);
    * }, (error) => {
@@ -122,7 +122,7 @@ export interface BackgroundGeolocationEvents {
    * - {@link GeoConfig.stopTimeout}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onMotionChange((event: MotionChangeEvent) => {
    *   if (event.isMoving) {
    *     console.log("[onMotionChange] Device has just started MOVING ", event.location);
@@ -145,7 +145,7 @@ export interface BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onGeofence((event) => {
    *   console.log("[onGeofence] ", event);
    * });
@@ -171,7 +171,7 @@ export interface BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onGeofencesChange((event) => {
    *   const on = event.on;   // newly activated geofences
    *   const off = event.off; // deactivated geofence identifiers
@@ -203,7 +203,7 @@ export interface BackgroundGeolocationEvents {
    * {@link MotionActivityEvent.confidence} always reports `100`.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onActivityChange((event) => {
    *   console.log("[onActivityChange] ", event);
    * });
@@ -225,7 +225,7 @@ export interface BackgroundGeolocationEvents {
    * - {@link getProviderState}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onProviderChange((event) => {
    *   console.log("[onProviderChange]: ", event);
    *
@@ -264,7 +264,7 @@ export interface BackgroundGeolocationEvents {
    * fetch a fresh location inside your callback, call {@link getCurrentPosition}.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   app: {
    *     heartbeatInterval: 60,
@@ -296,7 +296,7 @@ export interface BackgroundGeolocationEvents {
    * - {@link HttpConfig | HTTP Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onHttp((response) => {
    *   const status = response.status;
    *   const success = response.success;
@@ -317,7 +317,7 @@ export interface BackgroundGeolocationEvents {
    * was started or stopped.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onSchedule((state) => {
    *   if (state.enabled) {
    *     console.log("[onSchedule] scheduled start tracking");
@@ -341,7 +341,7 @@ export interface BackgroundGeolocationEvents {
    * an upload to {@link HttpConfig.url}.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onConnectivityChange((event) => {
    *   console.log("[onConnectivityChange] ", event);
    * });
@@ -376,7 +376,7 @@ export interface BackgroundGeolocationEvents {
    * ![](https://dl.dropboxusercontent.com/s/raz8lagrqayowia/Screenshot%202017-09-19%2010.33.49.png?dl=1)
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onPowerSaveChange((isPowerSaveMode) => {
    *   console.log("[onPowerSaveChange]: ", isPowerSaveMode);
    * });
@@ -393,7 +393,7 @@ export interface BackgroundGeolocationEvents {
    * {@link stop} triggers this event.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onEnabledChange((isEnabled) => {
    *   console.log("[onEnabledChange] isEnabled? ", isEnabled);
    * });
@@ -422,7 +422,7 @@ export interface BackgroundGeolocationEvents {
    * message.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const subscription = BackgroundGeolocation.onAuthorization((event) => {
    *   if (event.success) {
    *     console.log("[authorization] SUCCESS: ", event.response);
@@ -453,7 +453,7 @@ export interface BackgroundGeolocationEvents {
    * Calls {@link Subscription.remove} on all active subscriptions.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.removeListeners();
    * ```
    */
@@ -494,7 +494,7 @@ export interface BackgroundGeolocationEvents {
    * - {@link AppConfig.enableHeadless}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const BackgroundGeolocationHeadlessTask = async (event) => {
    *   const params = event.params;
    *   console.log("[BackgroundGeolocation HeadlessTask] -", event.name, params);
@@ -584,7 +584,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * If an optional {@link Config} is provided, it is applied after the reset.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.reset();
    * // Reset to default values with overrides
    * BackgroundGeolocation.reset({
@@ -613,7 +613,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link startGeofences}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const state = await BackgroundGeolocation.start();
    * console.log("[start] success - ", state);
    * ```
@@ -632,12 +632,12 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * stop scheduled tracking (for example, on user logout).
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.stop();
    * ```
    *
    * @example Stop tracking and the scheduler
-   * ```typescript
+   * ```ts
    * // Later when you want to stop the Scheduler (eg: user logout)
    * BackgroundGeolocation.stopSchedule();
    * ```
@@ -655,7 +655,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * independent of the device's motion sensors.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.changePace(true);  // location services ON ("moving")
    * BackgroundGeolocation.changePace(false); // location services OFF ("stationary")
    * ```
@@ -680,7 +680,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * // Add a geofence.
    * BackgroundGeolocation.addGeofence({
    *   notifyOnExit: true,
@@ -709,7 +709,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * Return the current {@link State} of the SDK, including all {@link Config} parameters.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const state = await BackgroundGeolocation.getState();
    * console.log("[state] ", state.enabled, state.trackingMode);
    * ```
@@ -764,7 +764,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * manually posting locations to your server.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const location = await BackgroundGeolocation.getCurrentPosition({
    *   timeout: 30,          // 30 second timeout to fetch location
    *   maximumAge: 5000,     // Accept the last-known-location if not older than 5000 ms.
@@ -798,7 +798,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * to avoid draining the battery.
    *
    * @example
-   * ```typescript
+   * ```ts
    * onResume() async {
    *   // Start watching position while app in foreground, retaining the return Subscription.
    *   this.watchPositionSubscription = await BackgroundGeolocation.watchPosition({
@@ -838,7 +838,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * {@link setOdometer|`.setOdometer(0)`}.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const location = await BackgroundGeolocation.resetOdometer();
    * console.log("[resetOdometer] reset at: ", location);
    * ```
@@ -852,7 +852,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * location where the odometer was set.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const location = await BackgroundGeolocation.setOdometer(1234.56);
    * console.log("[setOdometer] set at: ", location);
    * ```
@@ -877,7 +877,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link resetOdometer} / {@link setOdometer}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const odometer = await BackgroundGeolocation.getOdometer();
    * ```
    */
@@ -890,7 +890,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link onProviderChange} to subscribe to future authorization changes.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const providerState = await BackgroundGeolocation.getProviderState();
    * console.log("- Provider state: ", providerState);
    * ```
@@ -923,7 +923,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link requestTemporaryFullAccuracy} (iOS 14+)
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.onProviderChange((event) => {
    *   console.log('[providerchange]', event);
    * });
@@ -1013,7 +1013,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.addGeofence({
    *   identifier: "Home",
    *   radius: 150,
@@ -1048,7 +1048,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link addGeofence}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const geofences = [{
    *   identifier: "foo",
    *   radius: 200,
@@ -1075,7 +1075,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.removeGeofence("Home").then((success) => {
    *   console.log("[removeGeofence] success");
    * }).catch((error) => {
@@ -1093,7 +1093,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.removeGeofences();
    * ```
    */
@@ -1108,7 +1108,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const geofences = await BackgroundGeolocation.getGeofences();
    * console.log("[getGeofences]: ", geofences);
    * ```
@@ -1122,7 +1122,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const geofence = await BackgroundGeolocation.getGeofence("HOME");
    * console.log("[getGeofence] ", geofence);
    * ```
@@ -1136,7 +1136,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - 📘 {@link Geofence | Geofencing Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const exists = await BackgroundGeolocation.geofenceExists("HOME");
    * console.log("[geofenceExists] ", exists);
    * ```
@@ -1160,7 +1160,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link stopSchedule}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const state = await BackgroundGeolocation.startSchedule();
    * console.log("[startSchedule] success: ", state);
    * ```
@@ -1180,12 +1180,12 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link startSchedule}
    *
    * @example
-   * ```typescript
+   * ```ts
    * await BackgroundGeolocation.stopSchedule();
    * ```
    *
    * @example Stop the scheduler and active tracking
-   * ```typescript
+   * ```ts
    * // Later when you want to stop the Scheduler (eg: user logout)
    * await BackgroundGeolocation.stopSchedule();
    * const state = await BackgroundGeolocation.getState();
@@ -1216,7 +1216,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * Returns device information.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const deviceInfo = await BackgroundGeolocation.getDeviceInfo();
    * console.log(deviceInfo);
    * ```
@@ -1232,7 +1232,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * recognition performance degrades significantly.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const sensors = await BackgroundGeolocation.getSensors();
    * console.log(sensors);
    * ```
@@ -1263,7 +1263,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * ![](https://dl.dropboxusercontent.com/s/raz8lagrqayowia/Screenshot%202017-09-19%2010.33.49.png?dl=1)
    *
    * @example
-   * ```typescript
+   * ```ts
    * const isPowerSaveMode = await BackgroundGeolocation.isPowerSaveMode();
    * ```
    */
@@ -1277,7 +1277,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * Remove all records from the SDK's SQLite database.
    *
    * @example
-   * ```typescript
+   * ```ts
    * await BackgroundGeolocation.destroyLocations();
    * ```
    */
@@ -1287,7 +1287,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * Remove a single location by {@link Location.uuid}.
    *
    * @example
-   * ```typescript
+   * ```ts
    * await BackgroundGeolocation.destroyLocation(location.uuid);
    * ```
    */
@@ -1303,7 +1303,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * Retrieve all {@link Location} records stored in the SDK's SQLite database.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const locations = await BackgroundGeolocation.getLocations();
    * ```
    */
@@ -1313,7 +1313,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * Retrieve the count of all locations currently stored in the SDK's SQLite database.
    *
    * @example
-   * ```typescript
+   * ```ts
    * const count = await BackgroundGeolocation.getCount();
    * ```
    */
@@ -1337,7 +1337,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link HttpConfig | HTTP Guide}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const records = await BackgroundGeolocation.sync();
    * console.log("[sync] success: ", records);
    * ```
@@ -1379,7 +1379,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * ```
    *
    * @example
-   * ```typescript
+   * ```ts
    * onLocation(location) {
    *   console.log("[location] ", location);
    *
@@ -1405,7 +1405,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * The OS may now suspend the app if appropriate.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.startBackgroundTask().then((taskId) => {
    *   // Perform some long-running task (eg: HTTP request)
    *   performLongRunningTask().then(() => {

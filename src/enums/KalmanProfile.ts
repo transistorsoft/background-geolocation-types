@@ -17,7 +17,7 @@
  *   than immediate responsiveness.
  *
  * This maps directly to native Kalman tuning implementations on both Android and iOS.
- * 
+ *
  * @category Config
  */
 export const KalmanProfile = {

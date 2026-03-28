@@ -23,7 +23,7 @@ export interface State extends Config {
    * `false` when stationary.
    *
    * @example
-   * ```typescript
+   * ```ts
    * // Toggle the SDK's motion state from stationary to moving.
    * BackgroundGeolocation.onMotionChange((event) => {
    *   console.log('[onMotionChange] isMoving?', event.isMoving);
@@ -51,7 +51,7 @@ export interface State extends Config {
    * | `1` | Location | Location tracking and geofence monitoring. |
    *
    * @example
-   * ```typescript
+   * ```ts
    * await BackgroundGeolocation.start();
    * let state = await BackgroundGeolocation.getState();
    * console.log('Tracking mode:', state.trackingMode);

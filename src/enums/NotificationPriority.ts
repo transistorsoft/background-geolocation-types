@@ -5,22 +5,22 @@
  * the OS ranks it among other notifications.
  *
  * Mirrors Flutter’s `NotificationPriority` enum.
- * 
+ *
  * @category Config
  */
 export const NotificationPriority = {
   /**
-   * Default notification priority (normal weighting). 
+   * Default notification priority (normal weighting).
    */ 
   Default: 0,
 
   /**
-   * Notification strongly weighted to top of list; icon strongly weighted to the left. 
+   * Notification strongly weighted to top of list; icon strongly weighted to the left.
    */
   High: 1,
 
   /**
-   * Notification weighted to bottom of list; icon weighted to the right. 
+   * Notification weighted to bottom of list; icon weighted to the right.
    */
   Low: -1,
 
@@ -30,7 +30,7 @@ export const NotificationPriority = {
   Max: 2,
 
   /**
-   * Notification strongly weighted to bottom of list; icon hidden. 
+   * Notification strongly weighted to bottom of list; icon hidden.
    */
   Min: -2,
 } as const;

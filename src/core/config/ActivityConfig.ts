@@ -152,7 +152,7 @@ export interface ActivityConfig {
    * also set {@link GeoConfig.pausesLocationUpdatesAutomatically} to `false`.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   activity: {
    *     disableStopDetection: true,
@@ -196,7 +196,7 @@ export interface ActivityConfig {
    * {@link BackgroundGeolocation.changePace} `false` is called manually.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   activity: {
    *     stopOnStationary: true,
@@ -245,7 +245,7 @@ export interface ActivityConfig {
    * ```
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   activity: {
    *     motionTriggerDelay: 30000
@@ -272,7 +272,7 @@ export interface ActivityConfig {
    * permission.
    *
    * @example
-   * ```typescript
+   * ```ts
    * // Only trigger tracking for vehicles
    * BackgroundGeolocation.ready({
    *   activity: {
@@ -320,7 +320,7 @@ export interface ActivityConfig {
    * ![](https://dl.dropbox.com/s/6v4391oz592bdjg/android-permission-physical-activity.png?dl=1)
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.ready({
    *   activity: {
    *     disableMotionActivityUpdates: true

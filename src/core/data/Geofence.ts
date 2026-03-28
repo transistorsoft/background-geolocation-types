@@ -56,7 +56,7 @@ export type Vertices = [number, number][];
  * database, it is replaced.
  *
  * @example Single geofence
- * ```typescript
+ * ```ts
  * BackgroundGeolocation.addGeofence({
  *   identifier: "Home",
  *   radius: 200,
@@ -69,7 +69,7 @@ export type Vertices = [number, number][];
  * ```
  *
  * @example Multiple geofences
- * ```typescript
+ * ```ts
  * await BackgroundGeolocation.addGeofences([{
  *   identifier: "Home",
  *   radius: 200,
@@ -94,7 +94,7 @@ export type Vertices = [number, number][];
  * {@link BackgroundGeolocation.onGeofencesChange}.
  *
  * @example
- * ```typescript
+ * ```ts
  * BackgroundGeolocation.onGeofence((event) => {
  *   console.log("[onGeofence]", event.identifier, event.action);
  * });
@@ -130,7 +130,7 @@ export type Vertices = [number, number][];
  * ![](https://dl.dropbox.com/scl/fi/xz48myvjnpp8ko0l2tufg/polygon-geofencing-parc-lafontaine-400.png?rlkey=sf20ns959uj0a0fq0atmj55bz&dl=1)
  *
  * @example Polygon geofence
- * ```typescript
+ * ```ts
  * BackgroundGeolocation.addGeofence({
  *   identifier: "Park",
  *   notifyOnEntry: true,
@@ -170,17 +170,17 @@ export type Vertices = [number, number][];
  * monitored across app termination and device reboots.
  *
  * @example Remove a single geofence
- * ```typescript
+ * ```ts
  * await BackgroundGeolocation.removeGeofence("Home");
  * ```
  *
  * @example Remove all geofences
- * ```typescript
+ * ```ts
  * await BackgroundGeolocation.removeGeofences();
  * ```
  *
  * @example Fetch all stored geofences
- * ```typescript
+ * ```ts
  * const geofences = await BackgroundGeolocation.getGeofences();
  * console.log("[getGeofences]", geofences);
  * ```
@@ -198,7 +198,7 @@ export type Vertices = [number, number][];
  * time by calling the corresponding start method.
  *
  * @example Geofences-only mode
- * ```typescript
+ * ```ts
  * BackgroundGeolocation.onGeofence((event) => {
  *   console.log("[onGeofence]", event);
  * });
@@ -215,7 +215,7 @@ export type Vertices = [number, number][];
  * ## Examples
  *
  * @example Toggle between location tracking and geofences-only mode
- * ```typescript
+ * ```ts
  * BackgroundGeolocation.onGeofence((event) => {
  *   if (event.identifier === "DANGER_ZONE") {
  *     if (event.action === "ENTER") {
@@ -343,7 +343,7 @@ export interface Geofence {
    * ![](https://dl.dropbox.com/scl/fi/xzf6yau5wcg1az8fy0lbm/geofencing-polygons-on-map.PNG?rlkey=e82h494msbgt8ngu4s2pjwemb&dl=1)
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.addGeofence({
    *   identifier: "Home",
    *   notifyOnEntry: true,

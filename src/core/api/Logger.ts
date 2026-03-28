@@ -193,7 +193,7 @@ export interface Logger {
    * Insert a debug-level message into the SDK's log database.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.logger.debug("This is a debug message");
    * ```
    *
@@ -207,7 +207,7 @@ export interface Logger {
    * Insert an error-level message into the SDK's log database.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.logger.error("Something BAD");
    * ```
    *
@@ -222,7 +222,7 @@ export interface Logger {
    * Insert a warning-level message into the SDK's log database.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.logger.warn("Something WEIRD");
    * ```
    *
@@ -237,7 +237,7 @@ export interface Logger {
    * Insert an info-level message into the SDK's log database.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.logger.info("Something informative");
    * ```
    *
@@ -252,7 +252,7 @@ export interface Logger {
    * Insert a notice-level message into the SDK's log database.
    *
    * @example
-   * ```typescript
+   * ```ts
    * BackgroundGeolocation.logger.notice("A Notice");
    * ```
    *
@@ -278,7 +278,7 @@ export interface Logger {
    * - 📘[Debugging Guide](github:wiki/Debugging)
    *
    * @example
-   * ```typescript
+   * ```ts
    * // Fetch all logs
    * const log = await BackgroundGeolocation.logger.getLog();
    * console.log("[log]", log);
@@ -307,7 +307,7 @@ export interface Logger {
    * - 📘[Debugging Guide](github:wiki/Debugging)
    *
    * @example
-   * ```typescript
+   * ```ts
    * const Logger = BackgroundGeolocation.logger;
    * await Logger.emailLog("foo@bar.com");
    *
@@ -351,7 +351,7 @@ export interface Logger {
    * - 📘[Debugging Guide](github:wiki/Debugging)
    *
    * @example
-   * ```typescript
+   * ```ts
    * await BackgroundGeolocation.logger.uploadLog(
    *   "https://my.server.com/users/123/logs"
    * );
@@ -376,7 +376,7 @@ export interface Logger {
    * - 📘[Debugging Guide](github:wiki/Debugging)
    *
    * @example
-   * ```typescript
+   * ```ts
    * await BackgroundGeolocation.logger.destroyLog();
    * ```
    */

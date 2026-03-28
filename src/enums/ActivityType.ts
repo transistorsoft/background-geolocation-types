@@ -16,23 +16,23 @@
  */
 export const ActivityType = {  
   /**
-   * Default/unspecified activity. 
+   * Default/unspecified activity.
    */
   Other: 1,
   /**
-   * Automotive navigation mode. 
+   * Automotive navigation mode.
    */
   AutomotiveNavigation: 2,
   /**
-   * Fitness-related activity. 
+   * Fitness-related activity.
    */
   Fitness: 3,
   /**
-   * Non-automotive navigation mode. 
+   * Non-automotive navigation mode.
    */
   OtherNavigation: 4,
   /**
-   * Airborne activity (iOS 15+). 
+   * Airborne activity (iOS 15+).
    */
   Airborne: 5,
 } as const;

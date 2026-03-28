@@ -67,11 +67,11 @@
  * - {@link GeoConfig.filter}
  * - {@link LocationFilter}
  * - {@link KalmanProfile}
- * 
+ *
  * @category Config
  */
 export const LocationFilterPolicy = {
-  /** 
+  /**
    * No filtering — accept all samples. Useful for debugging.
    */ 
   PassThrough: 0,
@@ -85,16 +85,16 @@ export const LocationFilterPolicy = {
    * When using {@link LocationFilterPolicy.Adjust} (the default), the SDK computes
    * motion metrics such as:
    *
-   * - distance deltas  
-   * - implied speed  
-   * - accuracy variance  
-   * - heading stability  
+   * - distance deltas
+   * - implied speed
+   * - accuracy variance
+   * - heading stability
    *
    * It then applies adaptive gating rules to decide whether each sample should be:
    *
-   * - accepted  
-   * - ignored  
-   * - rejected as noise  
+   * - accepted
+   * - ignored
+   * - rejected as noise
    *
    * **Coordinates are never modified.** This policy adjusts *which* samples are
    * included, not *how* they are positioned.
@@ -104,9 +104,9 @@ export const LocationFilterPolicy = {
    */
   Adjust: 1,
 
-  /** 
-   * Aggressive — filters heavily, preferring stability over responsiveness. 
-   * */ 
+  /**
+   * Aggressive — filters heavily, preferring stability over responsiveness.
+   */ 
   Conservative: 2
 } as const;
 

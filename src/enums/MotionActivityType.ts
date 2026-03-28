@@ -1,35 +1,35 @@
-/** 
- * Reported device motion activity names (legacy RN + native). 
- * 
+/**
+ * Reported device motion activity names (legacy RN + native).
+ *
  * @category Events
  */
 export const MotionActivityType = {
   /**
-   * Device is stationary. 
+   * Device is stationary.
    */
   Still: 'still',   
   /**
-   * Device is walking. 
+   * Device is walking.
    */
   Walking: 'walking',
   /**
-   * Device is on foot (walking or running). 
+   * Device is on foot (walking or running).
    */
   OnFoot: 'on_foot',
   /**
-   * Device is running. 
+   * Device is running.
    */
   Running: 'running',
   /**
-   * Device is on bicycle. 
+   * Device is on bicycle.
    */
   OnBicycle: 'on_bicycle',
   /**
-   * Device is in vehicle. 
+   * Device is in vehicle.
    */
   InVehicle: 'in_vehicle',
   /**
-   * Device activity is unknown. 
+   * Device activity is unknown.
    */
   Unknown: 'unknown'
 } as const;

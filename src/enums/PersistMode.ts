@@ -1,7 +1,7 @@
 /**
  * Persistence modes for BackgroundGeolocation SDK.
  * Mirrors Flutter's `PersistMode` enum.
- * 
+ *
  * @category Config
  */
 export const PersistMode = {
