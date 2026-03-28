@@ -52,9 +52,10 @@ import { HttpMethod } from '../../enums/HttpMethod';
  *
  * Each location follows this path from recording to delivery:
  *
- * 1. Location is recorded and written to SQLite.
+ * 1. A location is recorded and immediately rendered to JSON — using the default schema or
+ *    {@link PersistenceConfig.locationTemplate} if configured — then written to SQLite.
  * 2. A **record-level lock** is acquired to prevent duplicate uploads.
- * 3. The record is serialized and posted to {@link url}.
+ * 3. The stored JSON is read from SQLite and posted to {@link url}.
  * 4. A **2xx** response marks the record as delivered — it is deleted from the database.
  * 5. On failure, the lock is released and the record is retried later.
  *
