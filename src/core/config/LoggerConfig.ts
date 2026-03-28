@@ -1,7 +1,6 @@
 import { LogLevel } from '../../enums/LogLevel';
 
 /**
- * <!-- doc-id: LoggerConfig -->
  * Logging and diagnostics configuration for the background geolocation SDK.
  *
  * `LoggerConfig` controls how much the SDK writes to its internal log, how long
@@ -196,7 +195,6 @@ import { LogLevel } from '../../enums/LogLevel';
  */
 export interface LoggerConfig {
   /**
-   * <!-- doc-id: LoggerConfig.debug -->
    * Enables audible soundFX and debug notifications during development.
    *
    * When `true`, the SDK plays a distinct sound for each key lifecycle event so
@@ -245,7 +243,6 @@ export interface LoggerConfig {
   debug?: boolean;
 
   /**
-   * <!-- doc-id: LoggerConfig.logLevel -->
    * Controls the verbosity of the SDK's internal log.
    *
    * Defaults to {@link LogLevel.Off}. The log is stored in an internal SQLite
@@ -300,7 +297,6 @@ export interface LoggerConfig {
   logLevel?: LogLevel;
 
   /**
-   * <!-- doc-id: LoggerConfig.logMaxDays -->
    * Number of days to retain log entries in the internal SQLite database.
    *
    * Defaults to `3` days. Entries older than this limit are purged automatically

@@ -1,7 +1,6 @@
 import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
 
 /**
- * <!-- doc-id: AuthorizationConfig -->
  * Token-based authorization configuration for the background geolocation SDK.
  *
  * `AuthorizationConfig` enables the SDK to authenticate HTTP uploads with an
@@ -145,7 +144,6 @@ import { AuthorizationStrategy } from '../../enums/AuthorizationStrategy';
  */
 export interface AuthorizationConfig {
   /**
-   * <!-- doc-id: AuthorizationConfig.strategy -->
    * Authorization strategy used when attaching the token to HTTP requests.
    * Defaults to `"JWT"`.
    *
@@ -155,7 +153,6 @@ export interface AuthorizationConfig {
   strategy: string;
 
   /**
-   * <!-- doc-id: AuthorizationConfig.accessToken -->
    * The access token attached to each HTTP request as an `Authorization`
    * header.
    *
@@ -176,7 +173,6 @@ export interface AuthorizationConfig {
   accessToken: string;
 
   /**
-   * <!-- doc-id: AuthorizationConfig.refreshToken -->
    * The token sent to {@link refreshUrl} when a new {@link accessToken} is
    * needed after {@link expires} or when HTTP `401 Unauthorized` is received.
    *
@@ -187,7 +183,6 @@ export interface AuthorizationConfig {
   refreshToken?: string;
 
   /**
-   * <!-- doc-id: AuthorizationConfig.refreshUrl -->
    * The URL of the authorization server that provides a new {@link accessToken}
    * when the current token expires.
    *
@@ -203,7 +198,6 @@ export interface AuthorizationConfig {
   refreshUrl?: string;
 
   /**
-   * <!-- doc-id: AuthorizationConfig.refreshPayload -->
    * Form fields sent in the `application/x-www-form-urlencoded` POST to
    * {@link refreshUrl} when requesting a new {@link accessToken} after
    * expiration.
@@ -242,7 +236,6 @@ export interface AuthorizationConfig {
   refreshPayload?: Record<string, string>;
 
   /**
-   * <!-- doc-id: AuthorizationConfig.refreshHeaders -->
    * HTTP headers sent with each request to {@link refreshUrl}.
    *
    * If not set, the SDK automatically injects
@@ -270,7 +263,6 @@ export interface AuthorizationConfig {
   refreshHeaders?: Record<string, string>;
 
   /**
-   * <!-- doc-id: AuthorizationConfig.expires -->
    * Token expiry time in seconds since epoch. Defaults to `-1` (not set).
    *
    * When set, the SDK proactively refreshes the token before expiry rather

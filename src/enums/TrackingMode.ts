@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: TrackingMode -->
  * SDK tracking mode (legacy RN values preserved).
  *
  * | Value | Name       | Description                   |
@@ -11,12 +10,10 @@
  */
 export const TrackingMode = {
   /**
-   * <!-- doc-id: TrackingMode.Geofences -->
    * Monitor geofences only. 
    */
   Geofences: 0,
   /**
-   * <!-- doc-id: TrackingMode.Location -->
    * Monitor location + geofences. 
    */
   Location: 1

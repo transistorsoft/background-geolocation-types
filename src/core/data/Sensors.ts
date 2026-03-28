@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: Sensors -->
  * Availability of motion sensors on the device, as returned by
  * {@link BackgroundGeolocation.getSensors}.
  *
@@ -18,31 +17,26 @@
  */
 export interface Sensors {
   /**
-   * <!-- doc-id: Sensors.platform -->
    * OS platform name: `"ios"` or `"android"`.
    */
   platform: string;
 
   /**
-   * <!-- doc-id: Sensors.accelerometer -->
    * `true` when the device has an accelerometer.
    */
   accelerometer: boolean;
 
   /**
-   * <!-- doc-id: Sensors.magnetometer -->
    * `true` when the device has a magnetometer (compass).
    */
   magnetometer: boolean;
 
   /**
-   * <!-- doc-id: Sensors.gyroscope -->
    * `true` when the device has a gyroscope.
    */
   gyroscope: boolean;
 
   /**
-   * <!-- doc-id: Sensors.significant_motion -->
    * `true` when the device supports the Significant Motion hardware trigger.
    * [Android only]
    *
@@ -52,7 +46,6 @@ export interface Sensors {
   significant_motion?: boolean;
 
   /**
-   * <!-- doc-id: Sensors.motion_hardware -->
    * `true` when the device has a dedicated M-series motion co-processor
    * (iPhone 5S and later). [iOS only]
    *

@@ -1,7 +1,6 @@
 import { PersistMode } from '../../enums/PersistMode';
 
 /**
- * <!-- doc-id: PersistenceConfig -->
  * Persistence and storage configuration for the background geolocation SDK.
  *
  * `PersistenceConfig` controls how the SDK stores, orders, templates, and purges
@@ -201,7 +200,6 @@ import { PersistMode } from '../../enums/PersistMode';
  */
 export interface PersistenceConfig {
   /**
-   * <!-- doc-id: PersistenceConfig.locationTemplate -->
    * Optional custom ERB template for reshaping {@link Location} JSON in HTTP uploads.
    *
    * When set, the SDK evaluates the template string against each location record
@@ -329,7 +327,6 @@ export interface PersistenceConfig {
   locationTemplate?: string;
 
   /**
-   * <!-- doc-id: PersistenceConfig.geofenceTemplate -->
    * Optional custom ERB template for reshaping {@link GeofenceEvent} JSON in HTTP uploads.
    *
    * Behaves like {@link locationTemplate} but includes two additional tags:
@@ -426,7 +423,6 @@ export interface PersistenceConfig {
   geofenceTemplate?: string;
 
   /**
-   * <!-- doc-id: PersistenceConfig.maxDaysToPersist -->
    * Maximum number of days to retain a persisted record in the SDK's on-device
    * SQLite database. Defaults to `1` day.
    *
@@ -437,7 +433,6 @@ export interface PersistenceConfig {
   maxDaysToPersist?: number;
 
   /**
-   * <!-- doc-id: PersistenceConfig.maxRecordsToPersist -->
    * Maximum number of records the SDK may retain in its on-device SQLite database.
    * Defaults to `-1` (no limit).
    *
@@ -449,7 +444,6 @@ export interface PersistenceConfig {
   maxRecordsToPersist?: number;
 
   /**
-   * <!-- doc-id: PersistenceConfig.locationsOrderDirection -->
    * Sort order used when selecting records for upload or returning them from
    * {@link BackgroundGeolocation.getLocations}. Defaults to `"ASC"` (oldest first).
    *
@@ -459,7 +453,6 @@ export interface PersistenceConfig {
   locationsOrderDirection?: 'ASC' | 'DESC';
 
   /**
-   * <!-- doc-id: PersistenceConfig.persistMode -->
    * Controls which event types the SDK writes to its internal SQLite database.
    * Defaults to {@link PersistMode.All}.
    *
@@ -485,7 +478,6 @@ export interface PersistenceConfig {
   persistMode?: PersistMode;
 
   /**
-   * <!-- doc-id: PersistenceConfig.extras -->
    * Optional arbitrary key/value pairs merged into each recorded location at
    * write time.
    *
@@ -533,7 +525,6 @@ export interface PersistenceConfig {
   extras?: Record<string, any>;
 
   /**
-   * <!-- doc-id: PersistenceConfig.disableProviderChangeRecord -->
    * Disables the automatic insertion of a synthetic "provider-change" location
    * into the SDK's SQLite database and its subsequent HTTP upload. [Android only]
    *

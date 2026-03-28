@@ -1,7 +1,6 @@
 import { TriggerActivity } from '../../enums/TriggerActivity';
 
 /**
- * <!-- doc-id: ActivityConfig -->
  * Activity recognition configuration for the background geolocation SDK.
  *
  * `ActivityConfig` controls how the SDK interprets transitions between *moving*
@@ -120,7 +119,6 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  */
 export interface ActivityConfig {
   /**
-   * <!-- doc-id: ActivityConfig.activityRecognitionInterval -->
    * Interval in milliseconds between motion-activity polls. Defaults to
    * `10000` ms (10 seconds).
    *
@@ -130,7 +128,6 @@ export interface ActivityConfig {
   activityRecognitionInterval?: number;
 
   /**
-   * <!-- doc-id: ActivityConfig.minimumActivityRecognitionConfidence -->
    * Minimum confidence level (0–100) required before a detected activity
    * triggers a moving/stationary state change.
    *
@@ -141,7 +138,6 @@ export interface ActivityConfig {
   minimumActivityRecognitionConfidence?: number;
 
   /**
-   * <!-- doc-id: ActivityConfig.disableStopDetection -->
    * Disables the motion-activity-based stop-detection system. Defaults to
    * `false`.
    *
@@ -186,7 +182,6 @@ export interface ActivityConfig {
   disableStopDetection?: boolean;
 
   /**
-   * <!-- doc-id: ActivityConfig.stopOnStationary -->
    * Automatically calls {@link BackgroundGeolocation.stop} when the
    * {@link GeoConfig.stopTimeout} elapses. Defaults to `false`.
    *
@@ -214,7 +209,6 @@ export interface ActivityConfig {
   stopOnStationary?: boolean;
 
   /**
-   * <!-- doc-id: ActivityConfig.motionTriggerDelay -->
    * Adds a delay in milliseconds before the SDK commits to the *moving* state
    * when the Motion API reports movement. Defaults to `0` (no delay).
    * [Android only]
@@ -262,7 +256,6 @@ export interface ActivityConfig {
   motionTriggerDelay?: number;
 
   /**
-   * <!-- doc-id: ActivityConfig.triggerActivities -->
    * Restricts which detected activities can trigger a transition from the
    * *stationary* state to the *moving* state.
    *
@@ -298,7 +291,6 @@ export interface ActivityConfig {
   triggerActivities?: TriggerActivity[] | TriggerActivity;
 
   /**
-   * <!-- doc-id: ActivityConfig.disableMotionActivityUpdates -->
    * Disables the SDK's request for Motion & Fitness (iOS) or Physical
    * Activity (Android 10+) permission. Defaults to `false`.
    *
@@ -339,7 +331,6 @@ export interface ActivityConfig {
   disableMotionActivityUpdates?: boolean;
 
   /**
-   * <!-- doc-id: ActivityConfig.stopDetectionDelay -->
    * Delays the iOS stop-detection system from engaging after the device
    * becomes stationary. Defaults to `0` (engage immediately). [iOS only]
    *

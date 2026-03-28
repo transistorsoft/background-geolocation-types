@@ -1,7 +1,6 @@
 import { NotificationConfig } from './NotificationConfig';
 
 /**
- * <!-- doc-id: PermissionRationale -->
  * Configures the background location permission rationale dialog on Android 11
  * and later. [Android only]
  *
@@ -74,23 +73,19 @@ import { NotificationConfig } from './NotificationConfig';
  */
 export interface PermissionRationale {
   /**
-   * <!-- doc-id: PermissionRationale.title -->
    * Title for the Android background location permission dialog.
    */
   title?: string;
   /**
-   * <!-- doc-id: PermissionRationale.message -->
    * Body text of the dialog. Explain why your app needs background location
    * access, similar in purpose to the iOS `NSLocationAlwaysAndWhenInUseUsageDescription`.
    */
   message?: string;
   /**
-   * <!-- doc-id: PermissionRationale.positiveAction -->
    * Text to display on the positive action button.
    */
   positiveAction?: string;
   /**
-   * <!-- doc-id: PermissionRationale.negativeAction -->
    * Text to display on the negative action button (e.g. "Cancel").
    */
   negativeAction?: string;
@@ -98,7 +93,6 @@ export interface PermissionRationale {
 
 
 /**
- * <!-- doc-id: AppConfig -->
  * Application and lifecycle configuration for the background geolocation SDK.
  *
  * `AppConfig` controls how the SDK integrates with your app's lifecycle: tracking
@@ -272,7 +266,6 @@ export interface PermissionRationale {
  */
 export interface AppConfig {
   /**
-   * <!-- doc-id: AppConfig.stopOnTerminate -->
    * Controls whether tracking stops when the application is terminated by the
    * user. Defaults to `true`.
    *
@@ -306,7 +299,6 @@ export interface AppConfig {
   stopOnTerminate?: boolean;
 
   /**
-   * <!-- doc-id: AppConfig.startOnBoot -->
    * Controls whether tracking resumes automatically after the device reboots.
    * Defaults to `false`.
    *
@@ -332,7 +324,6 @@ export interface AppConfig {
   startOnBoot?: boolean;
 
   /**
-   * <!-- doc-id: AppConfig.enableHeadless -->
    * Enables headless operation so the SDK can respond to events after the app
    * has been terminated with {@link AppConfig.stopOnTerminate} `false`. Defaults
    * to `false`. [Android only]
@@ -357,7 +348,6 @@ export interface AppConfig {
   enableHeadless?: boolean;
 
   /**
-   * <!-- doc-id: AppConfig.heartbeatInterval -->
    * Rate in seconds at which {@link BackgroundGeolocation.onHeartbeat} events
    * fire while the app is in the background.
    *
@@ -405,7 +395,6 @@ export interface AppConfig {
   heartbeatInterval?: number;
 
   /**
-   * <!-- doc-id: AppConfig.schedule -->
    * Configures a cron-like automated schedule that tells the SDK when to
    * {@link BackgroundGeolocation.start | start} and
    * {@link BackgroundGeolocation.stop | stop} tracking.
@@ -538,7 +527,6 @@ export interface AppConfig {
   schedule?: string[];
 
   /**
-   * <!-- doc-id: AppConfig.scheduleUseAlarmManager -->
    * Forces the Android scheduler to use `AlarmManager` (exact, on-the-minute)
    * instead of `JobScheduler` (inexact). Defaults to `false`. [Android only]
    *
@@ -555,7 +543,6 @@ export interface AppConfig {
   scheduleUseAlarmManager?: boolean;
 
   /**
-   * <!-- doc-id: AppConfig.notification -->
    * Configures the persistent foreground-service notification required by
    * Android. [Android only]
    *
@@ -578,7 +565,6 @@ export interface AppConfig {
   notification?: NotificationConfig;
 
   /**
-   * <!-- doc-id: AppConfig.backgroundPermissionRationale -->
    * Configures the dialog shown when requesting *Always* background location
    * permission on Android 11 and later. [Android only]
    *
@@ -637,7 +623,6 @@ export interface AppConfig {
   backgroundPermissionRationale?: PermissionRationale;
 
   /**
-   * <!-- doc-id: AppConfig.preventSuspend -->
    * Prevents iOS from suspending the application after location services have
    * been disabled while running in the background. Defaults to `false`.
    * [iOS only]

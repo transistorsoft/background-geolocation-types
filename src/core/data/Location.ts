@@ -3,39 +3,33 @@ import { MotionActivityType } from '../../enums/MotionActivityType';
 import { GeofenceEvent } from '../events/GeofenceEvent';
 
 /**
- * <!-- doc-id: Coords -->
  * Geographic coordinates attached to a {@link Location}.
  *
  * @category Data
 */
 export interface Coords {
   /**
-   * <!-- doc-id: Coords.floor -->
    * Floor within a building, when indoor-positioning hardware (e.g. Bluetooth
    * beacons) is available. [iOS only]
    */
   floor?: number;
 
   /**
-   * <!-- doc-id: Coords.latitude -->
    * Latitude in decimal degrees.
    */
   latitude: number;
 
   /**
-   * <!-- doc-id: Coords.longitude -->
    * Longitude in decimal degrees.
    */
   longitude: number;
 
   /**
-   * <!-- doc-id: Coords.accuracy -->
    * Horizontal accuracy radius in meters.
    */
   accuracy: number;
 
   /**
-   * <!-- doc-id: Coords.altitude -->
    * Altitude above a reference plane in meters.
    *
    * #### iOS
@@ -50,13 +44,11 @@ export interface Coords {
   altitude?: number;
 
   /**
-   * <!-- doc-id: Coords.ellipsoidal_altitude -->
    * Altitude above the WGS84 reference ellipsoid in meters.
    */
   ellipsoidal_altitude?: number;
 
   /**
-   * <!-- doc-id: Coords.altitude_accuracy -->
    * Vertical accuracy in meters. Returns `-1` if unavailable.
    *
    * #### iOS
@@ -75,7 +67,6 @@ export interface Coords {
   altitude_accuracy?: number;
 
   /**
-   * <!-- doc-id: Coords.heading -->
    * Direction of travel in degrees (0–360, clockwise from true north).
    *
    * ### Note
@@ -85,7 +76,6 @@ export interface Coords {
   heading?: number;
 
   /**
-   * <!-- doc-id: Coords.heading_accuracy -->
    * Heading accuracy in degrees.
    *
    * ### Note
@@ -95,7 +85,6 @@ export interface Coords {
   heading_accuracy?: number;
 
   /**
-   * <!-- doc-id: Coords.speed -->
    * Ground speed in meters per second.
    *
    * ### Note
@@ -105,7 +94,6 @@ export interface Coords {
   speed?: number;
 
   /**
-   * <!-- doc-id: Coords.speed_accuracy -->
    * Speed accuracy in meters per second.
    *
    * ### Note
@@ -116,27 +104,23 @@ export interface Coords {
 }
 
 /**
- * <!-- doc-id: Battery -->
  * Device battery state at the time a {@link Location} was recorded.
  *
  * @category Data
  */
 export interface Battery {
   /**
-   * <!-- doc-id: Battery.is_charging -->
    * `true` when the device is connected to a power source.
    */
   is_charging: boolean;
 
   /**
-   * <!-- doc-id: Battery.level -->
    * Battery charge level: `0.0` = empty, `1.0` = fully charged.
    */
   level: number;
 }
 
 /**
- * <!-- doc-id: MotionActivity -->
  * The motion activity reported by the device at the time a {@link Location}
  * was recorded.
  *
@@ -144,20 +128,17 @@ export interface Battery {
  */
 export interface MotionActivity {
   /**
-   * <!-- doc-id: MotionActivity.type -->
    * Detected motion activity type (e.g. `still`, `on_foot`, `in_vehicle`).
    */
   type: MotionActivityType;
 
   /**
-   * <!-- doc-id: MotionActivity.confidence -->
    * Confidence of the reported activity as a percentage (0–100).
    */
   confidence: number;
 }
 
 /**
- * <!-- doc-id: Location -->
  * A location record captured by the device's native location API and
  * delivered by the SDK.
  *
@@ -248,13 +229,11 @@ export interface MotionActivity {
  */
 export interface Location {
   /**
-   * <!-- doc-id: Location.timestamp -->
    * ISO-8601 UTC timestamp provided by the native location API.
    */
   timestamp: string;
 
   /**
-   * <!-- doc-id: Location.age -->
    * Age of the location in milliseconds, measured from the device system
    * clock at the time the location was received.
    *
@@ -264,7 +243,6 @@ export interface Location {
   age: number;
 
   /**
-   * <!-- doc-id: Location.odometer -->
    * Accumulated distance traveled in meters since the last odometer reset.
    *
    * The SDK integrates the distance between each pair of accepted locations
@@ -309,7 +287,6 @@ export interface Location {
   odometer: number;
 
   /**
-   * <!-- doc-id: Location.odometer_error -->
    * Accumulated odometer drift in meters.
    *
    * Represents the uncertainty that has built up in the {@link odometer}
@@ -342,14 +319,12 @@ export interface Location {
   odometer_error: number;
 
   /**
-   * <!-- doc-id: Location.is_moving -->
    * `true` when the SDK was in the **moving** state when this location was
    * recorded.
    */
   is_moving: boolean;
 
   /**
-   * <!-- doc-id: Location.uuid -->
    * Universally unique identifier for this location record.
    *
    * Use this to correlate locations in your server database with those in the
@@ -358,7 +333,6 @@ export interface Location {
   uuid: string;
 
   /**
-   * <!-- doc-id: Location.event -->
    * SDK event that triggered this location record.
    *
    * One of: `"motionchange"`, `"providerchange"`, `"geofence"`, `"heartbeat"`.
@@ -366,13 +340,11 @@ export interface Location {
   event?: string;
 
   /**
-   * <!-- doc-id: Location.mock -->
    * `true` when the location was generated by a mock location app or simulator.
    */
   mock?: boolean;
 
   /**
-   * <!-- doc-id: Location.sample -->
    * `true` for intermediate sample locations collected during accuracy
    * convergence.
    *
@@ -385,20 +357,17 @@ export interface Location {
   sample?: boolean;
 
   /**
-   * <!-- doc-id: Location.coords -->
    * Geographic coordinates: latitude, longitude, accuracy, speed, heading,
    * and altitude.
    */
   coords: Coords;
 
   /**
-   * <!-- doc-id: Location.battery -->
    * Device battery state at the time this location was recorded.
    */
   battery: Battery;
 
   /**
-   * <!-- doc-id: Location.extras -->
    * Optional arbitrary metadata attached to this location.
    *
    * Merged with configured {@link PersistenceConfig.extras} before persisting
@@ -407,7 +376,6 @@ export interface Location {
   extras?: Record<string, any>;
 
   /**
-   * <!-- doc-id: Location.geofence -->
    * The geofence event that triggered this location, if applicable.
    *
    * Present only when {@link event} is `"geofence"`.
@@ -415,14 +383,12 @@ export interface Location {
   geofence?: GeofenceEvent;
 
   /**
-   * <!-- doc-id: Location.activity -->
    * Motion activity detected by the device at the time this location was
    * recorded (e.g. `still`, `on_foot`, `in_vehicle`).
    */
   activity: MotionActivity;
 
   /**
-   * <!-- doc-id: Location.provider -->
    * Location-services provider state at the time this location was recorded.
    *
    * Present only when {@link event} is `"providerchange"`.

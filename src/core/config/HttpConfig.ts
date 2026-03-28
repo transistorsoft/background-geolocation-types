@@ -2,7 +2,6 @@
 import { HttpMethod } from '../../enums/HttpMethod';
 
 /**
- * <!-- doc-id: HttpConfig -->
  * HTTP and networking configuration for the background geolocation SDK.
  *
  * `HttpConfig` controls how recorded locations are uploaded to your server —
@@ -250,7 +249,6 @@ import { HttpMethod } from '../../enums/HttpMethod';
  */
 export interface HttpConfig {
   /**
-   * <!-- doc-id: HttpConfig.url -->
    * The server URL where the SDK posts recorded locations.
    *
    * The SDK hosts a robust HTTP service that continuously uploads recorded
@@ -284,7 +282,6 @@ export interface HttpConfig {
   url?: string;
 
   /**
-   * <!-- doc-id: HttpConfig.headers -->
    * HTTP headers applied to every outbound upload request.
    *
    * The supplied headers are merged with the SDK's automatically applied headers
@@ -324,7 +321,6 @@ export interface HttpConfig {
   headers?: Record<string, string>;
 
   /**
-   * <!-- doc-id: HttpConfig.params -->
    * Key/value pairs merged into the JSON body of every outbound upload request.
    *
    * Params are merged at the root level of the payload, or nested under
@@ -364,7 +360,6 @@ export interface HttpConfig {
   params?: Record<string, any>;
 
   /**
-   * <!-- doc-id: HttpConfig.method -->
    * The HTTP method used when uploading locations to {@link url}.
    *
    * Defaults to `POST`. Valid values: `POST`, `PUT`, `PATCH`.
@@ -382,7 +377,6 @@ export interface HttpConfig {
   method?: HttpMethod;
 
   /**
-   * <!-- doc-id: HttpConfig.autoSync -->
    * Uploads each recorded location to {@link url} immediately after it is recorded.
    *
    * Defaults to `true`. When a {@link url} is configured, the SDK attempts to
@@ -406,7 +400,6 @@ export interface HttpConfig {
   autoSync?: boolean;
 
   /**
-   * <!-- doc-id: HttpConfig.autoSyncThreshold -->
    * Minimum number of queued records required before an automatic upload fires.
    *
    * Defaults to `0` (no threshold — upload after every recorded location).
@@ -429,7 +422,6 @@ export interface HttpConfig {
   autoSyncThreshold?: number;
 
   /**
-   * <!-- doc-id: HttpConfig.disableAutoSyncOnCellular -->
    * Defers automatic uploads until the device is on Wi-Fi.
    *
    * Defaults to `false`. When `true`, {@link autoSync} uploads occur only when
@@ -447,7 +439,6 @@ export interface HttpConfig {
   disableAutoSyncOnCellular?: boolean;
 
   /**
-   * <!-- doc-id: HttpConfig.batchSync -->
    * Bundles all queued locations into a single HTTP request.
    *
    * Defaults to `false`. When `true`, the SDK sends all records currently in the
@@ -465,7 +456,6 @@ export interface HttpConfig {
   batchSync?: boolean;
 
   /**
-   * <!-- doc-id: HttpConfig.maxBatchSize -->
    * Maximum number of records included in each batched HTTP request.
    *
    * Defaults to `-1` (no limit — all queued records in one request).
@@ -481,7 +471,6 @@ export interface HttpConfig {
   maxBatchSize?: number;
 
   /**
-   * <!-- doc-id: HttpConfig.rootProperty -->
    * Wraps the location payload under a named root key in the JSON body.
    *
    * Defaults to `"location"`. When set, outgoing payloads nest the serialized
@@ -528,7 +517,6 @@ export interface HttpConfig {
   rootProperty?: string;
 
   /**
-   * <!-- doc-id: HttpConfig.timeout -->
    * HTTP request timeout in milliseconds.
    *
    * Defaults to `60000` ms (60 seconds). When a request exceeds this duration,

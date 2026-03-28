@@ -73,7 +73,6 @@ export interface EventPayloads {
  */
 export interface BackgroundGeolocationEvents {
   /**
-   * <!-- doc-id: BackgroundGeolocation.onLocation -->
    * Subscribe to location events.
    *
    * Every location recorded by the SDK is delivered to your callback, including
@@ -107,7 +106,6 @@ export interface BackgroundGeolocationEvents {
   onLocation(cb: (location: Location) => void, onError?: (err: LocationError) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onMotionChange -->
    * Subscribe to motion-change events.
    *
    * Fires each time the device transitions between the **moving** and
@@ -139,7 +137,6 @@ export interface BackgroundGeolocationEvents {
   onMotionChange(cb: (event: MotionChangeEvent) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onGeofence -->
    * Subscribe to geofence transition events.
    *
    * Fires when any monitored geofence crossing occurs.
@@ -159,7 +156,6 @@ export interface BackgroundGeolocationEvents {
   onGeofence(cb: (event: GeofenceEvent) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onGeofencesChange -->
    * Subscribe to changes in the set of actively monitored geofences.
    *
    * Fires when the SDK's active geofence set changes. The SDK can monitor any
@@ -197,7 +193,6 @@ export interface BackgroundGeolocationEvents {
   onGeofencesChange(cb: (event: GeofencesChangeEvent) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onActivityChange -->
    * Subscribe to motion-activity changes.
    *
    * Fires each time the activity-recognition system reports a new activity
@@ -219,7 +214,6 @@ export interface BackgroundGeolocationEvents {
   onActivityChange(cb: (event: MotionActivityEvent) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onProviderChange -->
    * Subscribe to location-services authorization changes.
    *
    * Fires whenever the state of the device's location-services authorization
@@ -257,7 +251,6 @@ export interface BackgroundGeolocationEvents {
   onProviderChange(cb: (event: ProviderChangeEvent) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onHeartbeat -->
    * Subscribe to periodic heartbeat events.
    *
    * Fires at each {@link AppConfig.heartbeatInterval} while the device is in
@@ -297,7 +290,6 @@ export interface BackgroundGeolocationEvents {
   onHeartbeat(cb: (event: HeartbeatEvent) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onHttp -->
    * Subscribe to HTTP responses from your server {@link HttpConfig.url}.
    *
    * **See also**
@@ -318,7 +310,6 @@ export interface BackgroundGeolocationEvents {
   onHttp(cb: (event: HttpEvent) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onSchedule -->
    * Subscribe to {@link AppConfig.schedule} events.
    *
    * Fires each time a schedule event activates or deactivates tracking.
@@ -341,7 +332,6 @@ export interface BackgroundGeolocationEvents {
   onSchedule(cb: (state: State) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onConnectivityChange -->
    * Subscribe to network connectivity changes.
    *
    * Fires when the device's network connectivity transitions between connected
@@ -362,7 +352,6 @@ export interface BackgroundGeolocationEvents {
   onConnectivityChange(cb: (event: ConnectivityChangeEvent) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onPowerSaveChange -->
    * Subscribe to OS power-saving mode changes.
    *
    * Fires when the operating system's power-saving mode is enabled or
@@ -398,7 +387,6 @@ export interface BackgroundGeolocationEvents {
   onPowerSaveChange(cb: (enabled: boolean) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onEnabledChange -->
    * Subscribe to changes in plugin {@link State.enabled}.
    *
    * Fires when {@link State.enabled} changes. Calling {@link start} or
@@ -416,7 +404,6 @@ export interface BackgroundGeolocationEvents {
   onEnabledChange(cb: (enabled: boolean) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onNotificationAction -->
    * Subscribe to button-click actions on the Android foreground-service
    * notification. [Android only]
    *
@@ -426,7 +413,6 @@ export interface BackgroundGeolocationEvents {
   onNotificationAction(cb: (buttonId: string) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.onAuthorization -->
    * Subscribe to {@link Config.authorization} events.
    *
    * Fires when {@link AuthorizationConfig.refreshUrl} responds, either
@@ -462,7 +448,6 @@ export interface BackgroundGeolocationEvents {
   removeListener(event: string, cb: Function): void;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.removeListeners -->
    * Remove all event listeners.
    *
    * Calls {@link Subscription.remove} on all active subscriptions.
@@ -475,7 +460,6 @@ export interface BackgroundGeolocationEvents {
   removeListeners(): Promise<void>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.registerHeadlessTask -->
    * Registers a headless-task callback for Android background events when the
    * app has been terminated with {@link AppConfig.stopOnTerminate}`:false`.
    * [Android only]
@@ -544,18 +528,15 @@ export interface BackgroundGeolocationEvents {
 export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.deviceSettings -->
    * {@link DeviceSettings} API
    */
   readonly deviceSettings: DeviceSettings;
   /**
-   * <!-- doc-id: BackgroundGeolocation.logger -->
    * {@link Logger} API
    */
   readonly logger: Logger;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.ready -->
    * Signal to the SDK that your app is launched and ready, supplying the
    * default {@link Config}.
    *
@@ -598,7 +579,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   ready(config: Config): Promise<State>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.reset -->
    * Reset the SDK configuration to documented default values.
    *
    * If an optional {@link Config} is provided, it is applied after the reset.
@@ -615,7 +595,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   reset(config:Config): Promise<State>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.start -->
    * Enable location and geofence tracking.
    *
    * This is the SDK's power **ON** switch. The SDK enters its **stationary**
@@ -642,7 +621,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   start(): Promise<State>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.stop -->
    * Disable location and geofence monitoring.
    *
    * This is the SDK's power **OFF** switch.
@@ -667,7 +645,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   stop(): Promise<State>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.changePace -->
    * Manually toggle the SDK's motion state between **stationary** and **moving**.
    *
    * Passing `true` immediately engages location services and begins tracking,
@@ -686,7 +663,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   changePace(isMoving: boolean): Promise<State>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.startGeofences -->
    * Switch to geofences-only tracking mode.
    *
    * In this mode no active location tracking occurs — only geofences are
@@ -730,7 +706,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   startGeofences(): Promise<State>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getState -->
    * Return the current {@link State} of the SDK, including all {@link Config} parameters.
    *
    * @example
@@ -742,7 +717,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    getState(): Promise<State>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.setConfig -->
    * Update the SDK's {@link Config} at runtime.
    *
    * The supplied {@link Config} is merged into the current configuration and
@@ -767,7 +741,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   setConfig(config: Partial<Config>): Promise<State>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getCurrentPosition -->
    * Retrieve the current {@link Location}.
    *
    * Instructs the SDK to fetch a single location at maximum power and
@@ -806,7 +779,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getCurrentPosition(options?: CurrentPositionRequest): Promise<Location>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.watchPosition -->
    * Start a continuous stream of location updates.
    *
    * Each location is persisted to SQLite (when the SDK is {@link State.enabled})
@@ -849,7 +821,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   watchPosition(options: WatchPositionRequest, locationCallback: (location: Location) => void, errorCallback?: (errorCode: number) => void): Subscription;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.stopWatchPosition -->
    * Stop watch-position updates initiated from {@link watchPosition}.
    *
    * **See also**
@@ -860,7 +831,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   stopWatchPosition?(watchId?:number): void;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.resetOdometer -->
    * Reset the odometer to `0`.
    *
    * Internally performs a {@link getCurrentPosition} to record the exact
@@ -876,7 +846,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   resetOdometer(): Promise<number>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.setOdometer -->
    * Set the odometer to an arbitrary value.
    *
    * Internally performs a {@link getCurrentPosition} to record the exact
@@ -891,7 +860,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   setOdometer(value: number): Promise<number>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getOdometer -->
    * Retrieve the current odometer reading in meters.
    *
    * The SDK continuously accumulates distance traveled between recorded
@@ -916,7 +884,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getOdometer(): Promise<number>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getProviderState -->
    * Retrieve the current location-services authorization state.
    *
    * **See also**
@@ -931,7 +898,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getProviderState(): Promise<ProviderChangeEvent>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.requestPermission -->
    * Manually request location permission using the configured
    * {@link GeoConfig.locationAuthorizationRequest}.
    *
@@ -977,7 +943,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   requestPermission(): Promise<AuthorizationStatus>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.requestTemporaryFullAccuracy -->
    * Request temporary full-accuracy location authorization. [iOS 14+]
    *
    * iOS 14 allows users to grant only reduced location accuracy. This method
@@ -1036,7 +1001,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /// ------------------------------------------------------------------------------------------------
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.addGeofence -->
    * Add a {@link Geofence} to be monitored by the native geofencing API.
    *
    * ### Note
@@ -1072,7 +1036,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   addGeofence(geofence: Geofence): Promise<boolean>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.addGeofences -->
    * Add a list of {@link Geofence} to be monitored by the native geofencing API.
    *
    * ### Note
@@ -1106,7 +1069,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   addGeofences(geofences: Geofence[]): Promise<boolean>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.removeGeofence -->
    * Remove the {@link Geofence} with the given {@link Geofence.identifier}.
    *
    * **See also**
@@ -1124,7 +1086,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   removeGeofence(identifier: string): Promise<boolean>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.removeGeofences -->
    * Remove all monitored {@link Geofence} records, or a specific subset by
    * identifier.
    *
@@ -1139,7 +1100,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   removeGeofences(identifiers?: string[]): Promise<boolean>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getGeofences -->
    * Fetch all {@link Geofence} records from the SDK's database.
    *
    * Returns an empty array if no geofences are stored.
@@ -1156,7 +1116,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getGeofences(): Promise<Geofence[]>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getGeofence -->
    * Fetch a single {@link Geofence} by identifier from the SDK's database.
    *
    * **See also**
@@ -1171,7 +1130,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getGeofence(identifier: string): Promise<Geofence>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.geofenceExists -->
    * Determine whether a geofence with the given identifier exists in the SDK's database.
    *
    * **See also**
@@ -1191,7 +1149,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /// ------------------------------------------------------------------------------------------------
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.startSchedule -->
    * Activate the configured {@link AppConfig.schedule}.
    *
    * Initiates the schedule defined in {@link AppConfig.schedule}. The SDK
@@ -1211,7 +1168,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   startSchedule(): Promise<void>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.stopSchedule -->
    * Halt scheduled tracking.
    *
    * ### ⚠️ Warning
@@ -1245,7 +1201,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /// ------------------------------------------------------------------------------------------------
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.setLogLevel -->
    * Sets the {@link LoggerConfig.logLevel}.
    */
   setLogLevel(level: LogLevel): Promise<void>;
@@ -1258,7 +1213,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /// ------------------------------------------------------------------------------------------------
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getDeviceInfo -->
    * Returns device information.
    *
    * @example
@@ -1270,7 +1224,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getDeviceInfo(): Promise<DeviceInfo>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getSensors -->
    * Returns the availability of motion sensors: accelerometer, gyroscope, and
    * magnetometer.
    *
@@ -1287,7 +1240,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getSensors(): Promise<Sensors>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.isPowerSaveMode -->
    * Returns the current state of the operating system's power-saving mode.
    *
    * Power-saving mode can throttle background services such as GPS and HTTP
@@ -1322,7 +1274,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /// ------------------------------------------------------------------------------------------------
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.destroyLocations -->
    * Remove all records from the SDK's SQLite database.
    *
    * @example
@@ -1333,7 +1284,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   destroyLocations(): Promise<void>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.destroyLocation -->
    * Remove a single location by {@link Location.uuid}.
    *
    * @example
@@ -1350,7 +1300,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   insertLocation(location: Location): Promise<Location>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getLocations -->
    * Retrieve all {@link Location} records stored in the SDK's SQLite database.
    *
    * @example
@@ -1361,7 +1310,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getLocations(): Promise<Array<Object>>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.getCount -->
    * Retrieve the count of all locations currently stored in the SDK's SQLite database.
    *
    * @example
@@ -1376,7 +1324,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /// ------------------------------------------------------------------------------------------------
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.sync -->
    * Manually upload all queued locations to {@link HttpConfig.url}.
    *
    * Initiates a POST of all records in the SQLite database to your configured
@@ -1402,7 +1349,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /// ------------------------------------------------------------------------------------------------
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.startBackgroundTask -->
    * Signal to the OS that you need to perform a long-running task.
    *
    * The OS keeps the app running in the background until you signal completion
@@ -1454,7 +1400,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   startBackgroundTask(): Promise<number>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.stopBackgroundTask -->
    * Signal completion of a {@link startBackgroundTask} to the OS.
    *
    * The OS may now suspend the app if appropriate.
@@ -1484,7 +1429,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   // ------------------------------------------------------------------------------------------------
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.findOrCreateTransistorAuthorizationToken -->
    * Find or create a Transistor authorization token.
    *
    * See {@link TransistorAuthorizationService} for more information.
@@ -1492,7 +1436,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   findOrCreateTransistorAuthorizationToken(orgname:string, username:string, url?:string): Promise<TransistorAuthorizationToken>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.destroyTransistorAuthorizationToken -->
    * Destroy a Transistor authorization token.
    *
    * See {@link TransistorAuthorizationService} for more information.
@@ -1500,7 +1443,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   destroyTransistorAuthorizationToken(url:string): Promise<void>;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.playSound -->
    * Play a system sound.
    *
    * #### iOS
@@ -1515,7 +1457,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
 }
 
 /**
- * <!-- doc-id: BackgroundGeolocation -->
  * Primary SDK API — the single entry point for all geolocation, geofencing,
  * HTTP sync, and configuration operations.
  *
@@ -1670,7 +1611,6 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
  */
 export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   /**
-   * <!-- doc-id: BackgroundGeolocation.LogLevel -->
    * Enum namespace controlling verbosity of the SDK logger.
    *
    * Used by `LoggerConfig.logLevel`. Values range from silent (`Off`) to
@@ -1689,7 +1629,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   LogLevel: typeof import('../../enums/LogLevel').LogLevel;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.DesiredAccuracy -->
    * Enum namespace controlling the native location engine's target accuracy.
    *
    * Higher accuracy consumes more battery. Used by `GeoConfig.desiredAccuracy`.
@@ -1707,7 +1646,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   DesiredAccuracy: typeof import('../../enums/DesiredAccuracy').DesiredAccuracy;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.PersistMode -->
    * Enum namespace controlling which records the SDK persists to SQLite:
    * locations only, geofences only, both, or none.
    *
@@ -1726,7 +1664,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   PersistMode: typeof import('../../enums/PersistMode').PersistMode;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.AuthorizationStrategy -->
    * Enum namespace defining how the HTTP service performs authorization.
    *
    * Includes basic, JWT, and custom strategies. Used by `AuthorizationConfig.strategy`.
@@ -1744,7 +1681,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   AuthorizationStrategy: typeof import('../../enums/AuthorizationStrategy').AuthorizationStrategy;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.LocationFilterPolicy -->
    * Enum namespace selecting the filtering engine policy for noise-reduction and smoothing.
    *
    * Used by `LocationFilter.policy`.
@@ -1764,7 +1700,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   LocationFilterPolicy: typeof import('../../enums/LocationFilterPolicy').LocationFilterPolicy;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.KalmanProfile -->
    * Enum namespace selecting a preset Kalman filter tuning profile
    * (aggressive, moderate, or relaxed smoothing).
    *
@@ -1785,7 +1720,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   KalmanProfile: typeof import('../../enums/KalmanProfile').KalmanProfile;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.HttpMethod -->
    * Enum namespace defining the HTTP method used for location uploads (POST, PUT, etc).
    *
    * Used by `HttpConfig.method`.
@@ -1803,7 +1737,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   HttpMethod: typeof import('../../enums/HttpMethod').HttpMethod;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.TriggerActivity -->
    * Enum namespace defining which physical motion activities can trigger
    * motion-detection transitions (still → moving).
    *
@@ -1824,7 +1757,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   TriggerActivity: typeof import('../../enums/TriggerActivity').TriggerActivity;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.NotificationPriority -->
    * Enum namespace controlling Android foreground-service notification priority
    * and icon placement (top, bottom, hidden). [Android only]
    *
@@ -1845,7 +1777,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   NotificationPriority: typeof import('../../enums/NotificationPriority').NotificationPriority;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.Event -->
    * Enum namespace of all event names emitted by the SDK
    * (`location`, `geofence`, `motionchange`, `heartbeat`, etc).
    *
@@ -1854,7 +1785,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   Event: typeof import('../../enums/Event').Event;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.LocationRequest -->
    * Enum namespace defining the type of location permission request
    * (Always, WhenInUse, or Any). [iOS only]
    *
@@ -1873,7 +1803,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   LocationRequest: typeof import('../../enums/LocationRequest').LocationRequest;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.AccuracyAuthorization -->
    * Enum namespace indicating whether the user granted full or reduced location
    * accuracy. [iOS 14+]
    *
@@ -1894,7 +1823,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   AccuracyAuthorization: typeof import('../../enums/AccuracyAuthorization').AccuracyAuthorization;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.AuthorizationStatus -->
    * Enum namespace representing the OS-level authorization state for
    * location services (Denied, Restricted, Always, WhenInUse).
    *
@@ -1912,7 +1840,6 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   AuthorizationStatus: typeof import('../../enums/AuthorizationStatus').AuthorizationStatus;
 
   /**
-   * <!-- doc-id: BackgroundGeolocation.ActivityType -->
    * Enum namespace specifying the type of user activity
    * (AutomotiveNavigation, Fitness, OtherNavigation, etc). [iOS only]
    *

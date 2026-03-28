@@ -3,7 +3,6 @@ import type { Location } from '../data/Location';
 import type { TrackingMode } from '../../enums/TrackingMode';
 
 /**
- * <!-- doc-id: State -->
  * Effective runtime state returned by {@link BackgroundGeolocation.ready} and
  * {@link BackgroundGeolocation.getState}.
  *
@@ -14,14 +13,12 @@ import type { TrackingMode } from '../../enums/TrackingMode';
  */
 export interface State extends Config {
   /**
-   * <!-- doc-id: State.enabled -->
    * `true` when the SDK is actively tracking — i.e. {@link BackgroundGeolocation.start}
    * or {@link BackgroundGeolocation.startGeofences} has been called and not yet stopped.
    */
   enabled: boolean;
 
   /**
-   * <!-- doc-id: State.isMoving -->
    * `true` when the SDK is in the **moving** state (location services active);
    * `false` when stationary.
    *
@@ -39,7 +36,6 @@ export interface State extends Config {
   isMoving: boolean;
 
   /**
-   * <!-- doc-id: State.schedulerEnabled -->
    * `true` when a {@link AppConfig.schedule} is configured and
    * {@link BackgroundGeolocation.startSchedule} has been called.
    * {@link BackgroundGeolocation.stopSchedule} sets this to `false`.
@@ -47,7 +43,6 @@ export interface State extends Config {
   schedulerEnabled: boolean;
 
   /**
-   * <!-- doc-id: State.trackingMode -->
    * Current tracking mode.
    *
    * | Value | Mode | Description |
@@ -71,7 +66,6 @@ export interface State extends Config {
   trackingMode: TrackingMode;
 
   /**
-   * <!-- doc-id: State.odometer -->
    * Accumulated distance traveled since the last odometer reset, in meters.
    *
    * **See also**
@@ -82,7 +76,6 @@ export interface State extends Config {
   odometer: number;
 
   /**
-   * <!-- doc-id: State.odometerError -->
    * Accumulated positional error in the odometer measurement, in meters.
    *
    * Reflects noise introduced by low-accuracy location samples. Use
@@ -92,7 +85,6 @@ export interface State extends Config {
   odometerError: number;
 
   /**
-   * <!-- doc-id: State.didLaunchInBackground -->
    * `true` when the app was relaunched in the background by the OS — for
    * example, due to a background fetch, geofence exit, or stationary geofence
    * transition. Always `false` on Android. [iOS only]
@@ -100,7 +92,6 @@ export interface State extends Config {
   didLaunchInBackground: boolean;
 
   /**
-   * <!-- doc-id: State.didDeviceReboot -->
    * `true` when the app was launched after a device reboot.
    */
   didDeviceReboot: boolean;

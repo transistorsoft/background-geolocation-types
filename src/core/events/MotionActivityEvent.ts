@@ -1,7 +1,6 @@
 import type { MotionActivityType } from '../../enums/MotionActivityType';
 
 /**
- * <!-- doc-id: MotionActivityEvent -->
  * Activity recognition result delivered to {@link BackgroundGeolocation.onActivityChange}.
  *
  * The SDK fires this event each time the device's motion-activity classifier
@@ -20,12 +19,10 @@ import type { MotionActivityType } from '../../enums/MotionActivityType';
  */
 export interface MotionActivityEvent {
   /**
-   * <!-- doc-id: MotionActivityEvent.activity -->
    * Detected motion activity type (e.g. `still`, `on_foot`, `in_vehicle`).
    */
   activity: MotionActivityType;
   /**
-   * <!-- doc-id: MotionActivityEvent.confidence -->
    * Confidence of the detected activity as a percentage (`0`–`100`).
    */
   confidence: number;

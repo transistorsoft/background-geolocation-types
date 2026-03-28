@@ -2,7 +2,6 @@
 import type { Config } from '../config/Config';
 
 /**
- * <!-- doc-id: TransistorAuthorizationToken -->
  * Authorization token issued by a Transistor Software tracking server.
  *
  * Returned from {@link TransistorAuthorizationService.findOrCreate} and used
@@ -12,34 +11,29 @@ import type { Config } from '../config/Config';
  */
 export interface TransistorAuthorizationToken {
   /**
-   * <!-- doc-id: TransistorAuthorizationToken.accessToken -->
    * JWT access token sent as `Authorization: Bearer <token>` on each upload.
    */
   accessToken: string;
 
   /**
-   * <!-- doc-id: TransistorAuthorizationToken.refreshToken -->
    * JWT refresh token presented to the {@link AuthorizationConfig.refreshUrl}
    * endpoint when the access token expires.
    */
   refreshToken: string;
 
   /**
-   * <!-- doc-id: TransistorAuthorizationToken.expires -->
    * Expiry time of the access token (epoch milliseconds). Typically used to
    * populate {@link AuthorizationConfig.expires}.
    */
   expires: number;
 
   /**
-   * <!-- doc-id: TransistorAuthorizationToken.url -->
    * Base URL of the tracker server that issued this token.
    */
   url: string;
 }
 
 /**
- * <!-- doc-id: TransistorAuthorizationService -->
  * Client for the Transistor Software demo tracking server.
  *
  * Transistor Software hosts a public demo server at
@@ -79,7 +73,6 @@ export interface TransistorAuthorizationToken {
  */
 export interface TransistorAuthorizationService {
   /**
-   * <!-- doc-id: TransistorAuthorizationService.findOrCreate -->
    * Find or create an authorization token for the given organization and username.
    *
    * If a token already exists in the local cache for this `orgName` + `url`
@@ -112,7 +105,6 @@ export interface TransistorAuthorizationService {
   ): Promise<TransistorAuthorizationToken>;
 
   /**
-   * <!-- doc-id: TransistorAuthorizationService.destroy -->
    * Remove the cached token associated with the given tracker URL.
    *
    * @param url - Tracker base URL. Defaults to `tracker.transistorsoft.com`.

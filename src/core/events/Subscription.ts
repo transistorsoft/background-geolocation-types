@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: Subscription -->
  * Handle returned by every `BackgroundGeolocation.on*` event-listener method.
  *
  * `Subscription` exposes a single {@link remove} method used to stop
@@ -56,7 +55,6 @@
  */
 export interface Subscription {
   /**
-   * <!-- doc-id: Subscription.remove -->
    * Removes the event-listener and frees its resources. Call this when the
    * listener is no longer needed to prevent memory leaks.
    */

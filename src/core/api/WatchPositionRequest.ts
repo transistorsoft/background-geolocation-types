@@ -1,7 +1,6 @@
 import type { DesiredAccuracy } from '../../enums/DesiredAccuracy';
 
 /**
- * <!-- doc-id: WatchPositionRequest -->
  * Options for {@link BackgroundGeolocation.watchPosition}.
  *
  * Configures the interval, accuracy, persistence, and metadata for a
@@ -33,20 +32,17 @@ import type { DesiredAccuracy } from '../../enums/DesiredAccuracy';
  */
 export interface WatchPositionRequest {
   /**
-   * <!-- doc-id: WatchPositionRequest.interval -->
    * Interval in **milliseconds** between location updates.
    */
   interval?: number;
 
   /**
-   * <!-- doc-id: WatchPositionRequest.desiredAccuracy -->
    * Target accuracy for location updates from the native API.
    * Defaults to {@link DesiredAccuracy.High}.
    */
   desiredAccuracy?: DesiredAccuracy;
 
   /**
-   * <!-- doc-id: WatchPositionRequest.persist -->
    * Whether to persist each location to the SDK's SQLite database and upload
    * it to {@link HttpConfig.url}. Defaults to `true` when the SDK is enabled;
    * `false` when stopped.
@@ -54,7 +50,6 @@ export interface WatchPositionRequest {
   persist?: boolean;
 
   /**
-   * <!-- doc-id: WatchPositionRequest.extras -->
    * Optional key-value metadata to attach to each location. Merged with any
    * configured {@link PersistenceConfig.extras} before persisting or uploading
    * to {@link HttpConfig.url}.
@@ -62,7 +57,6 @@ export interface WatchPositionRequest {
   extras?: Record<string, any>;
 
   /**
-   * <!-- doc-id: WatchPositionRequest.timeout -->
    * Maximum time in **milliseconds** to wait for each location fix before
    * firing an error. Default `60000`.
    */

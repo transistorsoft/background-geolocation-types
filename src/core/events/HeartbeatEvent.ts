@@ -1,7 +1,6 @@
 import type { Location } from '../data/Location';
 
 /**
- * <!-- doc-id: HeartbeatEvent -->
  * Periodic heartbeat delivered to {@link BackgroundGeolocation.onHeartbeat}.
  *
  * The SDK fires this event on a fixed interval while running in the background,
@@ -25,7 +24,6 @@ import type { Location } from '../data/Location';
  */
 export interface HeartbeatEvent {
   /**
-   * <!-- doc-id: HeartbeatEvent.location -->
    * Most recent location recorded by the SDK.
    *
    * The heartbeat event does not actively request a fresh location fix. Call

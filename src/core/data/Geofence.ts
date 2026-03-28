@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: Vertices -->
  * An array of `[latitude, longitude]` pairs defining a polygon geofence.
  *
  * See {@link Geofence.vertices}.
@@ -7,7 +6,6 @@
 export type Vertices = [number, number][];
 
 /**
- * <!-- doc-id: Geofence -->
  * A geofence definition for monitoring circular or polygon regions.
  *
  * The SDK implements the native iOS and Android Geofencing APIs, extended
@@ -254,7 +252,6 @@ export type Vertices = [number, number][];
  */
 export interface Geofence {
   /**
-   * <!-- doc-id: Geofence.identifier -->
    * Unique identifier for this geofence.
    *
    * Used to reference the geofence in events and removal calls. Adding a
@@ -263,7 +260,6 @@ export interface Geofence {
   identifier: string;
 
   /**
-   * <!-- doc-id: Geofence.latitude -->
    * Latitude of the circular geofence center.
    *
    * Omit when defining a polygon geofence via {@link vertices} — the SDK
@@ -272,7 +268,6 @@ export interface Geofence {
   latitude: number;
 
   /**
-   * <!-- doc-id: Geofence.longitude -->
    * Longitude of the circular geofence center.
    *
    * Omit when defining a polygon geofence via {@link vertices} — the SDK
@@ -281,7 +276,6 @@ export interface Geofence {
   longitude: number;
 
   /**
-   * <!-- doc-id: Geofence.radius -->
    * Radius of the circular geofence in meters.
    *
    * Omit when defining a polygon geofence via {@link vertices} — the SDK
@@ -299,7 +293,6 @@ export interface Geofence {
   radius: number;
 
   /**
-   * <!-- doc-id: Geofence.notifyOnEntry -->
    * Fire a {@link GeofenceEvent} when the device enters this geofence.
    *
    * **See also**
@@ -308,34 +301,29 @@ export interface Geofence {
   notifyOnEntry?: boolean;
 
   /**
-   * <!-- doc-id: Geofence.notifyOnExit -->
    * Fire a {@link GeofenceEvent} when the device exits this geofence.
    */
   notifyOnExit?: boolean;
 
   /**
-   * <!-- doc-id: Geofence.notifyOnDwell -->
    * Fire a {@link GeofenceEvent} when the device has remained inside this
    * geofence for {@link loiteringDelay} milliseconds.
    */
   notifyOnDwell?: boolean;
 
   /**
-   * <!-- doc-id: Geofence.loiteringDelay -->
    * Minimum time in milliseconds the device must remain inside the geofence
    * before a {@link notifyOnDwell} event fires. Default `0`.
    */
   loiteringDelay?: number;
 
   /**
-   * <!-- doc-id: Geofence.extras -->
    * Arbitrary key-value metadata attached to each geofence event and included
    * in the payload posted to {@link HttpConfig.url}.
    */
   extras?: Record<string, unknown>;
 
   /**
-   * <!-- doc-id: Geofence.vertices -->
    * Polygon geofence vertices as `[[lat, lng], ...]` pairs.
    *
    * When provided, the geofence is treated as a polygon rather than a circle.
@@ -378,7 +366,6 @@ export interface Geofence {
   // Runtime fields — populated by the SDK; do not set manually.
 
   /**
-   * <!-- doc-id: Geofence.entryState -->
    * Current entry state of the geofence.
    *
    * | Value | State |
@@ -391,7 +378,6 @@ export interface Geofence {
   readonly entryState?: number;
 
   /**
-   * <!-- doc-id: Geofence.hits -->
    * Number of times this geofence has been triggered since it was added.
    *
    * @readonly
@@ -399,7 +385,6 @@ export interface Geofence {
   readonly hits?: number;
 
   /**
-   * <!-- doc-id: Geofence.stateUpdatedAt -->
    * Epoch timestamp in seconds of the last geofence transition.
    *
    * @readonly

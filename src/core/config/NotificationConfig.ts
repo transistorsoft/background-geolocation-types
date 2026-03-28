@@ -1,7 +1,6 @@
 import { NotificationPriority } from '../../enums/NotificationPriority';
 
 /**
- * <!-- doc-id: NotificationConfig -->
  * Foreground service notification configuration for the background geolocation SDK. [Android only]
  *
  * Android requires a persistent notification whenever the SDK runs its foreground
@@ -64,7 +63,6 @@ import { NotificationPriority } from '../../enums/NotificationPriority';
  */
 export interface NotificationConfig {
   /**
-   * <!-- doc-id: NotificationConfig.priority -->
    * Controls the position and visibility of the foreground notification in the system
    * shade. Defaults to `PRIORITY_LOW` (`-1`).
    *
@@ -93,7 +91,6 @@ export interface NotificationConfig {
   priority?: NotificationPriority;
 
   /**
-   * <!-- doc-id: NotificationConfig.sticky -->
    * Keeps the foreground service notification visible at all times, regardless of
    * motion state. Defaults to `false`.
    *
@@ -104,19 +101,16 @@ export interface NotificationConfig {
   sticky?: boolean;
 
   /**
-   * <!-- doc-id: NotificationConfig.title -->
    * Title of the foreground service notification. Defaults to `"Background Geolocation"`.
    */
   title?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.text -->
    * Body text of the foreground service notification. Defaults to `"Tracking location"`.
    */
   text?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.color -->
    * Accent color of the notification icon. Not set by default.
    *
    * Applies to API level 21 and above. Supported formats:
@@ -126,7 +120,6 @@ export interface NotificationConfig {
   color?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.smallIcon -->
    * Small status-bar icon for the foreground notification. Defaults to
    * `"mipmap/ic_launcher"` (the app launcher icon).
    *
@@ -162,7 +155,6 @@ export interface NotificationConfig {
   smallIcon?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.largeIcon -->
    * Large icon for the foreground notification. Not set by default.
    *
    * ### ⚠️ Warning
@@ -197,7 +189,6 @@ export interface NotificationConfig {
   largeIcon?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.layout -->
    * Name of a custom Android Layout XML file for the foreground notification.
    *
    * **See also**
@@ -415,7 +406,6 @@ export interface NotificationConfig {
   layout?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.strings -->
    * Custom strings to render into `<TextView />` elements of a custom notification {@link layout}.
    *
    * See [Android Custom Notification Layout](github:wiki/Android-Custom-Notification-Layout)
@@ -449,7 +439,6 @@ export interface NotificationConfig {
   strings?: Record<string, string>;
 
   /**
-   * <!-- doc-id: NotificationConfig.actions -->
    * Declare click listeners for `<Button />` elements of a custom notification {@link layout}.
    *
    * ![](https://dl.dropbox.com/s/whcb6q1gxxdk9t1/android-foreground-notification-transistor.png?dl=1)
@@ -498,7 +487,6 @@ export interface NotificationConfig {
   actions?: string[];
 
   /**
-   * <!-- doc-id: NotificationConfig.channelName -->
    * Name of the Android notification channel used for the foreground service notification.
    * Defaults to `"BackgroundGeolocation"`.
    *
@@ -531,7 +519,6 @@ export interface NotificationConfig {
   channelName?: string;
 
   /**
-   * <!-- doc-id: NotificationConfig.channelId -->
    * Identifier of the Android notification channel used for the foreground service
    * notification. Defaults to `"bggeo"`.
    *

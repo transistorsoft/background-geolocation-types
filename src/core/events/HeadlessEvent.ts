@@ -1,7 +1,6 @@
 import type { Event } from '../../enums/Event';
 
 /**
- * <!-- doc-id: HeadlessEvent -->
  * Event delivered to a headless task registered via
  * {@link BackgroundGeolocation.registerHeadlessTask}. [Android only]
  *
@@ -32,13 +31,11 @@ import type { Event } from '../../enums/Event';
  */
 export interface HeadlessEvent {
   /**
-   * <!-- doc-id: HeadlessEvent.name -->
    * The SDK event that triggered this headless task invocation (e.g.
    * `location`, `http`, `geofence`, `heartbeat`, `terminate`).
    */
   name: Event;
   /**
-   * <!-- doc-id: HeadlessEvent.params -->
    * Event payload corresponding to `name`. Cast this to the appropriate event
    * type based on the value of `name` (e.g. {@link Location} for `location`,
    * {@link HttpEvent} for `http`).

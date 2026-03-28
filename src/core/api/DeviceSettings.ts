@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: DeviceSettingsRequest -->
  * Returned by a {@link DeviceSettings} request — describes which settings
  * screen to show and whether the user has already been prompted. [Android only]
  *
@@ -11,38 +10,32 @@
  */
 export interface DeviceSettingsRequest {
   /**
-   * <!-- doc-id: DeviceSettingsRequest.manufacturer -->
    * Device manufacturer (e.g. `"Huawei"`, `"Samsung"`).
    */
   manufacturer: string;
 
   /**
-   * <!-- doc-id: DeviceSettingsRequest.model -->
    * Device model name (e.g. `"P40"`, `"SM-G991B"`).
    */
   model: string;
 
   /**
-   * <!-- doc-id: DeviceSettingsRequest.version -->
    * Android OS version string.
    */
   version: string;
 
   /**
-   * <!-- doc-id: DeviceSettingsRequest.seen -->
    * `true` if this settings screen has already been shown to the user on this
    * device. Use this to avoid showing the same prompt repeatedly.
    */
   seen: boolean;
 
   /**
-   * <!-- doc-id: DeviceSettingsRequest.lastSeenAt -->
    * Timestamp of the last time this screen was shown to the user.
    */
   lastSeenAt: Date;
 
   /**
-   * <!-- doc-id: DeviceSettingsRequest.action -->
    * The Android Intent action used to open the target settings screen.
    *
    * ### ⚠️ Warning
@@ -53,7 +46,6 @@ export interface DeviceSettingsRequest {
 }
 
 /**
- * <!-- doc-id: DeviceSettings -->
  * API for directing users to Android device settings screens that can affect
  * background geolocation performance. [Android only]
  *
@@ -85,7 +77,6 @@ export interface DeviceSettingsRequest {
  */
 export interface DeviceSettings {
   /**
-   * <!-- doc-id: DeviceSettings.isIgnoringBatteryOptimizations -->
    * Returns `true` if the OS is ignoring battery optimizations for your app.
    * [Android only]
    *
@@ -96,7 +87,6 @@ export interface DeviceSettings {
   isIgnoringBatteryOptimizations(): Promise<boolean>;
 
   /**
-   * <!-- doc-id: DeviceSettings.showIgnoreBatteryOptimizations -->
    * Prepare a request to show the Android *Ignore Battery Optimizations*
    * settings screen. [Android only]
    *
@@ -116,7 +106,6 @@ export interface DeviceSettings {
   showIgnoreBatteryOptimizations(): Promise<DeviceSettingsRequest>;
 
   /**
-   * <!-- doc-id: DeviceSettings.showPowerManager -->
    * Prepare a request to show a vendor-specific Power Manager settings screen
    * (Huawei, Xiaomi, Vivo, Oppo, etc.). [Android only]
    *
@@ -133,7 +122,6 @@ export interface DeviceSettings {
   showPowerManager(): Promise<DeviceSettingsRequest>;
 
   /**
-   * <!-- doc-id: DeviceSettings.show -->
    * Execute a previously prepared {@link DeviceSettingsRequest} to open the
    * target settings screen. [Android only]
    *

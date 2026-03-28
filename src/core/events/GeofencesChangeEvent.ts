@@ -1,7 +1,6 @@
 import type { Geofence } from '../data/Geofence';
 
 /**
- * <!-- doc-id: GeofencesChangeEvent -->
  * Geofence monitoring change delivered to {@link BackgroundGeolocation.onGeofencesChange}.
  *
  * The SDK can only monitor a finite number of geofences simultaneously. As the
@@ -26,12 +25,10 @@ import type { Geofence } from '../data/Geofence';
  */
 export interface GeofencesChangeEvent {
   /**
-   * <!-- doc-id: GeofencesChangeEvent.on -->
    * Geofences that just became active and are now being monitored.
    */
   on: Geofence[];
   /**
-   * <!-- doc-id: GeofencesChangeEvent.off -->
    * Identifiers of geofences that were just deactivated and are no longer
    * being monitored.
    */

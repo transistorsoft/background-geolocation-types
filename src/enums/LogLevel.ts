@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: LogLevel -->
  * Controls the verbosity of plugin logging.
  *
  * | Level   | Value | Description                     |
@@ -17,32 +16,26 @@
  */
 export const LogLevel = {
   /**
-   * <!-- doc-id: LogLevel.Off -->
    * Disable all logging.
    */
   Off: 0,
   /** 
-   * <!-- doc-id: LogLevel.Error -->
    * Log only critical failures.
    */
   Error: 1,
   /** 
-   * <!-- doc-id: LogLevel.Warning -->
    * Log warnings + errors.
    */
   Warning: 2,
   /** 
-   * <!-- doc-id: LogLevel.Info -->
    * Operational information.
    */
   Info: 3,
   /**
-   * <!-- doc-id: LogLevel.Debug -->
    * Developer-level debug output.
    */
   Debug: 4,
   /**
-   * <!-- doc-id: LogLevel.Verbose -->
    * Maximum detail.
    */
   Verbose: 5,

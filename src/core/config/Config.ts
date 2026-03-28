@@ -7,7 +7,6 @@ import { ActivityConfig } from './ActivityConfig';
 import { AuthorizationConfig } from './AuthorizationConfig';
 import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationService';
 /**
- * <!-- doc-id: Config -->
  * Root configuration object passed to {@link BackgroundGeolocation.ready} and
  * {@link BackgroundGeolocation.setConfig}.
  *
@@ -127,7 +126,6 @@ import { TransistorAuthorizationToken } from '../api/TransistorAuthorizationServ
  */
 export interface Config {
   /**
-   * <!-- doc-id: Config.reset -->
    * Controls whether the SDK resets to factory defaults before applying this
    * configuration. Defaults to `true`.
    *
@@ -145,46 +143,38 @@ export interface Config {
    */
   reset?: boolean;
   /**
-   * <!-- doc-id: Config.logger -->
    * Debug logging, log level, and log retention. See {@link LoggerConfig}.
    */
   logger?: LoggerConfig;
   /**
-   * <!-- doc-id: Config.geolocation -->
    * Accuracy, sampling, elasticity, stop-detection, permissions, and geofencing.
    * See {@link GeoConfig}.
    */
   geolocation?: GeoConfig;
   /**
-   * <!-- doc-id: Config.http -->
    * Upload URL, HTTP method, sync cadence, batching, headers, and params.
    * See {@link HttpConfig}.
    */
   http?: HttpConfig;
   /**
-   * <!-- doc-id: Config.app -->
    * App lifecycle — background operation, boot behaviour, headless mode, and
    * foreground notification. See {@link AppConfig}.
    */
   app?: AppConfig;
   /**
-   * <!-- doc-id: Config.persistence -->
    * SQLite storage, TTL, record limits, and custom extras. See {@link PersistenceConfig}.
    */
   persistence?: PersistenceConfig;
   /**
-   * <!-- doc-id: Config.activity -->
    * Motion recognition, stop-detection triggers, and motion-trigger delay.
    * See {@link ActivityConfig}.
    */
   activity?: ActivityConfig;
   /**
-   * <!-- doc-id: Config.authorization -->
    * JWT and SAS token management with automatic refresh. See {@link AuthorizationConfig}.
    */
   authorization?: AuthorizationConfig;
   /**
-    * <!-- doc-id: Config.transistorAuthorizationToken -->
     * Convenience option that automatically configures the SDK to upload locations
     * to the Transistor Software demo server at tracker.transistorsoft.com, or a
     * local instance of [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console).

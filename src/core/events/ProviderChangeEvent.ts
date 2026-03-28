@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: ProviderChangeEvent -->
  * Location-services provider state delivered to {@link BackgroundGeolocation.onProviderChange}.
  *
  * The SDK fires this event when the user changes location permissions, toggles
@@ -27,29 +26,24 @@
  */
 export interface ProviderChangeEvent {
   /**
-   * <!-- doc-id: ProviderChangeEvent.enabled -->
    * `true` when the device has at least one location provider enabled.
    */
   enabled: boolean;
   /**
-   * <!-- doc-id: ProviderChangeEvent.status -->
    * Platform authorization status code. Use the
    * {@link BackgroundGeolocation.AuthorizationStatus} namespace constants to
    * interpret this value.
    */
   status: number;
   /**
-   * <!-- doc-id: ProviderChangeEvent.network -->
    * `true` when the network-based location provider is available.
    */
   network: boolean;
   /**
-   * <!-- doc-id: ProviderChangeEvent.gps -->
    * `true` when the GPS-based location provider is available.
    */
   gps: boolean;
   /**
-   * <!-- doc-id: ProviderChangeEvent.accuracyAuthorization -->
    * Precision location authorization level. Use the
    * {@link BackgroundGeolocation.AccuracyAuthorization} namespace constants to
    * interpret this value.

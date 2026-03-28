@@ -1,7 +1,6 @@
 import { SQLQueryOrder } from "../../enums/SQLQueryOrder";
 
 /**
- * <!-- doc-id: SQLQuery -->
  * Constrains a log query by date range, sort order, and record count.
  *
  * Pass to {@link Logger.getLog}, {@link Logger.emailLog}, or
@@ -34,31 +33,26 @@ import { SQLQueryOrder } from "../../enums/SQLQueryOrder";
  */
 export interface SQLQuery {
   /**
-   * <!-- doc-id: SQLQuery.start -->
    * Start of the query window (unix timestamp in **milliseconds**).
    */
   start?: number;
 
   /**
-   * <!-- doc-id: SQLQuery.end -->
    * End of the query window (unix timestamp in **milliseconds**).
    */
   end?: number;
 
   /**
-   * <!-- doc-id: SQLQuery.limit -->
    * Maximum number of records to return.
    */
   limit?: number;
 
   /**
-   * <!-- doc-id: SQLQuery.offset -->
    * Number of matching records to skip before returning results (for paging).
    */
   offset?: number;
 
   /**
-   * <!-- doc-id: SQLQuery.order -->
    * Sort order for results: `SQLQueryOrder.Asc` (oldest first) or
    * `SQLQueryOrder.Desc` (newest first).
    */
@@ -66,7 +60,6 @@ export interface SQLQuery {
 }
 
 /**
- * <!-- doc-id: Logger -->
  * SDK logging API — access via {@link BackgroundGeolocation.logger}.
  *
  * The SDK writes structured log entries to an internal SQLite database for
@@ -187,19 +180,16 @@ export interface SQLQuery {
  */
 export interface Logger {
   /**
-   * <!-- doc-id: Logger.ORDER_ASC -->
    * Sort-order constant for ascending log queries (oldest first).
    */
   readonly ORDER_ASC: 1;
 
   /**
-   * <!-- doc-id: Logger.ORDER_DESC -->
    * Sort-order constant for descending log queries (newest first).
    */
   readonly ORDER_DESC: -1;
 
   /**
-   * <!-- doc-id: Logger.debug -->
    * Insert a debug-level message into the SDK's log database.
    *
    * @example
@@ -214,7 +204,6 @@ export interface Logger {
   debug(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.error -->
    * Insert an error-level message into the SDK's log database.
    *
    * @example
@@ -230,7 +219,6 @@ export interface Logger {
   error(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.warn -->
    * Insert a warning-level message into the SDK's log database.
    *
    * @example
@@ -246,7 +234,6 @@ export interface Logger {
   warn(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.info -->
    * Insert an info-level message into the SDK's log database.
    *
    * @example
@@ -262,7 +249,6 @@ export interface Logger {
   info(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.notice -->
    * Insert a notice-level message into the SDK's log database.
    *
    * @example
@@ -278,7 +264,6 @@ export interface Logger {
   notice(message: string): void;
 
   /**
-   * <!-- doc-id: Logger.getLog -->
    * Fetch the SDK's log database as a string.
    *
    * Provide an optional {@link SQLQuery} to constrain results by date range,
@@ -311,7 +296,6 @@ export interface Logger {
   getLog(query?: SQLQuery): Promise<string>;
 
   /**
-   * <!-- doc-id: Logger.emailLog -->
    * Send the SDK's log database to an email address via the device mail client.
    *
    * Provide an optional {@link SQLQuery} to constrain which records are included.
@@ -339,7 +323,6 @@ export interface Logger {
   emailLog(email: string, query?: SQLQuery): Promise<void | boolean>;
 
   /**
-   * <!-- doc-id: Logger.uploadLog -->
    * Upload the SDK's log database to a URL as a gzipped multipart file.
    *
    * Provide an optional {@link SQLQuery} to constrain which records are included.
@@ -383,7 +366,6 @@ export interface Logger {
   uploadLog(url: string, query?: SQLQuery): Promise<void | boolean>;
 
   /**
-   * <!-- doc-id: Logger.destroyLog -->
    * Delete all records from the SDK's log database.
    *
    * **See also**

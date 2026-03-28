@@ -2,7 +2,6 @@ import { DesiredAccuracy } from '../../enums/DesiredAccuracy';
 import { LocationFilter } from './LocationFilter';
 import { ActivityType } from '../../enums/ActivityType';
 /**
- * <!-- doc-id: GeoConfig -->
  * Geolocation configuration for the background geolocation SDK.
  *
  * `GeoConfig` controls how the SDK acquires, filters, and records device locations —
@@ -216,7 +215,6 @@ import { ActivityType } from '../../enums/ActivityType';
 export interface GeoConfig {
 
   /**
-   * <!-- doc-id: GeoConfig.desiredAccuracy -->
    * Specifies the desired accuracy of the geolocation system.
    *
    * Defaults to {@link DesiredAccuracy.High}.
@@ -250,7 +248,6 @@ export interface GeoConfig {
   desiredAccuracy?: DesiredAccuracy;
 
   /**
-   * <!-- doc-id: GeoConfig.activityType -->
    * Specifies the Core Motion activity type used by iOS to optimize its internal
    * stop-detection algorithm. [iOS only]
    *
@@ -286,7 +283,6 @@ export interface GeoConfig {
   activityType?: ActivityType;
 
   /**
-   * <!-- doc-id: GeoConfig.distanceFilter -->
    * The minimum distance (meters) a device must move horizontally before a new location
    * is recorded.
    *
@@ -332,7 +328,6 @@ export interface GeoConfig {
   distanceFilter?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.stationaryRadius -->
    * The minimum distance the device must move beyond the stationary location before
    * aggressive background-tracking re-engages.
    *
@@ -362,7 +357,6 @@ export interface GeoConfig {
   stationaryRadius?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.stopTimeout -->
    * Minutes to wait in the *moving* state with no detected movement before transitioning
    * to the *stationary* state.
    *
@@ -384,7 +378,6 @@ export interface GeoConfig {
   stopTimeout?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.stopOnStationary -->
    * Automatically calls {@link BackgroundGeolocation.stop} when the {@link stopTimeout}
    * elapses.
    *
@@ -413,7 +406,6 @@ export interface GeoConfig {
   stopOnStationary?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.pausesLocationUpdatesAutomatically -->
    * Prevents the iOS location API from automatically pausing location updates. [iOS only]
    *
    * When set to `false`, iOS location services never turn off automatically. By default
@@ -433,7 +425,6 @@ export interface GeoConfig {
   pausesLocationUpdatesAutomatically?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.disableElasticity -->
    * Disables automatic speed-based {@link distanceFilter} scaling.
    *
    * Defaults to `false`. When `false`, the SDK automatically increases
@@ -453,7 +444,6 @@ export interface GeoConfig {
   disableElasticity?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.elasticityMultiplier -->
    * Controls the scale of automatic speed-based {@link distanceFilter} elasticity.
    *
    * Defaults to `1.0`. Increasing `elasticityMultiplier` results in fewer location
@@ -463,7 +453,6 @@ export interface GeoConfig {
   elasticityMultiplier?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.stopAfterElapsedMinutes -->
    * Automatically stops tracking after the specified number of minutes.
    *
    * Disabled by default. When set, the SDK automatically calls
@@ -484,7 +473,6 @@ export interface GeoConfig {
   stopAfterElapsedMinutes?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.useSignificantChangesOnly -->
    * Disables continuous background tracking in favour of periodic, coarse location
    * updates.
    *
@@ -520,7 +508,6 @@ export interface GeoConfig {
   useSignificantChangesOnly?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.disableLocationAuthorizationAlert -->
    * Disables the SDK's automatic alert when location authorization is insufficient.
    *
    * Defaults to `false`. By default, the SDK shows a native alert directing the user to
@@ -568,7 +555,6 @@ export interface GeoConfig {
   disableLocationAuthorizationAlert?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.locationAuthorizationRequest -->
    * Declares the location authorization level the app requires from the user.
    *
    * Defaults to `"Always"`. Valid values are:
@@ -681,7 +667,6 @@ export interface GeoConfig {
   locationAuthorizationRequest?: 'Always' | 'WhenInUse' | 'Any';
 
   /**
-   * <!-- doc-id: GeoConfig.locationAuthorizationAlert -->
    * Customizes the text displayed in the SDK's location-authorization alert dialog. [iOS only]
    *
    * When {@link locationAuthorizationRequest} is `"Always"` or `"WhenInUse"` and the
@@ -715,7 +700,6 @@ export interface GeoConfig {
   locationAuthorizationAlert?: Record<string, any>;
 
   /**
-   * <!-- doc-id: GeoConfig.showsBackgroundLocationIndicator -->
    * Controls whether the status bar indicator appears when location services are active
    * in the background with `Always` authorization. [iOS only]
    *
@@ -730,7 +714,6 @@ export interface GeoConfig {
   showsBackgroundLocationIndicator?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.locationUpdateInterval -->
    * Sets the desired interval for active location updates, in milliseconds. [Android only]
    *
    * Defaults to `1000` ms. The system honors this interval on a best-effort basis — updates
@@ -759,7 +742,6 @@ export interface GeoConfig {
   locationUpdateInterval?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.fastestLocationUpdateInterval -->
    * Sets the fastest interval for location updates, in milliseconds. [Android only]
    *
    * Defaults to `-1` (not set). When other apps or system components trigger location
@@ -790,7 +772,6 @@ export interface GeoConfig {
   fastestLocationUpdateInterval?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.deferTime -->
    * Sets the maximum wait time in milliseconds before batched location updates are
    * delivered. [Android only]
    *
@@ -805,7 +786,6 @@ export interface GeoConfig {
   deferTime?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.allowIdenticalLocations -->
    * Allows duplicate locations to be recorded when consecutive fixes are identical. [Android only]
    *
    * Defaults to `false`. By default, the SDK ignores a location that is identical to the
@@ -824,7 +804,6 @@ export interface GeoConfig {
   allowIdenticalLocations?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.geofenceProximityRadius -->
    * Defines the radius (meters) around the device used to query for geofences that
    * should be actively monitored.
    *
@@ -849,7 +828,6 @@ export interface GeoConfig {
   geofenceProximityRadius?: number;
 
   /**
-   * <!-- doc-id: GeoConfig.geofenceModeHighAccuracy -->
    * Enables high-accuracy mode for geofence-only tracking. [Android only]
    *
    * Defaults to `true`. Runs {@link BackgroundGeolocation.startGeofences} with a
@@ -890,7 +868,6 @@ export interface GeoConfig {
   geofenceModeHighAccuracy?:boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.disableStopDetection -->
    * Disables the motion-activity–based stop-detection system.
    *
    * When `true`, the SDK ignores platform motion-activity signals when determining
@@ -933,7 +910,6 @@ export interface GeoConfig {
   disableStopDetection?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.geofenceInitialTriggerEntry -->
    * Controls whether a geofence fires an entry event immediately if the device is already
    * inside it when the geofence is registered.
    *
@@ -946,7 +922,6 @@ export interface GeoConfig {
   geofenceInitialTriggerEntry?: boolean;
 
   /**
-   * <!-- doc-id: GeoConfig.filter -->
    * Defines how raw GPS samples are filtered, denoised, and smoothed before being
    * recorded or used for odometer calculations.
    *
@@ -1015,7 +990,6 @@ export interface GeoConfig {
   filter?: LocationFilter;
 
   /**
-   * <!-- doc-id: GeoConfig.enableTimestampMeta -->
    * Appends extra timestamp metadata to each recorded location, including system time.
    *
    * Defaults to `false`. Some devices report GPS {@link Location.timestamp} values that

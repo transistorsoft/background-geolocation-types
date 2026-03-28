@@ -1,5 +1,4 @@
 /**
- * <!-- doc-id: KalmanProfile -->
  * Specifies the preset tuning profile for the Kalman filter used in location
  * denoising.
  *
@@ -23,17 +22,14 @@
  */
 export const KalmanProfile = {
   /**
-   * <!-- doc-id: KalmanProfile.Default -->
    * **Balanced** — General-purpose; suitable for most movement types.
    */
   Default: 0,
   /**
-   * <!-- doc-id: KalmanProfile.Aggressive -->
    * **Aggressive** — Fast response; minimal smoothing.
    */
   Aggressive: 1,  
   /**
-   * <!-- doc-id: KalmanProfile.Conservative -->
    * **Conservative** — Maximum smoothing; slowest response to changes.
    */
   Conservative: 2
