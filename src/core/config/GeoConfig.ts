@@ -27,8 +27,8 @@ import { ActivityType } from '../../enums/ActivityType';
  * `GeoConfig` is supplied via {@link Config.geolocation} when calling
  * {@link BackgroundGeolocation.ready} or {@link BackgroundGeolocation.setConfig}.
  *
- * | Area | Keys |
- * |------|------|
+ * | Category | Properties |
+ * |----------|------------|
  * | **Accuracy** | {@link desiredAccuracy}, {@link distanceFilter}, {@link locationUpdateInterval}, {@link fastestLocationUpdateInterval} |
  * | **Elasticity** | {@link disableElasticity}, {@link elasticityMultiplier} |
  * | **Motion detection** | {@link stationaryRadius}, {@link stopTimeout}, {@link stopAfterElapsedMinutes}, {@link disableStopDetection} |
