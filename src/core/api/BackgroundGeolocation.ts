@@ -577,10 +577,10 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link setConfig}
    *
    * @example
-   * ```typescript
+   * ```ts
    * const state = await BackgroundGeolocation.ready({
    *   geolocation: {
-   *     desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+   *     desiredAccuracy: BackgroundGeolocation.DesiredAccuracy.High,
    *     distanceFilter: 10,
    *   },
    *   app: {
