@@ -692,6 +692,13 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * In this mode no active location tracking occurs — only geofences are
    * monitored. Use the usual {@link stop} method to exit geofences-only mode.
    *
+   * {@link start} and `startGeofences` are mutually exclusive — call one or the
+   * other, never both. {@link start} enables full tracking: location recording and
+   * geofence monitoring run together. `startGeofences` enables geofence monitoring
+   * only, with no continuous location recording. Calling {@link start} while already
+   * in geofences-only mode (or vice versa) switches modes; there is no need to call
+   * {@link stop} first.
+   *
    * **See also**
    * - {@link stop}
    * - 📘 {@link Geofence | Geofencing Guide}
