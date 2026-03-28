@@ -18,8 +18,8 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  *
  * ### Overview
  *
- * | Area | Keys | Notes |
- * |------|------|-------|
+ * | Category | Properties | Notes |
+ * |----------|------------|-------|
  * | **Recognition cadence** | `activityRecognitionInterval`, `minimumActivityRecognitionConfidence` | How often and how confidently the SDK polls platform motion APIs. |
  * | **Stop detection** | `disableStopDetection`, `stopOnStationary`, `stopDetectionDelay` | Controls when the SDK transitions to stationary and stops tracking. `stopDetectionDelay` is [iOS only]. |
  * | **Motion trigger** | `motionTriggerDelay`, `triggerActivities` | Controls which activities start tracking and how quickly. `motionTriggerDelay` is [Android only]. |
