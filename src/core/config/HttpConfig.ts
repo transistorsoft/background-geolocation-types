@@ -15,7 +15,6 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * - [Error handling](#error-handling)
  * - [Remote control](#remote-control)
  * - [Logging](#logging)
- * - [Migration](#migration)
  * - [Examples](#examples)
  *
  * ---
@@ -158,34 +157,6 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * | 4 | HTTP POST/PUT | Upload attempted |
  * | 5 | Response | Server status code |
  * | 6 | DESTROY / UNLOCK | Delivered / failed, queued for retry |
- *
- * ---
- *
- * ## Migration
- *
- * HTTP options previously lived at the root of `Config`. They are now grouped
- * under the `http` key. Legacy flat keys remain available but are **deprecated**
- * and will be removed in a future major release.
- *
- * @example Legacy flat Config
- * ```ts
- * BackgroundGeolocation.ready({
- *   url: "https://api.example.com",
- *   autoSync: true,
- *   headers: { Authorization: "Bearer ..." }
- * });
- * ```
- *
- * @example New compound Config
- * ```ts
- * BackgroundGeolocation.ready({
- *   http: {
- *     url: "https://api.example.com",
- *     autoSync: true,
- *     headers: { Authorization: "Bearer ..." }
- *   }
- * });
- * ```
  *
  * ---
  *

@@ -106,7 +106,6 @@ export interface PermissionRationale {
  * - [Heartbeat](#heartbeat)
  * - [Scheduler](#scheduler)
  * - [Background permission](#background-permission)
- * - [Migration](#migration)
  * - [Examples](#examples)
  *
  * ---
@@ -195,23 +194,6 @@ export interface PermissionRationale {
  * {@link GeoConfig.locationAuthorizationRequest} is `"Always"`. [Android only]
  *
  * See {@link PermissionRationale} for the full dialog configuration reference.
- *
- * ---
- *
- * ## Migration
- *
- * The following properties were previously on the root `Config` object and are
- * now deprecated there. Supply them via `Config.app` instead:
- *
- * - `Config.stopOnTerminate`
- * - `Config.startOnBoot`
- * - `Config.enableHeadless`
- * - `Config.heartbeatInterval`
- * - `Config.schedule`
- * - `Config.scheduleUseAlarmManager`
- * - `Config.notification`
- * - `Config.backgroundPermissionRationale`
- * - `Config.preventSuspend`
  *
  * ---
  *

@@ -16,7 +16,6 @@ import { ActivityType } from '../../enums/ActivityType';
  * - [Permissions](#permissions)
  * - [Geofencing](#geofencing)
  * - [Filtering](#filtering)
- * - [Migration](#migration)
  * - [Examples](#examples)
  *
  * ---
@@ -138,37 +137,6 @@ import { ActivityType } from '../../enums/ActivityType';
  * speed constraints to raw platform samples before they are recorded. This reduces GPS
  * jitter and improves odometer accuracy. See {@link LocationFilter} for full
  * documentation.
- *
- * ---
- *
- * ## Migration
- *
- * Geolocation options previously lived at the root of `Config`. They are now grouped
- * under the `geolocation` key. Legacy flat keys remain supported but are **deprecated**
- * and will be removed in a future major release.
- *
- * @example
- * ```ts
- * // Legacy (deprecated)
- * BackgroundGeolocation.ready({
- *   desiredAccuracy: BackgroundGeolocation.DesiredAccuracy.High,
- *   distanceFilter: 10,
- *   stopTimeout: 5,
- *   stationaryRadius: 150,
- *   locationTimeout: 60
- * });
- *
- * // Current
- * BackgroundGeolocation.ready({
- *   geolocation: {
- *     desiredAccuracy: DesiredAccuracy.High,
- *     distanceFilter: 10,
- *     stopTimeout: 5,
- *     stationaryRadius: 150,
- *     locationTimeout: 60
- *   }
- * });
- * ```
  *
  * ---
  *

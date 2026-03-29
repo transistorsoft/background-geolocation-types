@@ -13,7 +13,6 @@ import { PersistMode } from '../../enums/PersistMode';
  * - [Ordering](#ordering)
  * - [Templates](#templates)
  * - [Persist mode](#persist-mode)
- * - [Migration](#migration)
  * - [Examples](#examples)
  *
  * ---
@@ -104,47 +103,6 @@ import { PersistMode } from '../../enums/PersistMode';
  *   samples: 3,
  * });
  * ```
- *
- * ---
- *
- * ## Migration
- *
- * Persistence options previously lived at the root of `Config`. They are now grouped
- * under the `persistence` key. Legacy flat keys remain available but are **deprecated**
- * and will be removed in a future major release.
- *
- * @example Migration from legacy flat Config
- * ```ts
- * // Legacy
- * {
- *   maxDaysToPersist: 14,
- *   maxRecordsToPersist: 5000,
- *   locationsOrderDirection: 'ASC',
- *   locationTemplate: '{...}',
- *   geofenceTemplate: '{...}',
- *   persistMode: BackgroundGeolocation.PersistMode.All,
- *   extras: {'user_id': 123},
- *   disableProviderChangeRecord: true,
- * };
- * ```
- *
- * @example Now grouped under PersistenceConfig
- * ```ts
- * {
- *   persistence: {
- *     maxDaysToPersist: 14,
- *     maxRecordsToPersist: 5000,
- *     locationsOrderDirection: 'ASC',
- *     locationTemplate: '{...}',
- *     geofenceTemplate: '{...}',
- *     persistMode: PersistMode.all,
- *     extras: {'user_id': 123},
- *     disableProviderChangeRecord: true,
- *   },
- * };
- * ```
- *
- * Legacy keys remain but are marked **@deprecated**. Prefer the compound form going forward.
  *
  * ---
  *

@@ -13,7 +13,6 @@ import { LogLevel } from '../../enums/LogLevel';
  * - [Debug mode](#debug-mode)
  * - [Retention](#retention)
  * - [Diagnostics](#diagnostics)
- * - [Migration](#migration)
  * - [Examples](#examples)
  *
  * ---
@@ -128,33 +127,6 @@ import { LogLevel } from '../../enums/LogLevel';
  * Run the app from Xcode to stream SDK output to the console in real time. For
  * issues that only reproduce in the background, attach the device and monitor
  * the Xcode console while the app runs in the background.
- *
- * ---
- *
- * ## Migration
- *
- * Logging options previously lived at the root of `Config`. They are now grouped
- * under the `logger` key. Legacy flat keys remain available but are **deprecated**
- * and will be removed in a future major release.
- *
- * @example
- * ```ts
- * // Legacy (deprecated)
- * BackgroundGeolocation.ready({
- *   debug: true,
- *   logLevel: BackgroundGeolocation.LogLevel.Verbose,
- *   logMaxDays: 3,
- * });
- *
- * // Current
- * BackgroundGeolocation.ready({
- *   logger: {
- *     debug: true,
- *     logLevel: BackgroundGeolocation.LogLevel.Verbose,
- *     logMaxDays: 3,
- *   }
- * });
- * ```
  *
  * ---
  *

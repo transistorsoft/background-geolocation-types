@@ -11,7 +11,6 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  * - [Overview](#overview)
  * - [Stop detection](#stop-detection)
  * - [Motion trigger](#motion-trigger)
- * - [Migration](#migration)
  *
  * ---
  *
@@ -83,34 +82,6 @@ import { TriggerActivity } from '../../enums/TriggerActivity';
  *   delay expires, the transition is cancelled.
  *
  * ---
- *
- * ## Migration
- *
- * Activity recognition options previously lived at the root of `Config`. They are
- * now grouped under the `activity` key. Legacy flat keys remain available but are
- * **deprecated** and will be removed in a future major release.
- *
- * @example
- * ```ts
- * // Legacy (deprecated)
- * BackgroundGeolocation.ready({
- *   activityRecognitionInterval: 10000,
- *   disableStopDetection: true,
- *   stopOnStationary: true
- * });
- * ```
- *
- * @example
- * ```ts
- * // Current
- * BackgroundGeolocation.ready({
- *   activity: {
- *     activityRecognitionInterval: 10000,
- *     disableStopDetection: true,
- *     stopOnStationary: true
- *   }
- * });
- * ```
  *
  * **See also**
  * - {@link Config.activity}
