@@ -504,4 +504,31 @@ export interface PersistenceConfig {
    * ```
    */
   disableProviderChangeRecord?: boolean;
+
+  /**
+   * Format used for the `timestamp` field in persisted and uploaded location JSON.
+   * Defaults to `"iso"` (ISO-8601 string). Set to `"epoch"` to emit a Unix
+   * epoch integer in milliseconds instead.
+   *
+   * This setting only affects what is written to the SQLite database and
+   * subsequently uploaded via {@link HttpConfig}. The in-memory
+   * {@link Location} object and all live callbacks (`onLocation`,
+   * `getLocations`) continue to return ISO-8601 strings regardless of this
+   * setting.
+   *
+   * | Value | Format | Example |
+   * |-------|--------|---------|
+   * | `"iso"` | ISO-8601 string (**default**) | `"2015-05-05T04:31:54.123Z"` |
+   * | `"epoch"` | Unix epoch milliseconds (integer) | `1430800314123` |
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   persistence: {
+   *     timestampFormat: 'epoch'
+   *   }
+   * });
+   * ```
+   */
+  timestampFormat?: 'iso' | 'epoch';
 }
