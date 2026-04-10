@@ -246,9 +246,20 @@ export interface MotionActivity {
  */
 export interface Location {
   /**
-   * ISO-8601 UTC timestamp provided by the native location API.
+   * Timestamp provided by the native location API.
+   *
+   * - When {@link PersistenceConfig.timestampFormat} is `"iso"` (default): ISO-8601 UTC `string` (eg `"2025-04-10T12:00:01.123Z"`).
+   * - When {@link PersistenceConfig.timestampFormat} is `"epoch"`: epoch milliseconds `number`.
    */
-  timestamp: string;
+  timestamp: string | number;
+
+  /**
+   * Timestamp when the SDK received the location from the native API.
+   *
+   * - When {@link PersistenceConfig.timestampFormat} is `"iso"` (default): ISO-8601 UTC `string`.
+   * - When {@link PersistenceConfig.timestampFormat} is `"epoch"`: epoch milliseconds `number`.
+   */
+  recorded_at: string | number;
 
   /**
    * Age of the location in milliseconds, measured from the device system
