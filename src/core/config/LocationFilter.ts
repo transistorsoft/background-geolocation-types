@@ -38,6 +38,7 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  * | {@link filterDebug} | Enables verbose logging of filter decisions (default: `false`). |
  * | {@link odometerUseKalmanFilter} | Applies Kalman smoothing to odometer calculations (default: `true`). |
  * | {@link odometerAccuracyThreshold} | Maximum accuracy (meters) allowed for a sample to affect the odometer. Default: `20`. |
+ * | {@link odometerPolicy} | Filtering policy for odometer samples — use `Conservative` to reject GPS teleports entirely. Default: `Adjust`. |
  *
  * - Distances are in **meters**.
  * - Time fields are in **seconds** unless noted otherwise.
@@ -263,4 +264,40 @@ export interface LocationFilter {
    * updates.
    */
   odometerAccuracyThreshold?: number;
+
+  /**
+   * Selects the filtering policy applied to odometer-relevant location samples.
+   * Defaults to `LocationFilterPolicy.Adjust`.
+   *
+   * This property controls how the odometer handles anomalous GPS samples
+   * (teleports, unrealistic speed jumps) independently of the tracking
+   * {@link LocationFilter.policy}.
+   *
+   * | Policy | Odometer behavior |
+   * |--------|-------------------|
+   * | {@link LocationFilterPolicy.PassThrough} | No filtering — every sample contributes to the odometer. |
+   * | {@link LocationFilterPolicy.Adjust} | Anomalous samples are capped (kinematic/accuracy limits) but still accumulated. *(Default)* |
+   * | {@link LocationFilterPolicy.Conservative} | Anomalous samples are **rejected entirely** — zero phantom distance from GPS teleports. |
+   *
+   * ### ⚠️ Warning
+   *
+   * On devices with poor GPS behavior (certain chipsets, indoor/urban-canyon
+   * conditions), the default `Adjust` policy can accumulate significant phantom
+   * distance from repeatedly capped anomalies. If distance integrity is more
+   * important than capturing every meter of movement, use `Conservative`.
+   *
+   * @example Distance-integrity configuration for fleet/field-sales tracking:
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   geolocation: {
+   *     filter: {
+   *       odometerPolicy: LocationFilterPolicy.Conservative,
+   *       odometerAccuracyThreshold: 25,
+   *       maxImpliedSpeed: 28
+   *     }
+   *   }
+   * });
+   * ```
+   */
+  odometerPolicy?: LocationFilterPolicy;
 }
