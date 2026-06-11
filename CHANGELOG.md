@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 5.1.2 &mdash; 2026-06-11
+* Add `LocationFilter.odometerPolicy`
+
 ## 5.1.1 &mdash; 2026-04-10
 * Widen `Location.timestamp` type to `string | number` to reflect `timestampFormat` setting.
 * Add `Location.recorded_at` (`string | number`).
