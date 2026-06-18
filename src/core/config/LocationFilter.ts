@@ -111,7 +111,7 @@ export interface LocationFilter {
    * - {@link LocationFilter}
    * - {@link KalmanProfile}
    *
-   * @example Balanced default filtering
+   * @example Balanced filtering
    * ```ts
    * BackgroundGeolocation.ready({
    *   geolocation: {

@@ -18,8 +18,8 @@
  * | Policy | Description | Use Case |
  * |--------|-------------|----------|
  * | {@link LocationFilterPolicy.PassThrough} | **No filtering.** Every received sample is recorded, even if noisy or identical to the previous one. | Debugging, diagnostics, scenarios requiring raw data. |
- * | {@link LocationFilterPolicy.Adjust} | **Balanced filtering.** Smooths and rejects only clearly invalid samples. *(Default)* | Most use cases — walking, cycling, automotive tracking. |
- * | {@link LocationFilterPolicy.Conservative} | **Strict filtering.** Strongly smooths data and rejects high-variance samples, prioritizing stability over responsiveness. | Analytics, long-term background logging, noise-sensitive applications. |
+ * | {@link LocationFilterPolicy.Adjust} | **Balanced filtering.** Smooths and rejects only clearly invalid samples. | Most use cases — walking, cycling, automotive tracking. |
+ * | {@link LocationFilterPolicy.Conservative} | **Strict filtering.** Strongly smooths data and rejects high-variance samples, prioritizing stability over responsiveness. *(Default)* | Analytics, long-term background logging, noise-sensitive applications. |
  *
  * **Notes**
  *
@@ -30,7 +30,7 @@
  *
  * **Examples**
  *
- * @example Balanced default filtering
+ * @example Balanced filtering
  * ```ts
  * BackgroundGeolocation.ready({
  *   geolocation: {
@@ -77,12 +77,12 @@ export const LocationFilterPolicy = {
   PassThrough: 0,
 
   /**
-   * Balanced (default) — applies moderate filtering to reject noisy samples.
+   * Balanced — applies moderate filtering to reject noisy samples.
    *
    * Dynamically adjusts acceptance thresholds for incoming samples, but **never**
    * alters the raw latitude/longitude coordinates.
    *
-   * When using {@link LocationFilterPolicy.Adjust} (the default), the SDK computes
+   * When using {@link LocationFilterPolicy.Adjust}, the SDK computes
    * motion metrics such as:
    *
    * - distance deltas
@@ -105,8 +105,14 @@ export const LocationFilterPolicy = {
   Adjust: 1,
 
   /**
-   * Aggressive — filters heavily, preferring stability over responsiveness.
-   */ 
+   * Aggressive (default) — filters heavily, preferring stability over responsiveness.
+   *
+   * In addition to the policy-independent accuracy gate
+   * ({@link LocationFilter.trackingAccuracyThreshold}), this policy also **rejects**
+   * samples that imply an implausible speed or are statistical outliers. Under
+   * {@link LocationFilterPolicy.Adjust} and {@link LocationFilterPolicy.PassThrough}
+   * those samples are smoothed/capped and still delivered, not rejected.
+   */
   Conservative: 2
 } as const;
 

@@ -27,6 +27,7 @@ import type { HeartbeatEvent } from '../events/HeartbeatEvent';
 import type { GeofencesChangeEvent } from '../events/GeofencesChangeEvent';
 import type { ConnectivityChangeEvent } from '../events/ConnectivityChangeEvent';
 import type { MotionChangeEvent } from '../events/MotionChangeEvent';
+import type { LocationFilterEvent } from '../events/LocationFilterEvent';
 import type { ProviderChangeEvent } from '../events/ProviderChangeEvent';
 import type { HttpEvent } from '../events/HttpEvent';
 
@@ -53,6 +54,7 @@ export interface EventPayloads {
   location: Location;
   motionchange: MotionChangeEvent;
   activitychange: MotionActivityEvent;
+  locationfilter: LocationFilterEvent;
   geofence: GeofenceEvent;
   geofenceschange: GeofencesChangeEvent;
   http: HttpEvent;
@@ -135,6 +137,43 @@ export interface BackgroundGeolocationEvents {
    * @event motionchange
    */
   onMotionChange(cb: (event: MotionChangeEvent) => void): Subscription;
+
+  /**
+   * Subscribe to location-filter rejection events.
+   *
+   * Fires **only** when the SDK's tracking location-filter **rejects** (drops) a raw
+   * location sample. Two kinds of rejection are possible:
+   *
+   * - `"low-accuracy"` — the sample's horizontal accuracy is worse than
+   *   {@link LocationFilter.trackingAccuracyThreshold}. Applies under **any**
+   *   {@link LocationFilter.policy}.
+   * - `"implied-speed"` / `"outlier-capped"` — the sample looks like a GPS spike.
+   *   Only when {@link LocationFilter.policy} is `Conservative` (the default); under
+   *   `Adjust` / `PassThrough` such samples are smoothed/capped and still delivered
+   *   to {@link onLocation} rather than rejected.
+   *
+   * ## Note
+   *
+   * Rejected locations are **not** delivered to {@link onLocation}. The filter
+   * silently drops them to keep your path and odometer clean, which means a long
+   * run of poor fixes can leave {@link onLocation} quiet for an extended period.
+   * Subscribe here to observe those rejections and adapt — for example, surface a
+   * "poor GPS signal" hint to the user, or temporarily relax
+   * {@link LocationFilter.trackingAccuracyThreshold}.
+   *
+   * **See also**
+   * - {@link LocationFilter.trackingAccuracyThreshold}
+   *
+   * @example
+   * ```ts
+   * const subscription = BackgroundGeolocation.onLocationFilter((event) => {
+   *   console.log("[onLocationFilter] rejected: ", event.reason, event.accuracy);
+   * });
+   * ```
+   *
+   * @event locationfilter
+   */
+  onLocationFilter(cb: (event: LocationFilterEvent) => void): Subscription;
 
   /**
    * Subscribe to geofence transition events.
