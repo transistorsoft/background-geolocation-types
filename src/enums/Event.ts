@@ -25,6 +25,10 @@ export const Event = {
    */
   ActivityChange: 'activitychange',
   /**
+   * Emitted when the tracking location-filter rejects a location.
+   */
+  LocationFilter: 'locationfilter',
+  /**
    * Emitted when a geofence transition occurs.
    */
   Geofence: 'geofence',

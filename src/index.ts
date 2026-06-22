@@ -18,6 +18,7 @@ export * from './enums/GeofenceAction';
 export * from './enums/Event';
 export * from './enums/ActivityType'
 export * from './enums/LocationError';
+export * from './enums/LocationFilterReason';
 export * from './enums/SQLQueryOrder';
 
 // events/data
@@ -35,6 +36,7 @@ export * from "./core/events/HeartbeatEvent";
 export * from "./core/events/GeofencesChangeEvent";
 export * from "./core/events/ConnectivityChangeEvent";
 export * from "./core/events/MotionChangeEvent";
+export * from "./core/events/LocationFilterEvent";
 export * from "./core/events/ProviderChangeEvent";
 export * from "./core/events/HttpEvent";
 

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 5.2.0 &mdash; 2026-06-22
+* Add `onLocationFilter` event — fires when the tracking location-filter **rejects** a location. Adds `LocationFilterEvent` (`location`, `reason`, `accuracy`, `trackingAccuracyThreshold`) and the `LocationFilterReason` enum (`low-accuracy` | `implied-speed` | `outlier-capped`); registered via `BackgroundGeolocation.onLocationFilter(callback)`.
+* Document `LocationFilter` policy scope — which fields the `policy` governs versus the policy-independent fields (eg `trackingAccuracyThreshold` rejects under *every* policy, including `PassThrough`).
+* Fix `LocationFilterPolicy` documented default — `Conservative` (was incorrectly `Adjust`).
+
 ## 5.1.2 &mdash; 2026-06-11
 * Add `LocationFilter.odometerPolicy`
 
