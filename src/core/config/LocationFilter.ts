@@ -11,6 +11,7 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  *
  * ## Contents
  * - [Overview](#overview)
+ * - [Policy scope](#policy-scope)
  * - [Examples](#examples)
  *
  * ---
@@ -58,6 +59,37 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  *   }
  * });
  * ```
+ *
+ * ---
+ *
+ * ## Policy scope
+ *
+ * {@link policy} controls only the **decision phase** — how the filter responds
+ * to a sample *after* its motion metrics are computed. Several fields apply
+ * regardless of the chosen policy:
+ *
+ * | Field | Governed by `policy`? | Behaviour |
+ * |-------|:---------------------:|-----------|
+ * | {@link trackingAccuracyThreshold} | No | Accuracy gate. A fix whose accuracy is worse than this is **rejected before** the policy runs — under *every* policy, including `PassThrough`. Set to `0` to disable the gate. |
+ * | {@link useKalman}, {@link kalmanProfile} | No | Kalman smoothing runs before the policy phase whenever `useKalman` is `true`. |
+ * | {@link maxBurstDistance}, {@link burstWindow} | Yes | Define a GPS "spike" (a large jump in a short window). `Conservative` rejects it, `Adjust` caps it, `PassThrough` lets it through. |
+ * | {@link maxImpliedSpeed} | Partly | Flags an implausible-speed spike (rejected only under `Conservative`), and also applies a final per-step speed clamp under *every* policy. |
+ * | {@link rollingWindow} | Yes | Feeds the kinematic / outlier cap used by `Adjust` and `Conservative`; `PassThrough` ignores it. |
+ * | {@link odometerPolicy}, {@link odometerAccuracyThreshold}, {@link odometerUseKalmanFilter} | — | Govern the separate **odometer** filter, not the tracking `policy`. |
+ *
+ * Each policy differs only in how it treats anomalous or over-distance steps:
+ *
+ * - **`PassThrough`** — accept the sample as-is; no capping, no anomaly rejection.
+ * - **`Adjust`** — cap the step (to {@link GeoConfig.distanceFilter} or the
+ *   kinematic limit); never rejects.
+ * - **`Conservative`** — reject implausible-speed or outlier steps; otherwise cap.
+ *
+ * ### ⚠️ Warning
+ *
+ * `PassThrough` does **not** disable {@link trackingAccuracyThreshold}. To record
+ * every sample untouched, set `policy: PassThrough` **and**
+ * `trackingAccuracyThreshold: 0` — otherwise low-accuracy fixes are still rejected
+ * (and delivered to {@link BackgroundGeolocation.onLocationFilter}).
  *
  * ---
  *
