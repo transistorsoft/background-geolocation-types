@@ -94,6 +94,21 @@ export interface DeviceSettings {
    * so you can inspect {@link DeviceSettingsRequest.seen} and decide whether to
    * prompt the user.
    *
+   * On Android 14+, "Unrestricted" battery usage materially changes SDK
+   * behavior. Field-measured, it:
+   *
+   * - exempts the app from the default denial of `SCHEDULE_EXACT_ALARM`, so
+   *   {@link AppConfig.schedule} evaluates exactly on-the-minute rather than
+   *   deferring by up to ~15 minutes under Doze;
+   * - permits foreground-service starts from the background, so tracking
+   *   resumes immediately rather than through the SDK's recovery mechanisms;
+   * - restores prompt geofence responsiveness while the device sits
+   *   stationary with the screen off — stationary-exit detection within
+   *   meters of movement versus hundreds of meters when battery-optimized.
+   *
+   * For serious tracking deployments, directing users to this setting is the
+   * single most effective reliability measure available on Android.
+   *
    * ## ⚠️ Warning
    *
    * On some devices and OS versions this screen may not be available. Always

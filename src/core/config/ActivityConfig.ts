@@ -284,9 +284,27 @@ export interface ActivityConfig {
    * ## Android
    *
    * Android 10+ requires runtime permission for Physical Activity. Without
-   * it, the SDK falls back to a stationary geofence mechanism — the device
-   * must move **200–500 m** before tracking re-engages, compared to just a
-   * few meters when the Motion API is authorized.
+   * it, the SDK falls back to a stationary geofence mechanism — tracking
+   * re-engages only when the device exits a geofence around its stationary
+   * position, compared to just a few meters of movement when the Motion API
+   * is authorized.
+   *
+   * ## ⚠️ Warning
+   *
+   * Geofence responsiveness is throttled by the OS while a device sits
+   * stationary with the screen off (see Android's [Background Location
+   * Limits](https://developer.android.com/about/versions/oreo/background-location-limits)).
+   * In field tests on a device *without* "Unrestricted" battery usage, the
+   * fallback stationary geofence fired only after **600–950 meters** of
+   * travel — and on one leg of the route, not at all — while the same route
+   * with "Unrestricted" battery re-engaged tracking promptly.
+   * Motion-activity updates are not subject to this throttling: they detect
+   * movement within seconds, even with the screen off and the battery
+   * optimized.
+   *
+   * If your app enables this option and requires prompt movement detection,
+   * instruct users to enable "Unrestricted" battery usage — see
+   * {@link DeviceSettings.showIgnoreBatteryOptimizations}.
    *
    * ![](https://dl.dropbox.com/s/6v4391oz592bdjg/android-permission-physical-activity.png?dl=1)
    *

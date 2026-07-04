@@ -180,8 +180,10 @@ export interface PermissionRationale {
  * after calling `ready()`.
  *
  * {@link AppConfig.scheduleUseAlarmManager} (default `false`) forces the Android
- * scheduler to use `AlarmManager` (exact, on-the-minute) instead of
- * `JobScheduler` (inexact). [Android only]
+ * scheduler to use `AlarmManager` instead of `JobScheduler`. On Android 14+,
+ * exact evaluation additionally requires the `SCHEDULE_EXACT_ALARM`
+ * permission (denied by default) or "Unrestricted" battery usage — see
+ * {@link AppConfig.scheduleUseAlarmManager}. [Android only]
  *
  * ---
  *
@@ -494,8 +496,13 @@ export interface AppConfig {
    *
    * ## Android
    *
-   * Uses `AlarmManager.setExactAndAllowWhileIdle`, typically evaluating
-   * on-the-minute.
+   * Evaluated by `JobScheduler` (default) or `AlarmManager` (see
+   * {@link AppConfig.scheduleUseAlarmManager}). On Android 14+, apps hold the
+   * `SCHEDULE_EXACT_ALARM` permission only if the user grants it (or enables
+   * "Unrestricted" battery usage) — without it, evaluation is *inexact*:
+   * expect boundaries to defer by several minutes while the device is in
+   * Doze (field-measured median ~8 minutes, worst ~15; no boundaries lost).
+   * Battery-whitelisted apps evaluate exactly, on-the-minute.
    *
    * **See also**
    * - {@link BackgroundGeolocation.startSchedule}
@@ -504,8 +511,33 @@ export interface AppConfig {
   schedule?: string[];
 
   /**
-   * Forces the Android scheduler to use `AlarmManager` (exact, on-the-minute)
-   * instead of `JobScheduler` (inexact). Defaults to `false`. [Android only]
+   * Forces the Android scheduler to use `AlarmManager` instead of its
+   * default `JobScheduler`. Defaults to `false`. [Android only]
+   *
+   * ## ⚠️ Warning
+   *
+   * Historically this option provided exact, on-the-minute schedule
+   * evaluation. Since Android 14, the `SCHEDULE_EXACT_ALARM` permission this
+   * relies upon is **denied by default** — the user can grant it via
+   * Settings → *Alarms & reminders*, and apps with "Unrestricted" battery
+   * usage are exempt (see {@link DeviceSettings.showIgnoreBatteryOptimizations}).
+   * Apps may direct the user to that toggle at runtime via the
+   * `Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM` intent (API 31+) and check
+   * the current state with `AlarmManager.canScheduleExactAlarms()` — though
+   * "Unrestricted" battery usage is the stronger single request, since it
+   * includes the exact-alarm exemption alongside its other benefits.
+   *
+   * Without that permission, alarms fire *inexact* and defer while the
+   * device is in Doze. In overnight field measurements (Android 16,
+   * battery-optimized app, deep Doze), schedule boundaries evaluated a
+   * median of ~8 minutes late — worst case ~15 minutes — though **no
+   * boundary was ever lost**. The default `JobScheduler` is subject to the
+   * same Doze batching, but was observed to evaluate within ~100 ms of the
+   * boundary on an awake device.
+   *
+   * The SDK deliberately does **not** declare the `USE_EXACT_ALARM`
+   * permission: Google Play policy restricts it to alarm-clock and calendar
+   * apps.
    *
    * @example
    * ```ts
