@@ -490,6 +490,17 @@ export interface GeoConfig {
    * polygon geofences, full-rate continuous tracking) are unavailable in this
    * configuration.
    *
+   * {@link BackgroundGeolocation.getCurrentPosition} operates best-effort:
+   * samples are fetched by an expedited `WorkManager` job instead of a
+   * foreground service, honoring the requested `samples`, `desiredAccuracy` and
+   * `maximumAge` and returning the best sample collected if the timeout expires
+   * first.  With the app in the foreground this behaves identically to the
+   * fully-permissioned SDK; in the background, Android throttles location
+   * delivery to unpromoted apps — expect slower fixes, fewer samples, or a
+   * timeout.  {@link BackgroundGeolocation.watchPosition} remains
+   * foreground-service-bound and is reliable only while the app is in the
+   * foreground in this configuration.
+   *
    * Example 1 — `useSignificantChangesOnly: true`:
    *
    * ![](https://dl.dropboxusercontent.com/s/wdl9e156myv5b34/useSignificantChangesOnly.png?dl=1)
