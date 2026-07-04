@@ -465,6 +465,31 @@ export interface GeoConfig {
    * state. No foreground service is run (and no persistent {@link NotificationConfig}
    * notification is shown).
    *
+   * ## Running without foreground-service permissions
+   *
+   * Because SignificantChanges mode never launches a foreground service, apps
+   * whose tracking needs are satisfied by this mode may remove the SDK's
+   * foreground-service permissions entirely — and with them, every Google Play
+   * Console foreground-service declaration.  The SDK's own manifest declares
+   * these permissions, so removal requires manifest-merger overrides in your
+   * application's `AndroidManifest.xml`:
+   *
+   * ```xml
+   * <manifest xmlns:tools="http://schemas.android.com/tools" ...>
+   *   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" />
+   *   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" tools:node="remove" />
+   * ```
+   *
+   * When `android.permission.FOREGROUND_SERVICE` /
+   * `android.permission.FOREGROUND_SERVICE_LOCATION` are absent from the merged
+   * manifest, the SDK detects this at launch and **enforces**
+   * `useSignificantChangesOnly: true` regardless of the configured value,
+   * logging a warning.  The configured value itself is never modified —
+   * restoring the permissions restores configured behavior on the next launch.
+   * Features that require a foreground service ({@link geofenceModeHighAccuracy},
+   * polygon geofences, full-rate continuous tracking) are unavailable in this
+   * configuration.
+   *
    * Example 1 — `useSignificantChangesOnly: true`:
    *
    * ![](https://dl.dropboxusercontent.com/s/wdl9e156myv5b34/useSignificantChangesOnly.png?dl=1)
