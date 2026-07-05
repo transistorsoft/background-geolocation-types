@@ -141,16 +141,15 @@ export interface BackgroundGeolocationEvents {
   /**
    * Subscribe to location-filter rejection events.
    *
-   * Fires **only** when the SDK's tracking location-filter **rejects** (drops) a raw
-   * location sample. Two kinds of rejection are possible:
+   * Fires when the SDK **rejects** data before it reaches your stream — either a raw
+   * location sample dropped by the tracking location-filter, or a **geofence trigger**
+   * rejected as spurious or duplicate. See {@link LocationFilterReason} for the full
+   * list of {@link LocationFilterEvent.reason} values and what each means.
    *
-   * - `"low-accuracy"` — the sample's horizontal accuracy is worse than
-   *   {@link LocationFilter.trackingAccuracyThreshold}. Applies under **any**
-   *   {@link LocationFilter.policy}.
-   * - `"implied-speed"` / `"outlier-capped"` — the sample looks like a GPS spike.
-   *   Only when {@link LocationFilter.policy} is `Conservative` (the default); under
-   *   `Adjust` / `PassThrough` such samples are smoothed/capped and still delivered
-   *   to {@link onLocation} rather than rejected.
+   * For geofence-trigger rejections, {@link LocationFilterEvent.geofence} is present —
+   * it identifies the fence, the rejected transition (`ENTER` / `EXIT`), and why — and
+   * {@link LocationFilterEvent.location} carries the trigger fix. It is `undefined` for
+   * sample rejections, where {@link LocationFilterEvent.trackingAccuracyThreshold} applies.
    *
    * ## Note
    *
@@ -162,6 +161,7 @@ export interface BackgroundGeolocationEvents {
    * {@link LocationFilter.trackingAccuracyThreshold}.
    *
    * **See also**
+   * - {@link LocationFilterReason}
    * - {@link LocationFilter.trackingAccuracyThreshold}
    *
    * @example
