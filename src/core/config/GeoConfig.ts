@@ -465,6 +465,12 @@ export interface GeoConfig {
    * state. No foreground service is run (and no persistent {@link NotificationConfig}
    * notification is shown).
    *
+   * Geofence transitions in this mode resolve at the **next location computation** —
+   * typically 200–1000 meters past the boundary rather than at it. A fence transited
+   * entirely between computations is reconstructed from recorded path evidence and
+   * reported only when evidenced; unsupported triggers are rejected and surfaced on
+   * {@link BackgroundGeolocation.onLocationFilter}.
+   *
    * ## Running without foreground-service permissions
    *
    * Because SignificantChanges mode never launches a foreground service, apps
