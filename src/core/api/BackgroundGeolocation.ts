@@ -802,6 +802,17 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * {@link Location.sample} set to `true`. Filter these out if you are
    * manually posting locations to your server.
    *
+   * ## Android: running without foreground-service permissions
+   *
+   * In the FGS-permission-free configuration (see
+   * {@link GeoConfig.useSignificantChangesOnly}), `getCurrentPosition` operates
+   * best-effort: samples are fetched by an expedited `WorkManager` job instead
+   * of a foreground service, honoring `samples`, `desiredAccuracy` and
+   * `maximumAge` as usual.  With the app in the foreground this behaves
+   * identically to the fully-permissioned SDK; in the background, Android
+   * throttles location delivery to unpromoted apps — expect slower fixes,
+   * fewer samples, or a timeout.
+   *
    * @example
    * ```ts
    * const location = await BackgroundGeolocation.getCurrentPosition({
@@ -829,6 +840,13 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * `watchPosition` is designed for foreground use only — not for long-term
    * background monitoring. The SDK's motion-based tracking model does not
    * require it.
+   *
+   * ## Android: running without foreground-service permissions
+   *
+   * In the FGS-permission-free configuration (see
+   * {@link GeoConfig.useSignificantChangesOnly}), `watchPosition` remains
+   * foreground-service-bound and is reliable only while the app is in the
+   * foreground.
    *
    * ## iOS
    *
