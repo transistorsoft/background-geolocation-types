@@ -59,4 +59,5 @@ export * from './core/api/Logger';
 export * from './core/api/DeviceSettings';
 export * from './core/api/CurrentPositionRequest';
 export * from './core/api/WatchPositionRequest';
+export * from './core/api/LocationQuery';
 export * from './core/api/TransistorAuthorizationService';

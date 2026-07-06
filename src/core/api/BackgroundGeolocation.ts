@@ -2,6 +2,7 @@ import type { Logger } from './Logger';
 import type { DeviceSettings} from './DeviceSettings';
 import type { CurrentPositionRequest } from './CurrentPositionRequest';
 import type { WatchPositionRequest } from './WatchPositionRequest';
+import type { LocationQuery } from './LocationQuery';
 import type { Config } from '../config/Config';
 import type { State } from './State';
 import type { GeoConfig } from '../config/GeoConfig';
@@ -1357,14 +1358,30 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   insertLocation(location: Location): Promise<Location>;
 
   /**
-   * Retrieve all {@link Location} records stored in the SDK's SQLite database.
+   * Retrieve {@link Location} records stored in the SDK's SQLite database.
+   *
+   * Provide an optional {@link LocationQuery} to page through a large table,
+   * constraining results by {@link LocationQuery.limit | limit}, starting
+   * {@link LocationQuery.offset | offset} (or {@link LocationQuery.page | page}),
+   * and sort {@link LocationQuery.order | order}. Without a query, every record is
+   * returned in a single call — which can exhaust memory on a table of several
+   * thousand records, so prefer paging for large datasets. Size your paging with
+   * {@link getCount}.
    *
    * @example
    * ```ts
+   * // All records
    * const locations = await BackgroundGeolocation.getLocations();
+   *
+   * // One page of 500, newest first
+   * const page = await BackgroundGeolocation.getLocations({
+   *   limit: 500,
+   *   page: 0,
+   *   order: SQLQueryOrder.Desc
+   * });
    * ```
    */
-  getLocations(): Promise<Array<Object>>;
+  getLocations(query?: LocationQuery): Promise<Array<Object>>;
 
   /**
    * Retrieve the count of all locations currently stored in the SDK's SQLite database.
