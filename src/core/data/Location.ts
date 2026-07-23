@@ -423,3 +423,41 @@ export interface Location {
    */
   provider?: ProviderChangeEvent;
 }
+
+/**
+ * The record accepted by {@link BackgroundGeolocation.insertLocation} when manually inserting a
+ * location into the SDK database.
+ *
+ * Unlike the full {@link Location} record delivered to listeners, only {@link coords} (with
+ * `latitude` and `longitude`) is required. The record is stored **as given** — any additional
+ * fields the caller supplies are preserved verbatim, and the SDK does not overwrite them with
+ * current device state.
+ *
+ * @category Data
+ */
+export interface LocationInput {
+  /**
+   * Latitude and longitude of the record. Only `latitude` and `longitude` are required; every
+   * other {@link Coords} field is optional.
+   */
+  coords: Pick<Coords, "latitude" | "longitude"> & Partial<Coords>;
+
+  /**
+   * Timestamp of the record, as an ISO-8601 UTC string or a numeric epoch (milliseconds). Stored
+   * as given — the SDK does not clamp it or replace it with device time. Defaults to the current
+   * time when omitted or unparseable.
+   */
+  timestamp?: string | number;
+
+  /**
+   * A uuid to correlate the record with an external system. When omitted, the SDK generates one
+   * and returns it from {@link BackgroundGeolocation.insertLocation}.
+   */
+  uuid?: string;
+
+  /**
+   * Any additional caller fields (for example `activity`, `battery`, `odometer`, `extras`) are
+   * preserved and stored verbatim.
+   */
+  [key: string]: any;
+}
