@@ -13,7 +13,7 @@ import type { ActivityConfig } from '../config/ActivityConfig';
 import type { AuthorizationConfig } from '../config/AuthorizationConfig';
 import type { NotificationConfig } from '../config/NotificationConfig';
 
-import type { Location } from '../data/Location';
+import type { Location, LocationInput } from '../data/Location';
 import type { LocationError } from '../../enums/LocationError';
 import type { Geofence } from '../data/Geofence';
 import type { DeviceInfo} from '../data/DeviceInfo';
@@ -1352,10 +1352,37 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   destroyLocation(uuid: string): Promise<void>;
 
   /**
-   * @hidden
-   * Users can simply call {@link getCurrentPosition} to insert locations on-demand.
+   * Manually insert a location record into the SDK's SQLite database.
+   *
+   * The record is stored **as given** — the SDK does not overwrite its `timestamp`, `activity`,
+   * `is_moving`, `odometer`, `battery`, or other fields with current device state. This is intended
+   * for importing history or externally-sourced fixes the SDK did not record itself. Only
+   * {@link LocationInput.coords} (latitude and longitude) is required; a missing or unparseable
+   * {@link LocationInput.timestamp} defaults to the current time. Resolves with the `uuid` of the
+   * inserted record — the SDK generates one when {@link LocationInput.uuid} is omitted.
+   *
+   * ### Note
+   * `insertLocation` deliberately bypasses {@link PersistenceConfig.persistMode} — an explicit insert
+   * always writes to the database, regardless of the configured persistence mode. For recording the
+   * device's own position on demand, prefer {@link getCurrentPosition}.
+   *
+   * **See also**
+   * - {@link getCurrentPosition}
+   * - {@link getLocations}
+   * - {@link getCount}
+   * - {@link destroyLocation}
+   *
+   * @example
+   * ```ts
+   * const uuid = await BackgroundGeolocation.insertLocation({
+   *   timestamp: "2024-01-15T10:30:00.000Z",
+   *   coords: { latitude: 45.5152, longitude: -73.6104 },
+   *   extras: { source: "import" }
+   * });
+   * console.log("[insertLocation] inserted record:", uuid);
+   * ```
    */
-  insertLocation(location: Location): Promise<Location>;
+  insertLocation(location: LocationInput): Promise<string>;
 
   /**
    * Retrieve {@link Location} records stored in the SDK's SQLite database.
