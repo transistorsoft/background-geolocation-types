@@ -70,6 +70,7 @@ export interface SQLQuery {
  * ## Contents
  * - [Overview](#overview)
  * - [Retrieving logs](#retrieving-logs)
+ * - [Analyzing a log](#analyzing-a-log)
  * - [Writing log entries](#writing-log-entries)
  * - [Examples](#examples)
  *
@@ -123,6 +124,29 @@ export interface SQLQuery {
  * 09-19 11:12:22.083   🔵  Response: 200
  * 09-19 11:12:22.100   ✅  DESTROY: bca5acc8-e358-4d8f-827f-b8c0d556b7bb
  * ```
+ *
+ * ---
+ *
+ * ## Analyzing a log
+ *
+ * A multi-day capture runs to hundreds of thousands of lines.
+ * [`loganalyzer`](https://github.com/transistorsoft/loganalyzer) reads one and
+ * produces a triage **digest** — what the SDK did and what went wrong — plus an
+ * interactive **map** of where it did it:
+ *
+ * ```bash
+ * npx @transistorsoft/loganalyzer background-geolocation.log.gz
+ * ```
+ *
+ * It accepts the exports produced by {@link getLog}, {@link emailLog} and
+ * {@link uploadLog} — `.log` or `.log.gz`, one file or several.
+ *
+ * `digest.md` is pseudonymized (coordinates become `COORD-A`, geofences `GF-1`),
+ * which makes it the artifact to attach to a support issue. `map.html` plots
+ * full-precision coordinates and is a local instrument — do not share it.
+ *
+ * See [Debugging → Log Analyzer](../help/debugging.md#log-analyzer) for the full
+ * walkthrough.
  *
  * ---
  *
@@ -305,6 +329,7 @@ export interface Logger {
    * - {@link getLog}
    * - {@link uploadLog}
    * - 📘[Debugging Guide](github:wiki/Debugging)
+   * - 🔎[Analyzing a log](../help/debugging.md#log-analyzer)
    *
    * @example
    * ```ts
