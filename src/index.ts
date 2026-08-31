@@ -1,5 +1,6 @@
 // enums
 export * from './enums/AuthorizationStatus';
+export * from './enums/Permission';
 export * from './enums/LogLevel';
 export * from './enums/DesiredAccuracy';
 export * from './enums/PersistMode';
