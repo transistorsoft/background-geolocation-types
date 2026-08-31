@@ -35,6 +35,7 @@ import type { HttpEvent } from '../events/HttpEvent';
 // Enums (adapters will attach these as statics at runtime)
 import type { Event } from '../../enums/Event';
 import type { AuthorizationStatus } from '../../enums/AuthorizationStatus';
+import type { Permission } from '../../enums/Permission';
 import type { LogLevel } from '../../enums/LogLevel';
 import type { DesiredAccuracy } from '../../enums/DesiredAccuracy';
 import type { PersistMode } from '../../enums/PersistMode';
@@ -956,36 +957,77 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   getProviderState(): Promise<ProviderChangeEvent>;
 
   /**
-   * Manually request location permission using the configured
-   * {@link GeoConfig.locationAuthorizationRequest}.
+   * Requests location and motion permission — together, or each one separately.
    *
-   * Resolves successfully if either `WhenInUse` or `Always` is granted,
-   * regardless of the requested level. Rejects if the user denies.
+   * With no argument, requests everything the current configuration requires:
+   * location per {@link GeoConfig.locationAuthorizationRequest}, then the motion
+   * permission — the same set {@link start} requests. Pass a {@link Permission} to
+   * request one permission at a time and control exactly when each system dialog
+   * appears:
    *
-   * If permission is already granted, resolves immediately. If iOS has
-   * already shown the authorization dialog and the current grant does not
-   * match the configured request, the SDK presents an alert offering to
-   * direct the user to your app's Settings page.
+   * | Argument              | Requests                                   | Resolves with |
+   * |-----------------------|--------------------------------------------|---------------|
+   * | *(none)*              | Location per configuration, then motion    | The location {@link AuthorizationStatus}; the motion outcome stays silent |
+   * | `Permission.Location` | Location only — motion untouched           | The location {@link AuthorizationStatus} |
+   * | `Permission.Motion`   | Motion only                                | {@link AuthorizationStatus.Always} when granted |
    *
-   * ## Note
+   * The location forms resolve when either `WhenInUse` or `Always` is granted,
+   * regardless of the configured level, and resolve immediately when permission is
+   * already granted. Denial rejects the Promise with the bare
+   * {@link AuthorizationStatus} value.
    *
-   * The SDK automatically requests permission when you call {@link start},
-   * {@link startGeofences}, or {@link getCurrentPosition}. You do not need to
-   * call this method in typical use.
+   * Each call is independently awaitable: the returned Promise settles only when
+   * its own request fully resolves, and the SDK serializes permission requests
+   * internally — `await` one call, then issue the next, and each dialog appears in
+   * order, never stacked.
+   *
+   * #### Android
+   *
+   * A motion denial rejects with {@link AuthorizationStatus.Denied} while a new
+   * request can still show the system dialog, and with
+   * {@link AuthorizationStatus.DeniedAlways} once Android permanently denies the
+   * permission (two user denials) — after that, only the device's app-settings
+   * screen can restore it.
+   *
+   * #### iOS
+   *
+   * The motion permission is one-shot: a denial is permanent and rejects with
+   * {@link AuthorizationStatus.Denied}. If the location dialog has already been
+   * shown and the current grant does not match the configured request, the SDK
+   * presents an alert offering to direct the user to the app's Settings page.
+   *
+   * ### Note
+   *
+   * The SDK automatically requests every required permission when you call
+   * {@link start}, {@link startGeofences}, or {@link getCurrentPosition}. Calling
+   * this method first resolves the dialogs ahead of time, so those methods find
+   * everything granted and show nothing.
    *
    * **See also**
+   * - {@link Permission}
    * - {@link GeoConfig.locationAuthorizationRequest}
    * - {@link GeoConfig.disableLocationAuthorizationAlert}
    * - {@link GeoConfig.locationAuthorizationAlert}
    * - {@link AppConfig.backgroundPermissionRationale} (Android)
    * - {@link requestTemporaryFullAccuracy} (iOS 14+)
    *
-   * @example
+   * @example Request each permission separately
    * ```ts
-   * BackgroundGeolocation.onProviderChange((event) => {
-   *   console.log('[providerchange]', event);
-   * });
+   * const locationStatus = await BackgroundGeolocation.requestPermission(Permission.Location);
+   * console.log('[requestPermission] location: ', locationStatus);
    *
+   * try {
+   *   const motionStatus = await BackgroundGeolocation.requestPermission(Permission.Motion);
+   *   console.log('[requestPermission] motion: ', motionStatus);
+   * } catch (status) {
+   *   if (status === AuthorizationStatus.DeniedAlways) {
+   *     // Only the app-settings screen can restore the motion permission now.
+   *   }
+   * }
+   * ```
+   *
+   * @example Request everything at once
+   * ```ts
    * const state = await BackgroundGeolocation.ready({
    *   geolocation: { locationAuthorizationRequest: 'Always' }
    * });
@@ -998,7 +1040,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * }
    * ```
    */
-  requestPermission(): Promise<AuthorizationStatus>;
+  requestPermission(permission?: Permission): Promise<AuthorizationStatus>;
 
   /**
    * Request temporary full-accuracy location authorization. [iOS 14+]

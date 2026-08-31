@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 5.3.0 &mdash; 2026-08-31
+* Add `Permission` enum (`Permission.Location` / `Permission.Motion`) and an optional parameter to `requestPermission(permission?)` — request location and motion separately, each independently awaitable, instead of the all-at-once dialog storm. The no-argument form is unchanged (backward compatible). (WO-007)
+* Add `AuthorizationStatus.DeniedAlways` (5) — the motion permission was permanently denied on Android (two user denials); only the device's app-settings screen can restore it. iOS reports plain `Denied`, where denial is always permanent. (WO-007)
+* Rewrite the `requestPermission` documentation: the per-permission contract, the serialized-dialog guarantee, and the platform-specific denial semantics.
+
 ## 5.2.2 &mdash; 2026-07-23
 * Document `insertLocation` and correct its contract. The method is now public (previously `@hidden`), accepts the new `LocationInput` type, and resolves with the inserted record's `uuid` — `Promise<string>` (previously `Promise<Location>`, which no platform ever returned). An explicit `insertLocation` always writes to the database, bypassing `PersistenceConfig.persistMode`.
 * Add `LocationInput` type — the record accepted by `insertLocation`. Only `coords.latitude` and `coords.longitude` are required; `timestamp` and `uuid` are optional (a missing `timestamp` defaults to the current time), and any additional fields are stored verbatim.

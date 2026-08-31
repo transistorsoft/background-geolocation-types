@@ -8,6 +8,7 @@
  * | Denied              |  2    | iOS & Android           |
  * | Always              |  3    | iOS & Android           |
  * | WhenInUse           |  4    | iOS & Android 10+       |
+ * | DeniedAlways        |  5    | Android only            |
  *
  * @category Events
  */
@@ -32,6 +33,15 @@ export const AuthorizationStatus = {
    * Location permissions authorized for when-in-use (Android 10+).
    */
   WhenInUse: 4,
+  /**
+   * Permanently denied — the OS silently ignores further permission requests and
+   * only the device's app-settings screen can restore the permission. [Android only]
+   *
+   * Android promotes a permission to this state after two user denials. Reported by
+   * {@link BackgroundGeolocation.requestPermission} for the motion permission; iOS
+   * reports plain {@link Denied}, where denial is always permanent.
+   */
+  DeniedAlways: 5,
 } as const;
 
 /**
