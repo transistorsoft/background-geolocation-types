@@ -976,6 +976,11 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * already granted. Denial rejects the Promise with the bare
    * {@link AuthorizationStatus} value.
    *
+   * The no-argument form skips the motion step when
+   * {@link ActivityConfig.disableMotionActivityUpdates} is `true` — and, on iOS,
+   * when `NSMotionUsageDescription` is absent from `Info.plist` (requesting motion
+   * without it would terminate the app).
+   *
    * Each call is independently awaitable: the returned Promise settles only when
    * its own request fully resolves, and the SDK serializes permission requests
    * internally — `await` one call, then issue the next, and each dialog appears in
@@ -991,10 +996,16 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    *
    * #### iOS
    *
-   * The motion permission is one-shot: a denial is permanent and rejects with
-   * {@link AuthorizationStatus.Denied}. If the location dialog has already been
-   * shown and the current grant does not match the configured request, the SDK
-   * presents an alert offering to direct the user to the app's Settings page.
+   * The motion permission is one-shot — iOS never re-prompts. A user denial rejects
+   * with {@link AuthorizationStatus.DeniedAlways}: the state is permanent and only
+   * the Settings app can restore it (the motion form never rejects with plain
+   * {@link AuthorizationStatus.Denied}). The rejection can also carry
+   * {@link AuthorizationStatus.Restricted} (system-wide Fitness Tracking is off or
+   * the hardware is absent — not recoverable from the app's own Settings page) or
+   * {@link AuthorizationStatus.NotDetermined} (no dialog could be shown, e.g. the
+   * app was backgrounded). If the location dialog has already been shown and the
+   * current grant does not match the configured request, the SDK presents an alert
+   * offering to direct the user to the app's Settings page.
    *
    * ### Note
    *
@@ -1006,6 +1017,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * **See also**
    * - {@link Permission}
    * - {@link GeoConfig.locationAuthorizationRequest}
+   * - {@link ActivityConfig.disableMotionActivityUpdates}
    * - {@link GeoConfig.disableLocationAuthorizationAlert}
    * - {@link GeoConfig.locationAuthorizationAlert}
    * - {@link AppConfig.backgroundPermissionRationale} (Android)
