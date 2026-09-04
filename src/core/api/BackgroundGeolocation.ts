@@ -1995,6 +1995,14 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   AuthorizationStatus: typeof import('../../enums/AuthorizationStatus').AuthorizationStatus;
 
   /**
+   * Enum namespace naming a single permission to request via
+   * {@link requestPermission} — `Permission.Location` or `Permission.Motion`.
+   *
+   * @readonly
+   */
+  Permission: typeof import('../../enums/Permission').Permission;
+
+  /**
    * Enum namespace specifying the type of user activity
    * (AutomotiveNavigation, Fitness, OtherNavigation, etc). [iOS only]
    *

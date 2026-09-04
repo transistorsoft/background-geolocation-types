@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 5.3.2 &mdash; 2026-09-04
+* [Fixed] Declare the `Permission` enum static on the `BackgroundGeolocation` interface. `Permission` shipped in 5.3.0 as a named export, but the class-static access path — `BackgroundGeolocation.Permission.Location`, which the SDKs document and which mirrors the other 15 enum statics — was missing from the interface, so it failed to compile with `TS2339: Property 'Permission' does not exist on type 'BackgroundGeolocation'`. (WO-007)
+
 ## 5.3.1 &mdash; 2026-09-04
 * [Docs] `AuthorizationStatus.DeniedAlways` is reported by **both** platforms (WO-014): iOS motion denial is one-shot and immediately permanent — `requestPermission(Permission.Motion)` rejects with `DeniedAlways`, never plain `Denied`. Previously documented as Android-only, with iOS said to reject `Denied`. Cross-platform `status === AuthorizationStatus.DeniedAlways` is now the single route-to-Settings test.
 * [Docs] The iOS motion rejection can also carry `Restricted` (system-wide Fitness Tracking is off or the hardware is absent — deliberately not remapped; not recoverable from the app's own Settings page) or `NotDetermined` (no dialog could be shown, e.g. the app was backgrounded).
