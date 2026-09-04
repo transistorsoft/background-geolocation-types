@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 5.3.1 &mdash; 2026-09-04
+* [Docs] `AuthorizationStatus.DeniedAlways` is reported by **both** platforms (WO-014): iOS motion denial is one-shot and immediately permanent — `requestPermission(Permission.Motion)` rejects with `DeniedAlways`, never plain `Denied`. Previously documented as Android-only, with iOS said to reject `Denied`. Cross-platform `status === AuthorizationStatus.DeniedAlways` is now the single route-to-Settings test.
+* [Docs] The iOS motion rejection can also carry `Restricted` (system-wide Fitness Tracking is off or the hardware is absent — deliberately not remapped; not recoverable from the app's own Settings page) or `NotDetermined` (no dialog could be shown, e.g. the app was backgrounded).
+* [Docs] The no-argument `requestPermission()` skips the motion step when `ActivityConfig.disableMotionActivityUpdates` is `true` — and, on iOS, when `NSMotionUsageDescription` is absent from `Info.plist`.
+
 ## 5.3.0 &mdash; 2026-08-31
 * Add `Permission` enum (`Permission.Location` / `Permission.Motion`) and an optional parameter to `requestPermission(permission?)` — request location and motion separately, each independently awaitable, instead of the all-at-once dialog storm. The no-argument form is unchanged (backward compatible). (WO-007)
 * Add `AuthorizationStatus.DeniedAlways` (5) — the motion permission was permanently denied on Android (two user denials); only the device's app-settings screen can restore it. iOS reports plain `Denied`, where denial is always permanent. (WO-007)
