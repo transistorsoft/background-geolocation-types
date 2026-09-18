@@ -633,7 +633,7 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * });
    * ```
    */
-  reset(config:Config): Promise<State>;
+  reset(config?:Config): Promise<State>;
 
   /**
    * Enable location and geofence tracking.
