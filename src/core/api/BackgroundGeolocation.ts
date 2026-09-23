@@ -1296,13 +1296,15 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * - {@link AppConfig.schedule}
    * - {@link stopSchedule}
    *
+   * Resolves the {@link State} once the scheduler is active, like {@link start}.
+   *
    * @example
    * ```ts
    * const state = await BackgroundGeolocation.startSchedule();
-   * console.log("[startSchedule] success: ", state);
+   * console.log("[startSchedule] success: ", state.schedulerEnabled);
    * ```
    */
-  startSchedule(): Promise<void>;
+  startSchedule(): Promise<State>;
 
   /**
    * Halt scheduled tracking.
@@ -1316,6 +1318,8 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * **See also**
    * - {@link startSchedule}
    *
+   * Resolves the {@link State} once the scheduler is halted, like {@link stop}.
+   *
    * @example
    * ```ts
    * await BackgroundGeolocation.stopSchedule();
@@ -1324,14 +1328,13 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * @example Stop the scheduler and active tracking
    * ```ts
    * // Later when you want to stop the Scheduler (eg: user logout)
-   * await BackgroundGeolocation.stopSchedule();
-   * const state = await BackgroundGeolocation.getState();
+   * const state = await BackgroundGeolocation.stopSchedule();
    * if (state.enabled) {
    *   BackgroundGeolocation.stop();
    * }
    * ```
    */
-  stopSchedule(): Promise<void>;
+  stopSchedule(): Promise<State>;
 
   /// ------------------------------------------------------------------------------------------------
   /// Logger API

@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## Unreleased
+* [Fixed] `startSchedule()` and `stopSchedule()` declare `Promise<State>`, the value every SDK has always resolved — React Native, Capacitor and Flutter on both platforms, Cordova on iOS — and the one the `startSchedule` example three lines above the declaration already read. `Promise<void>` first appeared in 5.0.0 and matched no SDK. Nothing needs changing unless your code assigned the awaited value; the `stopSchedule` example now reads `state.enabled` from the resolution instead of a second `getState()`. (WO-036)
 * [Fixed] `reset()` declares its `Config` optional, matching the documented example and every SDK — React Native, Cordova, Capacitor and Flutter all default it. TypeScript apps calling `BackgroundGeolocation.reset()` failed to compile with *"Expected 1 arguments, but got 0"*.
 
 ## 5.3.2 &mdash; 2026-09-04
