@@ -1,9 +1,12 @@
 # CHANGELOG
 
-## Unreleased
+## 5.3.3 &mdash; 2026-09-23
 * [Fixed] `startSchedule()` and `stopSchedule()` declare `Promise<State>`, the value every SDK has always resolved — React Native, Capacitor and Flutter on both platforms, Cordova on iOS — and the one the `startSchedule` example three lines above the declaration already read. `Promise<void>` first appeared in 5.0.0 and matched no SDK. Nothing needs changing unless your code assigned the awaited value; the `stopSchedule` example now reads `state.enabled` from the resolution instead of a second `getState()`. (WO-036)
 * [Fixed] `reset()` declares its `Config` optional, matching the documented example and every SDK — React Native, Cordova, Capacitor and Flutter all default it. TypeScript apps calling `BackgroundGeolocation.reset()` failed to compile with *"Expected 1 arguments, but got 0"*.
 * [Fixed] `destroyLocations()` and `destroyLocation()` declare `Promise<boolean>` — they resolve `true`, as React Native and Flutter always have and as the four geofence mutators already declare. `Promise<void>` matched only Capacitor and Cordova, which resolved nothing; both now resolve `true` as well, so every mutator answers the same way on every SDK. Nothing needs changing in your code. (WO-028)
+* [Changed] `setOdometer()` and `resetOdometer()` declare `Promise<Location>` — the location the SDK records at the moment the odometer is set, which is what every SDK has always resolved and what the documented examples always named `location`; only the TypeScript line said `number`. While tracking is disabled no fix is acquired and the resolved `Location` is synthetic: the new odometer value, a timestamp and a `uuid`, with zeroed `coords` (documented on both methods). (WO-035)
+* [Deprecated] `resetOdometer()` — an alias for `setOdometer(0)` in every SDK that has it; the Dart API never had it. (WO-035)
+* [Deprecated] `setLogLevel()` — removed from the documentation. The log level is a configuration value like any other: `setConfig({logger: {logLevel}})` or `ready()`. The declaration stays for the one SDK that implements it. (WO-035)
 
 ## 5.3.2 &mdash; 2026-09-04
 * [Fixed] Declare the `Permission` enum static on the `BackgroundGeolocation` interface. `Permission` shipped in 5.3.0 as a named export, but the class-static access path — `BackgroundGeolocation.Permission.Location`, which the SDKs document and which mirrors the other 15 enum statics — was missing from the interface, so it failed to compile with `TS2339: Property 'Permission' does not exist on type 'BackgroundGeolocation'`. (WO-007)
