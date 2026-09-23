@@ -2,6 +2,7 @@
 
 ## Unreleased
 * [Fixed] `reset()` declares its `Config` optional, matching the documented example and every SDK — React Native, Cordova, Capacitor and Flutter all default it. TypeScript apps calling `BackgroundGeolocation.reset()` failed to compile with *"Expected 1 arguments, but got 0"*.
+* [Fixed] `destroyLocations()` and `destroyLocation()` declare `Promise<boolean>` — they resolve `true`, as React Native and Flutter always have and as the four geofence mutators already declare. `Promise<void>` matched only Capacitor and Cordova, which resolved nothing; both now resolve `true` as well, so every mutator answers the same way on every SDK. Nothing needs changing in your code. (WO-028)
 
 ## 5.3.2 &mdash; 2026-09-04
 * [Fixed] Declare the `Permission` enum static on the `BackgroundGeolocation` interface. `Permission` shipped in 5.3.0 as a named export, but the class-static access path — `BackgroundGeolocation.Permission.Location`, which the SDKs document and which mirrors the other 15 enum statics — was missing from the interface, so it failed to compile with `TS2339: Property 'Permission' does not exist on type 'BackgroundGeolocation'`. (WO-007)

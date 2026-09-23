@@ -1424,22 +1424,26 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   /**
    * Remove all records from the SDK's SQLite database.
    *
+   * Resolves `true` once the store is cleared, like the geofence mutators.
+   *
    * @example
    * ```ts
    * await BackgroundGeolocation.destroyLocations();
    * ```
    */
-  destroyLocations(): Promise<void>;
+  destroyLocations(): Promise<boolean>;
 
   /**
    * Remove a single location by {@link Location.uuid}.
+   *
+   * Resolves `true` once the record is removed.
    *
    * @example
    * ```ts
    * await BackgroundGeolocation.destroyLocation(location.uuid);
    * ```
    */
-  destroyLocation(uuid: string): Promise<void>;
+  destroyLocation(uuid: string): Promise<boolean>;
 
   /**
    * Manually insert a location record into the SDK's SQLite database.
