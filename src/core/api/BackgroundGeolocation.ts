@@ -890,19 +890,33 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
   stopWatchPosition?(watchId?:number): void;
 
   /**
+   * **Deprecated.** Use {@link setOdometer} with `0`: this method is an alias for it in every SDK
+   * that has it, and the Dart API does not have it at all.
+   *
    * Reset the odometer to `0`.
    *
    * Internally performs a {@link getCurrentPosition} to record the exact
    * location where the odometer was reset. Equivalent to
    * {@link setOdometer|`.setOdometer(0)`}.
    *
+   * Resolves the {@link Location} fetched while resetting, as {@link setOdometer} does.
+   *
+   * ## While tracking is disabled
+   *
+   * The SDK will not switch location-services on just to set the odometer. When
+   * {@link State.enabled} is `false` — or location-services are off, or location permission has
+   * not been granted — no fix is acquired and the resolved {@link Location} is **synthetic**: it
+   * carries the new odometer value, a timestamp and a `uuid`, but its `coords` are zeroes rather
+   * than a position. Check {@link State.enabled} first if you need the location to be real.
+   *
    * @example
    * ```ts
    * const location = await BackgroundGeolocation.resetOdometer();
    * console.log("[resetOdometer] reset at: ", location);
    * ```
+   * @deprecated Call {@link setOdometer} with `0` instead.
    */
-  resetOdometer(): Promise<number>;
+  resetOdometer(): Promise<Location>;
 
   /**
    * Set the odometer to an arbitrary value.
@@ -915,8 +929,19 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * const location = await BackgroundGeolocation.setOdometer(1234.56);
    * console.log("[setOdometer] set at: ", location);
    * ```
+   *
+   * Resolves the {@link Location} the SDK fetched while setting the value.
+   *
+   * ## While tracking is disabled
+   *
+   * The SDK will not switch location-services on just to set the odometer. When
+   * {@link State.enabled} is `false` — or location-services are off, or location permission has
+   * not been granted — no fix is acquired and the resolved {@link Location} is **synthetic**: it
+   * carries the new odometer value, a timestamp and a `uuid`, but its `coords` are zeroes rather
+   * than a position. Check {@link State.enabled} first if you need the location to be real.
+   *
    */
-  setOdometer(value: number): Promise<number>;
+  setOdometer(value: number): Promise<Location>;
 
   /**
    * Retrieve the current odometer reading in meters.
@@ -1314,6 +1339,17 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
 
   /**
    * Sets the {@link LoggerConfig.logLevel}.
+   *
+   * @deprecated The log level is a configuration value like any other — set it with
+   * {@link ready} or {@link setConfig}:
+   *
+   * @example
+   * ```typescript
+   * await BackgroundGeolocation.setConfig({logger: {logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE}});
+   * ```
+   *
+   * The log level is a configuration value, and this method duplicated it.
+   * @hidden
    */
   setLogLevel(level: LogLevel): Promise<void>;
 
