@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+* [Fixed] Add `Event.NotificationAction` (`'notificationaction'`). React Native 5.0.0 and later subscribe `onNotificationAction()` through this key, and without it the call threw *"BackgroundGeolocation#on must be provided a {String} event as 1st argument."* This affects every React Native 5.x release, and each depends on this package with a caret range, so updating this package fixes an installed app without a React Native upgrade: `npm update @transistorsoft/background-geolocation-types`.
+* [Fixed] `HeadlessEvent.name` includes `'locationerror'`, which Android delivers to a headless task. It also includes `'notificationaction'` through the key above. A `case` on either name in a strictly typed headless task failed to compile with *TS2678*.
+* [Deprecated] `Event.Notification` (`'notification'`) — no SDK has ever emitted it. Use `Event.NotificationAction`.
+
 ## 5.3.3 &mdash; 2026-09-23
 * [Fixed] `startSchedule()` and `stopSchedule()` declare `Promise<State>`, the value every SDK has always resolved — React Native, Capacitor and Flutter on both platforms, Cordova on iOS — and the one the `startSchedule` example three lines above the declaration already read. `Promise<void>` first appeared in 5.0.0 and matched no SDK. Nothing needs changing unless your code assigned the awaited value; the `stopSchedule` example now reads `state.enabled` from the resolution instead of a second `getState()`. (WO-036)
 * [Fixed] `reset()` declares its `Config` optional, matching the documented example and every SDK — React Native, Cordova, Capacitor and Flutter all default it. TypeScript apps calling `BackgroundGeolocation.reset()` failed to compile with *"Expected 1 arguments, but got 0"*.
