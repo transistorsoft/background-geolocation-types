@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 5.3.4 &mdash; 2026-09-24
 * [Fixed] Add `Event.NotificationAction` (`'notificationaction'`). React Native 5.0.0 and later subscribe `onNotificationAction()` through this key, and without it the call threw *"BackgroundGeolocation#on must be provided a {String} event as 1st argument."* This affects every React Native 5.x release, and each depends on this package with a caret range, so updating this package fixes an installed app without a React Native upgrade: `npm update @transistorsoft/background-geolocation-types`.
 * [Fixed] `HeadlessEvent.name` includes `'locationerror'`, which Android delivers to a headless task. It also includes `'notificationaction'` through the key above. A `case` on either name in a strictly typed headless task failed to compile with *TS2678*.
 * [Deprecated] `Event.Notification` (`'notification'`) — no SDK has ever emitted it. Use `Event.NotificationAction`.
