@@ -53,9 +53,13 @@ export const Event = {
    */
   Schedule: 'schedule',
   /**
-   * Emitted when a user interacts with a plugin-generated notification.
+   * @deprecated Never emitted by any SDK. Use {@link Event.NotificationAction}.
    */
   Notification: 'notification',
+  /**
+   * Emitted when the user taps an action button on a custom notification layout. [Android only]
+   */
+  NotificationAction: 'notificationaction',
   /**
    * Emitted when the plugin's authorization state changes.
    */

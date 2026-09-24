@@ -33,8 +33,13 @@ export interface HeadlessEvent {
   /**
    * The SDK event that triggered this headless task invocation (e.g.
    * `location`, `http`, `geofence`, `heartbeat`, `terminate`).
+   *
+   * Also `locationerror`, which has no listener of its own: in the foreground a
+   * location error reaches the failure callback of `onLocation`. On React Native
+   * its `params` is the {@link LocationError} code. For `notificationaction`,
+   * `params` is the `buttonId` of the tapped action.
    */
-  name: Event;
+  name: Event | 'locationerror';
   /**
    * Event payload corresponding to `name`. Cast this to the appropriate event
    * type based on the value of `name` (e.g. {@link Location} for `location`,
