@@ -197,9 +197,9 @@ export interface NotificationConfig {
    * ![](https://dl.dropbox.com/s/whcb6q1gxxdk9t1/android-foreground-notification-transistor.png?dl=1)
    *
    * Custom layouts support `<TextView />`, `<ImageView />`, and `<Button />` elements.
-   * All `android:id` values must be prefixed with `notification`
-   * (e.g. `notificationText`, `notificationTitle`). The one exception is
-   * `applicationName`, which the SDK populates with the app name automatically.
+   * The SDK fills the special elements below by their fixed `android:id`. Your own
+   * elements may use any `android:id`: you reference it from {@link strings} or
+   * {@link actions}.
    *
    * ## Layout special elements
    *
@@ -335,6 +335,16 @@ export interface NotificationConfig {
    *         android:gravity="right"
    *         android:orientation="horizontal">
    *
+   *         <TextView
+   *             android:id="@+id/myCustomElement"
+   *             style="@style/TextAppearance.Compat.Notification.Line2"
+   *             android:layout_width="0dp"
+   *             android:layout_height="wrap_content"
+   *             android:layout_gravity="center_vertical"
+   *             android:layout_weight="1"
+   *             android:text="myCustomElement"
+   *             android:textSize="12sp" />
+   *
    *         <Button
    *             android:id="@+id/notificationButtonFoo"
    *             style="@style/Widget.AppCompat.Button.Small"
@@ -367,7 +377,7 @@ export interface NotificationConfig {
    *         "notificationButtonBar"
    *       ],
    *       strings: {
-   *         myCustomTextBox1: "custom TextBox element"
+   *         myCustomElement: "My Custom Element Text"
    *       }
    *     }
    *   }
