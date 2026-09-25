@@ -1,6 +1,6 @@
 import { ProviderChangeEvent} from '../events/ProviderChangeEvent';
 import { MotionActivityType } from '../../enums/MotionActivityType';
-import { GeofenceEvent } from '../events/GeofenceEvent';
+import type { GeofenceAction } from '../../enums/GeofenceAction';
 
 /**
  * Geographic coordinates attached to a {@link Location}.
@@ -139,6 +139,38 @@ export interface MotionActivity {
 }
 
 /**
+ * The geofence transition that caused a {@link Location} to be recorded,
+ * delivered as {@link Location.geofence}.
+ *
+ * A summary of the transition. Unlike {@link GeofenceEvent}, it carries no
+ * `location` and no {@link Geofence} record.
+ *
+ * @category Data
+ */
+export interface GeofenceTrigger { // (WO-049) the shape both cores attach to a geofence-type location
+  /**
+   * The {@link Geofence.identifier} of the geofence that triggered this location.
+   */
+  identifier: string;
+
+  /**
+   * Transition type that fired: `ENTER`, `EXIT`, or `DWELL`.
+   */
+  action: GeofenceAction;
+
+  /**
+   * ISO-8601 UTC timestamp of the geofence transition.
+   */
+  timestamp: string;
+
+  /**
+   * Optional metadata originally configured on the {@link Geofence}. Present
+   * only when the geofence was created with an `extras` map.
+   */
+  extras?: Record<string, any>;
+}
+
+/**
  * A location record captured by the device's native location API and
  * delivered by the SDK.
  *
@@ -226,7 +258,8 @@ export interface MotionActivity {
  *         },
  *         "geofence": {  // <-- Present only if a geofence was triggered at this location
  *             "identifier": [String],
- *             "action": [String ENTER|EXIT]
+ *             "action": [String ENTER|EXIT],
+ *             "timestamp": [ISO-8601 UTC]
  *         },
  *         "battery": {
  *             "level": [Double],
@@ -408,7 +441,7 @@ export interface Location {
    *
    * Present only when {@link event} is `"geofence"`.
    */
-  geofence?: GeofenceEvent;
+  geofence?: GeofenceTrigger; // (WO-049) not a GeofenceEvent: the cores send no location inside it
 
   /**
    * Motion activity detected by the device at the time this location was

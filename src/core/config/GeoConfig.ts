@@ -29,7 +29,7 @@ import { ActivityType } from '../../enums/ActivityType';
  * |----------|------------|
  * | **Accuracy** | {@link desiredAccuracy}, {@link distanceFilter}, {@link locationUpdateInterval}, {@link fastestLocationUpdateInterval} |
  * | **Elasticity** | {@link disableElasticity}, {@link elasticityMultiplier} |
- * | **Motion detection** | {@link stationaryRadius}, {@link stopTimeout}, {@link stopAfterElapsedMinutes}, {@link disableStopDetection} |
+ * | **Motion detection** | {@link stationaryRadius}, {@link stopTimeout}, {@link stopAfterElapsedMinutes}, {@link ActivityConfig.disableStopDetection} |
  * | **Permissions** | {@link locationAuthorizationRequest}, {@link locationAuthorizationAlert}, {@link disableLocationAuthorizationAlert} |
  * | **Geofencing** | {@link geofenceProximityRadius}, {@link geofenceModeHighAccuracy}, {@link geofenceInitialTriggerEntry} |
  * | **Filtering** | {@link filter} |
@@ -94,9 +94,9 @@ import { ActivityType } from '../../enums/ActivityType';
  * - {@link stopTimeout} — minutes to wait after the activity recognition system reports
  *   `STILL` before transitioning to the stationary state.
  * - {@link stopAfterElapsedMinutes} — automatically stop tracking after N minutes.
- * - {@link stopOnStationary} — automatically call {@link BackgroundGeolocation.stop}
+ * - {@link ActivityConfig.stopOnStationary} — automatically call {@link BackgroundGeolocation.stop}
  *   when the device enters the stationary state.
- * - {@link disableStopDetection} — disable the motion-activity–based stop-detection
+ * - {@link ActivityConfig.disableStopDetection} — disable the motion-activity–based stop-detection
  *   system entirely.
  * - {@link pausesLocationUpdatesAutomatically} — [iOS only] whether iOS may
  *   automatically suspend location updates.
@@ -345,33 +345,7 @@ export interface GeoConfig {
    */
   stopTimeout?: number;
 
-  /**
-   * Automatically calls {@link BackgroundGeolocation.stop} when the {@link stopTimeout}
-   * elapses.
-   *
-   * When `true`, the SDK stops itself the next time {@link BackgroundGeolocation.onMotionChange}
-   * fires into the *stationary* state after the {@link stopTimeout} timer elapses.
-   *
-   * ## Warning
-   * `stopOnStationary` fires only when the SDK transitions to the stationary state due
-   * to {@link stopTimeout} expiry. It does **not** fire when you manually call
-   * {@link BackgroundGeolocation.changePace} with `false`.
-   *
-   * @example
-   * ```ts
-   * BackgroundGeolocation.ready({
-   *   geolocation: {
-   *     stopOnStationary: true,
-   *   },
-   *   app: {
-   *     isMoving: true,
-   *   }
-   * }, (state) => {
-   *   BackgroundGeolocation.start();
-   * });
-   * ```
-   */
-  stopOnStationary?: boolean;
+  // (WO-049) stopOnStationary is an ActivityConfig key; neither core reads it under geolocation.
 
   /**
    * Prevents the iOS location API from automatically pausing location updates. [iOS only]
@@ -877,46 +851,7 @@ export interface GeoConfig {
    */
   geofenceModeHighAccuracy?:boolean;
 
-  /**
-   * Disables the motion-activity–based stop-detection system.
-   *
-   * When `true`, the SDK ignores platform motion-activity signals when determining
-   * whether the device is stationary. This affects how and when location services are
-   * automatically turned off on both platforms.
-   *
-   * ## iOS
-   * Disables the accelerometer-based stop-detection system. iOS location services then
-   * turn off automatically after **exactly 15 minutes** of no motion — you lose control
-   * over {@link stopTimeout}.
-   *
-   * To prevent iOS from ever automatically disabling location services, also set
-   *
-   * @example
-   * ```ts
-   * BackgroundGeolocation.ready({
-   *   geolocation: {
-   *     disableStopDetection: true,
-   *     pausesLocationUpdatesAutomatically: false
-   *   }
-   * });
-   * ```
-   *
-   * ## Warning
-   * With `disableStopDetection: true` and `pausesLocationUpdatesAutomatically: false`,
-   * iOS location services **never** turn off. This can severely drain the battery.
-   * Only use this configuration if you fully control tracking manually (for example, a
-   * workout app toggling tracking via {@link BackgroundGeolocation.changePace}).
-   *
-   * iOS stop-detection timing:
-   *
-   * ![](https://dl.dropbox.com/scl/fi/fhkz97f9jl4omnv7y30by/ios-stop-detection-timing.png?rlkey=cvs9h2nnngmmz9bwh1vg3796g&dl=1)
-   *
-   * ## Android
-   * When `true`, Android location services never turn off automatically. You must
-   * disable tracking manually by calling {@link BackgroundGeolocation.changePace} with
-   * `false`, or {@link BackgroundGeolocation.stop}.
-   */
-  disableStopDetection?: boolean;
+  // (WO-049) disableStopDetection is an ActivityConfig key; neither core reads it under geolocation.
 
   /**
    * Controls whether a geofence fires an entry event immediately if the device is already
