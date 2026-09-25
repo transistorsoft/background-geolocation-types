@@ -11,7 +11,7 @@ import type { TrackingMode } from '../../enums/TrackingMode';
  *
  * @category Primary API
  */
-export interface State extends Config {
+export interface State extends Omit<Config, 'reset' | 'transistorAuthorizationToken'> { // (WO-049) input-only keys; neither core echoes them into State
   /**
    * `true` when the SDK is actively tracking — i.e. {@link BackgroundGeolocation.start}
    * or {@link BackgroundGeolocation.startGeofences} has been called and not yet stopped.
