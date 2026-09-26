@@ -8,11 +8,16 @@ carries **provenance**: a signed record of the repository, commit and workflow t
 ## A release
 
 ```bash
-scripts/release.sh prepare 5.3.6     # branch chore/release-5.3.6: version, dated CHANGELOG, preflight
+pnpm release prepare 5.3.6     # branch chore/release-5.3.6: version, dated CHANGELOG, preflight
 # merge chore/release-5.3.6 into master
-scripts/release.sh tag 5.3.6         # on master: tag the merge (lightweight, like every earlier tag)
-git push origin master 5.3.6         # the tag starts the workflow
+pnpm release tag 5.3.6         # on master: tag the merge (lightweight, like every earlier tag)
+git push origin master 5.3.6   # the tag starts the workflow
 ```
+
+`pnpm release …` runs `scripts/release.sh …`, and `pnpm preflight [--release]` runs
+`scripts/preflight.sh`; with npm, put `--` before the arguments (`npm run release -- tag 5.3.6`).
+Never add a `version`, `preversion` or `postversion` script: `release prepare` runs
+`npm version`, which would run them.
 
 The workflow checks (the tag equals `package.json`'s version; `scripts/preflight.sh --release`:
 a clean build, the packed tarball's contents, a strict consumer compile under node16 and
@@ -20,7 +25,7 @@ bundler resolution, the enums at runtime, a CHANGELOG heading for the version), 
 publishes. A prerelease such as `5.4.0-beta.1` is published under the `next` dist-tag, so
 `latest` only moves to a release.
 
-`scripts/preflight.sh` (without `--release`) is safe to run at any time; it publishes nothing.
+`pnpm preflight` (without `--release`) is safe to run at any time; it publishes nothing.
 
 ## A release that failed
 
