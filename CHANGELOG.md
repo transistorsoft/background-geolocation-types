@@ -2,6 +2,7 @@
 
 ## Unreleased
 * [Docs] Three `GeoConfig` defaults now match what the SDK ships. `geofenceModeHighAccuracy` defaults to `false`, not `true`. The `filter` table gives `odometerAccuracyThreshold` a default of `20`, not `100`; it also calls `trackingAccuracyThreshold` a maximum, not a minimum, and says time fields are in seconds, not milliseconds. `stopAfterElapsedMinutes` now states the value each OS reports, `-1` on iOS and `0` on Android; any value of `0` or less disables it. (WO-058)
+* [Changed] Releases are built and published by GitHub Actions with npm provenance, so each version records the commit and workflow that built it (verify with `npm audit signatures`). The package's `repository` field now points at this repository.
 
 ## 5.3.5 &mdash; 2026-09-25
 * [Fixed] Remove `GeoConfig.stopOnStationary` and `GeoConfig.disableStopDetection`. No SDK has ever read either key under `geolocation` — iOS logs *"received undefined key"* and Android skips it — so `ready({geolocation: {stopOnStationary: true}})` did nothing. Both settings live on `ActivityConfig`: pass `activity: {stopOnStationary: true}` and `activity: {disableStopDetection: true}`. An object literal that still passes them under `geolocation` now fails to compile (*TS2353*), which exposes a setting that never took effect. A `geolocation` block built in a variable or with a spread may still compile, so search your code for either key under `geolocation`. (WO-049)
