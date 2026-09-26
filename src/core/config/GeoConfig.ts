@@ -397,7 +397,8 @@ export interface GeoConfig {
   /**
    * Automatically stops tracking after the specified number of minutes.
    *
-   * Disabled by default. When set, the SDK automatically calls
+   * Defaults to `-1` on iOS and `0` on Android. Any value of `0` or less disables
+   * it. When set to a positive value, the SDK automatically calls
    * {@link BackgroundGeolocation.stop} after this many minutes have elapsed since
    * {@link BackgroundGeolocation.start} was called.
    *
@@ -814,7 +815,7 @@ export interface GeoConfig {
   /**
    * Enables high-accuracy mode for geofence-only tracking. [Android only]
    *
-   * Defaults to `true`. Runs {@link BackgroundGeolocation.startGeofences} with a
+   * Defaults to `false`. Runs {@link BackgroundGeolocation.startGeofences} with a
    * foreground service (and its corresponding persistent {@link AppConfig.notification}),
    * making geofence transition events significantly more responsive.
    *
@@ -891,15 +892,15 @@ export interface GeoConfig {
    * | **{@link LocationFilter.rollingWindow}** | Number of samples for rolling burst averaging. Larger values increase smoothness but reduce responsiveness. |
    * | **{@link LocationFilter.burstWindow}** | Duration of each averaging burst (seconds). Default: `10`. |
    * | **{@link LocationFilter.maxBurstDistance}** | Maximum distance (meters) for samples to be included in the same burst window. Default: `300`. |
-   * | **{@link LocationFilter.trackingAccuracyThreshold}** | Minimum GPS horizontal accuracy (meters) required to accept a location. Default: `100`. |
+   * | **{@link LocationFilter.trackingAccuracyThreshold}** | Maximum GPS horizontal accuracy (meters) required to accept a location. Default: `100`. |
    * | **{@link LocationFilter.maxImpliedSpeed}** | Maximum implied speed (m/s) before rejecting a sample as unrealistic. Default: `60` (~216 km/h). |
    * | **{@link LocationFilter.filterDebug}** | Enables verbose logging of filter decisions (`ACCEPTED`, `REJECTED`, etc). |
    * | **{@link LocationFilter.odometerUseKalmanFilter}** | Applies Kalman smoothing to odometer calculations. |
-   * | **{@link LocationFilter.odometerAccuracyThreshold}** | Maximum accuracy (meters) allowed for a sample to affect the odometer. Default: `100`. |
+   * | **{@link LocationFilter.odometerAccuracyThreshold}** | Maximum accuracy (meters) allowed for a sample to affect the odometer. Default: `20`. |
    *
    * ## Note
    * - Distances are in **meters**.
-   * - Time fields are in **milliseconds** unless otherwise specified.
+   * - Time fields are in **seconds** unless otherwise specified.
    * - Filtering affects **recorded** locations only — it does not influence real-time motion detection.
    *
    * @example
