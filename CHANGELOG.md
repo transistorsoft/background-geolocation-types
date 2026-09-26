@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 5.3.6 &mdash; 2026-09-26
 * [Docs] Three `GeoConfig` defaults now match what the SDK ships. `geofenceModeHighAccuracy` defaults to `false`, not `true`. The `filter` table gives `odometerAccuracyThreshold` a default of `20`, not `100`; it also calls `trackingAccuracyThreshold` a maximum, not a minimum, and says time fields are in seconds, not milliseconds. `stopAfterElapsedMinutes` now states the value each OS reports, `-1` on iOS and `0` on Android; any value of `0` or less disables it. (WO-058)
 * [Changed] Releases are built and published by GitHub Actions with npm provenance, so each version records the commit and workflow that built it (verify with `npm audit signatures`). The package's `repository` field now points at this repository.
 
