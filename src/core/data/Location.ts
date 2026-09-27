@@ -214,7 +214,7 @@ export interface GeofenceTrigger { // (WO-049) the shape both cores attach to a 
  *    "event":         [String],   // <-- motionchange|geofence|heartbeat
  *    "is_moving":     [Boolean],  // <-- The motion-state when location was recorded.
  *    "uuid":          [String],   // <-- Universally unique identifier
- *    "age":           [Integer],  // <-- Age of the location in milliseconds
+ *    "age":           [Double],   // <-- Age of the location in seconds
  *    "coords": {
  *        "latitude":  [Double],
  *        "longitude": [Double],
@@ -270,7 +270,7 @@ export interface GeofenceTrigger { // (WO-049) the shape both cores attach to a 
  *             "is_charging": [Boolean]
  *         },
  *         "timestamp": [ISO-8601 UTC], // eg:  "2015-05-05T04:31:54.123Z"
- *         "age":       [Integer],      // <-- Age of the location in milliseconds
+ *         "age":       [Double],       // <-- Age of the location in seconds
  *         "uuid":      [String],       // <-- Universally unique identifier
  *         "event"      [String],       // <-- motionchange|geofence|heartbeat
  *         "is_moving": [Boolean],      // <-- The motion-state when recorded.
@@ -299,11 +299,15 @@ export interface Location {
   recorded_at: string | number;
 
   /**
-   * Age of the location in milliseconds, measured from the device system
-   * clock at the time the location was received.
+   * Age of the location in seconds, with millisecond precision (e.g. `1.234`): how long
+   * before the SDK received the location the native API had fixed it.
    *
-   * `location.timestamp` + `location.age` = device system time when the
-   * SDK received the location from the native API.
+   * {@link recorded_at} is the time the SDK received the location, so `recorded_at` is
+   * roughly `timestamp` plus `age` seconds.
+   *
+   * ## ⚠️ Warning
+   * Before version 5, `age` was an integer number of milliseconds. If your code compares it
+   * against a millisecond value, divide that value by 1000.
    */
   age: number;
 

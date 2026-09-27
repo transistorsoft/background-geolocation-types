@@ -41,7 +41,8 @@ export interface CurrentPositionRequest {
   desiredAccuracy?: number;
 
   /**
-   * Maximum time in **seconds** to wait for a location fix. Default `30`.
+   * Maximum time in **seconds** to wait for a location fix. Defaults to
+   * {@link GeoConfig.locationTimeout} (`60`).
    *
    * If the timeout expires before a satisfactory location is found, the
    * Promise rejects with a {@link LocationError}.
