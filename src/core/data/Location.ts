@@ -9,10 +9,14 @@ import type { GeofenceAction } from '../../enums/GeofenceAction';
  */
 export interface Coords {
   /**
-   * Floor within a building, when indoor-positioning hardware (e.g. Bluetooth
-   * beacons) is available. [iOS only]
+   * The floor within a building, when the device is in a venue with indoor
+   * positioning. [iOS only]
+   *
+   * iOS sends `null` when it reports no floor, which is almost always. Android
+   * never sends it. Test it with `floor != null`: a `floor !== undefined` check
+   * lets iOS's `null` through, and `if (floor)` skips floor `0`.
    */
-  floor?: number;
+  floor?: number | null;
 
   /**
    * Latitude in decimal degrees.
