@@ -2,6 +2,7 @@
 
 ## Unreleased
 * [Fixed] `Coords.floor` is typed `number | null`. iOS has always sent `null` when it reports no floor, which is almost always, and Android never sends the key. Code that tested `floor !== undefined` let that `null` through and read it as floor 0; test `floor != null` instead. Under `strictNullChecks`, assigning `floor` to a `number | undefined` now fails to compile (*TS2322*), which exposes that case. (WO-067)
+* [Docs] `TransistorAuthorizationService`: `findOrCreate(orgName, username, url?)` and `destroy(url?)` name their default, `https://tracker.transistorsoft.com`, with its scheme, and the examples use https. They passed `http://`, which Android 9+ and iOS refuse unless the app allows cleartext traffic or arbitrary loads. (WO-063)
 
 ## 5.3.6 &mdash; 2026-09-26
 * [Docs] Three `GeoConfig` defaults now match what the SDK ships. `geofenceModeHighAccuracy` defaults to `false`, not `true`. The `filter` table gives `odometerAccuracyThreshold` a default of `20`, not `100`; it also calls `trackingAccuracyThreshold` a maximum, not a minimum, and says time fields are in seconds, not milliseconds. `stopAfterElapsedMinutes` now states the value each OS reports, `-1` on iOS and `0` on Android; any value of `0` or less disables it. (WO-058)
