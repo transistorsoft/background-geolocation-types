@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Unreleased
+* [Fixed] Declare `GeoConfig.locationTimeout`, the time in seconds `getCurrentPosition()` waits for a location when the call passes no `timeout` of its own (default `60`). Every SDK has always read it, but `ready({geolocation: {locationTimeout: 30}})` failed to compile (*TS2353*). `CurrentPositionRequest.timeout` also said its default was `30` seconds; it is `locationTimeout`, `60` unless you change it. (WO-072)
+
 ## 5.3.7 &mdash; 2026-09-27
 * [Fixed] `Coords.floor` is typed `number | null`. iOS has always sent `null` when it reports no floor, which is almost always, and Android never sends the key. Code that tested `floor !== undefined` let that `null` through and read it as floor 0; test `floor != null` instead. Under `strictNullChecks`, assigning `floor` to a `number | undefined` now fails to compile (*TS2322*), which exposes that case. (WO-067)
 * [Docs] `TransistorAuthorizationService`: `findOrCreate(orgName, username, url?)` and `destroy(url?)` name their default, `https://tracker.transistorsoft.com`, with its scheme, and the examples use https. They passed `http://`, which Android 9+ and iOS refuse unless the app allows cleartext traffic or arbitrary loads. (WO-063)

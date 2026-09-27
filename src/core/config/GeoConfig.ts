@@ -27,7 +27,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * | Category | Properties |
  * |----------|------------|
- * | **Accuracy** | {@link desiredAccuracy}, {@link distanceFilter}, {@link locationUpdateInterval}, {@link fastestLocationUpdateInterval} |
+ * | **Accuracy** | {@link desiredAccuracy}, {@link distanceFilter}, {@link locationUpdateInterval}, {@link fastestLocationUpdateInterval}, {@link locationTimeout} |
  * | **Elasticity** | {@link disableElasticity}, {@link elasticityMultiplier} |
  * | **Motion detection** | {@link stationaryRadius}, {@link stopTimeout}, {@link stopAfterElapsedMinutes}, {@link ActivityConfig.disableStopDetection} |
  * | **Permissions** | {@link locationAuthorizationRequest}, {@link locationAuthorizationAlert}, {@link disableLocationAuthorizationAlert} |
@@ -755,6 +755,30 @@ export interface GeoConfig {
    * - [Android LocationRequest.setFastestInterval](https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest.html#setFastestInterval(long))
    */
   fastestLocationUpdateInterval?: number;
+
+  /**
+   * Seconds {@link BackgroundGeolocation.getCurrentPosition} waits for a location when the call
+   * does not pass its own {@link CurrentPositionRequest.timeout}.
+   *
+   * Defaults to `60` seconds.
+   *
+   * When the time runs out, the request resolves with the best location it has received. It
+   * rejects with {@link LocationError.Timeout} (`408`) only if no location arrived at all.
+   *
+   * ## Note
+   * In the Kotlin and Swift APIs, `getCurrentPosition` always passes its own `timeout`, so this
+   * value does not apply to it there.
+   *
+   * @example
+   * ```ts
+   * BackgroundGeolocation.ready({
+   *   geolocation: {
+   *     locationTimeout: 30 // getCurrentPosition() waits at most 30 s by default
+   *   }
+   * });
+   * ```
+   */
+  locationTimeout?: number;
 
   /**
    * Sets the maximum wait time in milliseconds before batched location updates are
