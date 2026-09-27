@@ -37,7 +37,7 @@ export interface TransistorAuthorizationToken {
  * Client for the Transistor Software demo tracking server.
  *
  * Transistor Software hosts a public demo server at
- * [tracker.transistorsoft.com](http://tracker.transistorsoft.com) that
+ * [tracker.transistorsoft.com](https://tracker.transistorsoft.com) that
  * consumes location data from devices running the Background Geolocation SDK.
  * You can also run a local instance — see
  * [background-geolocation-console](https://github.com/transistorsoft/background-geolocation-console).
@@ -51,11 +51,11 @@ export interface TransistorAuthorizationToken {
  *
  * To view tracking results in a browser, visit:
  *
- * `http://tracker.transistorsoft.com/<your-organization-name>`
+ * `https://tracker.transistorsoft.com/<your-organization-name>`
  *
  * @example
  * ```ts
- * const url = "http://tracker.transistorsoft.com";
+ * const url = "https://tracker.transistorsoft.com";
  * const orgname = "my-company-name";
  * const username = "my-username";
  *
@@ -81,7 +81,7 @@ export interface TransistorAuthorizationService {
    *
    * @param orgName - Organization or company identifier.
    * @param username - Username or device label shown on the tracker map.
-   * @param url - Optional tracker base URL. Defaults to `tracker.transistorsoft.com`.
+   * @param url - Optional tracker base URL. Defaults to `https://tracker.transistorsoft.com`.
    *
    * @returns A Promise resolving with a {@link TransistorAuthorizationToken}.
    *
@@ -90,7 +90,7 @@ export interface TransistorAuthorizationService {
    * const token = await BackgroundGeolocation.findOrCreateTransistorAuthorizationToken(
    *   "my-company-name",
    *   "my-username",
-   *   "http://tracker.transistorsoft.com"
+   *   "https://tracker.transistorsoft.com"
    * );
    *
    * BackgroundGeolocation.ready({
@@ -107,7 +107,7 @@ export interface TransistorAuthorizationService {
   /**
    * Remove the cached token associated with the given tracker URL.
    *
-   * @param url - Tracker base URL. Defaults to `tracker.transistorsoft.com`.
+   * @param url - Tracker base URL. Defaults to `https://tracker.transistorsoft.com`.
    */
   destroy(url?: string): Promise<void>;
 
