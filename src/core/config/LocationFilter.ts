@@ -249,6 +249,8 @@ export interface LocationFilter {
    *
    * Locations with an accuracy value greater (worse) than this threshold are
    * discarded and not used in path or odometer calculations.
+   *
+   * `0` means no accuracy limit: no location is discarded for its accuracy.
    */
   trackingAccuracyThreshold?: number;
 
@@ -294,6 +296,8 @@ export interface LocationFilter {
    *
    * Any location whose accuracy exceeds this threshold is ignored for odometer
    * updates.
+   *
+   * `0` means no accuracy limit: no location is ignored for its accuracy.
    */
   odometerAccuracyThreshold?: number;
 

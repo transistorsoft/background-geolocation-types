@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Unreleased
+* [Docs] `LocationFilter.trackingAccuracyThreshold` and `odometerAccuracyThreshold` say what `0` means: no accuracy limit, so no location is discarded or ignored for its accuracy. The valid range has always included `0` without saying so. (WO-110)
+
 ## 5.3.8 &mdash; 2026-09-27
 * [Fixed] Declare `GeoConfig.locationTimeout`, the time in seconds `getCurrentPosition()` waits for a location when the call passes no `timeout` of its own (default `60`). Every SDK has always read it, but `ready({geolocation: {locationTimeout: 30}})` failed to compile (*TS2353*). `CurrentPositionRequest.timeout` also said its default was `30` seconds; it is `locationTimeout`, `60` unless you change it. (WO-072)
 * [Docs] `Location.age` is in seconds, with millisecond precision (e.g. `1.234`), not milliseconds as documented. Every SDK has reported seconds since version 5; before that it was an integer number of milliseconds. Code that compares `age` against a millisecond value, carried over from version 4, should divide that value by 1000. (WO-065)
