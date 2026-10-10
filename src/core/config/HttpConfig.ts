@@ -129,7 +129,7 @@ import { HttpMethod } from '../../enums/HttpMethod';
  * | `"addGeofence"` | `{Geofence}` | {@link BackgroundGeolocation.addGeofence} |
  * | `"addGeofences"` | `[{Geofence}, ...]` | {@link BackgroundGeolocation.addGeofences} |
  * | `"removeGeofence"` | `identifier: string` | {@link BackgroundGeolocation.removeGeofence} |
- * | `"removeGeofences"` | list or none | Remove some or all geofences. |
+ * | `"removeGeofences"` | list or none | With no argument, removes every geofence. A list removes the geofences it names; an empty list removes none. |
  * | `"uploadLog"` | `url: string` | Upload the plugin log. |
  * | `"destroyLog"` | — | Delete the plugin log. |
  *

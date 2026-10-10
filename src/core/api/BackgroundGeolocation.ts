@@ -1226,6 +1226,9 @@ export interface BackgroundGeolocationAPI extends BackgroundGeolocationEvents {
    * Remove all monitored {@link Geofence} records, or a specific subset by
    * identifier.
    *
+   * With no argument, removes every geofence. With a list of identifiers,
+   * removes only the geofences it names. An empty list removes none.
+   *
    * **See also**
    * - 📘 {@link Geofence | Geofencing Guide}
    *
