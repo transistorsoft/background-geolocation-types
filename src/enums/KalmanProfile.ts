@@ -1,36 +1,25 @@
 /**
- * Specifies the preset tuning profile for the Kalman filter used in location
- * denoising.
+ * Selects a preset tuning profile for the Kalman filter.
  *
- * Each profile adjusts the Kalman filter’s process and measurement noise
- * parameters, trading off between responsiveness and smoothness:
+ * **Reserved:** in the current SDK the three profiles apply the same tuning on
+ * both iOS and Android, so changing this value has no effect. The value is
+ * accepted and stored.
  *
- * | Profile              | Behavior                                                            |
- * |----------------------|---------------------------------------------------------------------|
- * | `defaultProfile`     | **Balanced** — General-purpose; suitable for most movement types.   |
- * | `aggressive`         | **Aggressive** — Fast response; minimal smoothing.                   |
- * | `conservative`       | **Conservative** — Maximum smoothing; slowest response to changes.  |
- *
- * - If no profile is provided, `defaultProfile` is applied.
- * - Use `aggressive` for fast-changing activities requiring rapid updates.
- * - Use `conservative` when stability and track smoothness are more important
- *   than immediate responsiveness.
- *
- * This maps directly to native Kalman tuning implementations on both Android and iOS.
+ * If no profile is provided, `defaultProfile` is applied.
  *
  * @category Config
  */
 export const KalmanProfile = {
   /**
-   * **Balanced** — General-purpose; suitable for most movement types.
+   * The SDK's Kalman tuning.
    */
   Default: 0,
   /**
-   * **Aggressive** — Fast response; minimal smoothing.
+   * Reserved. Currently applies the same tuning as `Default`.
    */
   Aggressive: 1,  
   /**
-   * **Conservative** — Maximum smoothing; slowest response to changes.
+   * Reserved. Currently applies the same tuning as `Default`.
    */
   Conservative: 2
 } as const;

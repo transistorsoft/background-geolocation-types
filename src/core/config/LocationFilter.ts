@@ -197,21 +197,12 @@ export interface LocationFilter {
   kalmanDebug?: boolean;
 
   /**
-   * Selects the preset tuning profile for the Kalman filter. Defaults to
+   * Selects a preset tuning profile for the Kalman filter. Defaults to
    * `KalmanProfile.Default`.
    *
-   * Each profile adjusts the Kalman filter's process and measurement noise
-   * parameters, trading off between responsiveness and smoothness:
-   *
-   * | Profile | Behaviour |
-   * |---------|-----------|
-   * | `defaultProfile` | **Balanced** — General-purpose; suitable for most movement types. |
-   * | `aggressive` | **Aggressive** — Fast response; minimal smoothing. |
-   * | `conservative` | **Conservative** — Maximum smoothing; slowest response to changes. |
-   *
-   * Use `aggressive` for fast-changing activities requiring rapid updates. Use
-   * `conservative` when stability and track smoothness are more important than
-   * immediate responsiveness.
+   * **Reserved:** in the current SDK the three profiles apply the same tuning on
+   * both iOS and Android, so changing this value has no effect. The value is
+   * accepted and stored.
    */
   kalmanProfile?: KalmanProfile;
 
