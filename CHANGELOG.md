@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## Unreleased
+* [Docs] `removeGeofences` says what each form removes: with no argument, every geofence; with a list of identifiers, the geofences it names; with an empty list, none. An empty list used to remove every geofence in every SDK; it removes none from the releases that require `tslocationmanager` 4.8.0 on Android and `TSLocationManager` 4.9.0 on iOS. The `removeGeofences` row of the response-RPC table in `HttpConfig` says the same of `["removeGeofences"]` and `["removeGeofences", []]`. (WO-055)
 * [Docs] `LocationFilter.trackingAccuracyThreshold` and `odometerAccuracyThreshold` say what `0` means: no accuracy limit, so no location is discarded or ignored for its accuracy. The valid range has always included `0` without saying so. (WO-110)
 
 ## 5.3.8 &mdash; 2026-09-27
