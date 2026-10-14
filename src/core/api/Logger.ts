@@ -351,8 +351,21 @@ export interface Logger {
    * Upload the SDK's log database to a URL as a gzipped multipart file.
    *
    * Provide an optional {@link SQLQuery} to constrain which records are included.
-   * The upload includes your configured {@link HttpConfig.headers} for
-   * authentication.
+   *
+   * ## Authentication
+   *
+   * The upload carries the same credentials as a location upload: your
+   * configured {@link HttpConfig.headers}, then the `authorization` access token
+   * as an `Authorization` header. When both supply an `Authorization` header,
+   * the access token wins. A `Content-Type` or `Content-Length` in
+   * `http.headers` is not sent: the multipart body sets its own.
+   *
+   * The upload does not refresh an expired access token: a `401` response
+   * rejects it. Token refresh on a `401` applies to location uploads only.
+   *
+   * The headers go to whatever URL you pass, including the URL of an RPC
+   * `uploadLog` command. A pre-signed storage URL may refuse a request that
+   * carries an `Authorization` header.
    *
    * ## Multipart upload
    *
@@ -367,6 +380,13 @@ export interface Logger {
    * | `manufacturer` | Device manufacturer |
    * | `platform` | `iOS` or `Android` |
    * | `version` | OS version |
+   *
+   * ## ⚠️ Warning
+   *
+   * The upload does not follow HTTP redirects: any `3xx` response rejects it,
+   * so pass the URL your server answers directly. When your server redirects
+   * an unauthenticated upload to a login page, the promise rejects instead of
+   * resolving on the login page's `200`.
    *
    * **See also**
    * - {@link LoggerConfig.logLevel}
