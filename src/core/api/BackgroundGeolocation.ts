@@ -1901,8 +1901,8 @@ export interface BackgroundGeolocation extends BackgroundGeolocationAPI {
   LocationFilterPolicy: typeof import('../../enums/LocationFilterPolicy').LocationFilterPolicy;
 
   /**
-   * Enum namespace for `LocationFilter.kalmanProfile`. Reserved: see
-   * `KalmanProfile`.
+   * Enum namespace for `LocationFilter.kalmanProfile`, the odometer's smoothing
+   * profile. See `KalmanProfile`.
    *
    * @example
    * ```ts

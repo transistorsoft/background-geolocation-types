@@ -133,7 +133,7 @@ import { ActivityType } from '../../enums/ActivityType';
  *
  * ## Filtering
  *
- * {@link filter} applies Kalman smoothing, rolling-window averaging, and accuracy and
+ * {@link filter} applies rolling-window averaging, and accuracy and
  * speed constraints to raw platform samples before they are recorded. This reduces GPS
  * jitter and improves odometer accuracy. See {@link LocationFilter} for full
  * documentation.
@@ -899,7 +899,7 @@ export interface GeoConfig {
    * location data from the underlying platform.
    *
    * The native platform continuously produces raw `CLLocation` (iOS) or `Location`
-   * (Android) samples. The filter applies Kalman filtering, rolling-window averaging,
+   * (Android) samples. The filter applies rolling-window averaging,
    * and speed, distance, and accuracy constraints to produce smoother paths, reduce
    * jitter, and improve odometer stability.
    *
@@ -910,16 +910,16 @@ export interface GeoConfig {
    * | Field | Description |
    * |-------|-------------|
    * | **{@link LocationFilter.policy}** | Selects which filtering policy to apply. See {@link LocationFilterPolicy}. |
-   * | **{@link LocationFilter.useKalman}** | Enables Kalman filtering of speed and position (default: `true`). |
-   * | **{@link LocationFilter.kalmanDebug}** | Enables verbose Kalman diagnostic logs. |
-   * | **{@link LocationFilter.kalmanProfile}** | Selects a Kalman tuning profile (see {@link KalmanProfile}). |
+   * | **{@link LocationFilter.useKalman}** | Has no effect on delivered locations (default: `true`). |
+   * | **{@link LocationFilter.kalmanDebug}** | Logs the odometer filter's values for each location (default: `false`). |
+   * | **{@link LocationFilter.kalmanProfile}** | Selects how strongly the odometer smooths the path at slow speeds (see {@link KalmanProfile}). |
    * | **{@link LocationFilter.rollingWindow}** | Number of samples for rolling burst averaging. Larger values increase smoothness but reduce responsiveness. |
    * | **{@link LocationFilter.burstWindow}** | Duration of each averaging burst (seconds). Default: `10`. |
    * | **{@link LocationFilter.maxBurstDistance}** | Maximum distance (meters) for samples to be included in the same burst window. Default: `300`. |
    * | **{@link LocationFilter.trackingAccuracyThreshold}** | Maximum GPS horizontal accuracy (meters) required to accept a location. Default: `100`. |
    * | **{@link LocationFilter.maxImpliedSpeed}** | Maximum implied speed (m/s) before rejecting a sample as unrealistic. Default: `60` (~216 km/h). |
    * | **{@link LocationFilter.filterDebug}** | Enables verbose logging of filter decisions (`ACCEPTED`, `REJECTED`, etc). |
-   * | **{@link LocationFilter.odometerUseKalmanFilter}** | Applies Kalman smoothing to odometer calculations. |
+   * | **{@link LocationFilter.odometerUseKalmanFilter}** | Switches the odometer's position filter (default: `true`). |
    * | **{@link LocationFilter.odometerAccuracyThreshold}** | Maximum accuracy (meters) allowed for a sample to affect the odometer. Default: `20`. |
    *
    * ## Note
