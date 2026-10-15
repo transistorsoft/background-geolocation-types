@@ -320,22 +320,30 @@ export interface Location {
    *
    * ## How it's calculated
    *
-   * - Distance is computed between each consecutive pair of accepted locations.
-   * - The {@link LocationFilter} evaluates accuracy and motion context for
-   *   each sample. Low-quality samples may be rejected or down-weighted
-   *   based on {@link LocationFilter.odometerAccuracyThreshold}.
-   * - Accumulated drift is exposed via {@link Location.odometer_error}.
+   * - Every location the tracking filter accepts goes through the odometer's
+   *   position filter, which follows the fixes as closely as their own speed
+   *   warrants (`kalmanProfile`), and the odometer adds the distance between the
+   *   positions it last added to.
+   * - A location whose accuracy is worse than
+   *   {@link LocationFilter.odometerAccuracyThreshold} is refused and moves
+   *   nothing.
+   * - Across a gap in the fixes (a tunnel, a garage, an app restart) the odometer
+   *   adds the straight-line distance between the last position it added to and
+   *   the first fix after the gap.
+   * - The odometer's uncertainty is exposed via {@link Location.odometer_error}.
    *
    * ## When it increases
    *
    * - After the device moves and a new location is recorded.
-   * - During both moving and stationary states when minor motion is detected.
-   * - In geofences-only mode, at each geofence transition or stationary exit.
+   * - While the device is stationary, only when its fixes move beyond the hold
+   *   radius their accuracy sets.
    *
    * ## When it does not increase
    *
    * - When a sample fails accuracy thresholds.
-   * - When the device is stationary and no sufficient movement is detected.
+   * - While the device is stationary and its fixes wander within their accuracy.
+   * - In geofences-only mode, and under `useSignificantChangesOnly`: the odometer
+   *   runs only while location tracking is on.
    *
    * **See also**
    * - {@link LocationFilter}
@@ -356,21 +364,16 @@ export interface Location {
   odometer: number;
 
   /**
-   * Accumulated odometer drift in meters.
+   * An index of the odometer's uncertainty, in meters.
    *
-   * Represents the uncertainty that has built up in the {@link odometer}
-   * value due to GPS noise, tunnel blackouts, and other inaccurate samples.
+   * It grows with the accuracy the device reports, where the path turns, and
+   * where the odometer adds the distance across a gap such as a tunnel, and it
+   * resets with `setOdometer` and `resetOdometer`. It is not a confidence interval
+   * and states no probability. It does not include systematic error, such as the
+   * distance a straight chord misses on a curved road.
    *
-   * ## How to use it
-   *
-   * Treat this as a confidence interval for {@link odometer}. For example,
-   * if `odometer = 12000` and `odometer_error = 40`, the true traveled
-   * distance is likely within ±40 meters of the reported value.
-   *
-   * Resetting or setting a new {@link odometer} value automatically resets
-   * `odometer_error` to `0`. Values typically remain low (< 10 m) under
-   * good GPS conditions but grow during long tunnels, dense urban canyons, or
-   * extended indoor tracking.
+   * Compare values from one device over time rather than across devices: a device
+   * that reports coarser accuracy produces a larger index on the same road.
    *
    * **See also**
    * - {@link odometer}
@@ -380,7 +383,7 @@ export interface Location {
    * BackgroundGeolocation.onLocation((location) => {
    *   console.log("Odometer:", location.odometer);
    *   if (location.odometer_error > 50) {
-   *     console.warn("High odometer drift — signal quality degraded");
+   *     console.warn("Odometer uncertainty is high");
    *   }
    * });
    * ```

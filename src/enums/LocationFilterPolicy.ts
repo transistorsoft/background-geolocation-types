@@ -4,7 +4,7 @@
  *
  * The filtering policy determines how aggressively the plugin removes noisy,
  * inaccurate, or redundant location updates. It represents the *first stage*
- * in the SDK’s data-quality pipeline — before Kalman smoothing, burst averaging,
+ * in the SDK’s data-quality pipeline — before burst averaging,
  * or other denoising steps are applied.
  *
  * Choosing the correct policy depends on your app’s tolerance for jitter versus
@@ -99,8 +99,8 @@ export const LocationFilterPolicy = {
    * **Coordinates are never modified.** This policy adjusts *which* samples are
    * included, not *how* they are positioned.
    *
-   * If {@link LocationFilter.useKalman} is enabled, additional smoothing may occur,
-   * but the physical coordinates of each accepted sample remain untouched.
+   * {@link LocationFilter.useKalman} has no effect on delivered locations:
+   * the physical coordinates of each accepted sample remain untouched.
    */
   Adjust: 1,
 

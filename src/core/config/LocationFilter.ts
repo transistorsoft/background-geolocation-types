@@ -19,25 +19,25 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  * ## Overview
  *
  * The SDK applies several processing stages to each raw GPS sample before
- * recording it: Kalman filtering, rolling-window burst averaging, and
- * speed/distance/accuracy constraints. These produce smoother paths, reduce
- * jitter, and improve odometer stability.
+ * recording it: an accuracy gate, rolling-window burst detection, and speed
+ * and distance constraints; the odometer runs its own position filter on the
+ * samples that pass. Coordinates are never modified.
  *
  * ![](https://dl.dropbox.com/scl/fi/71rkzdo2tr3qm651ulou8/location-filter-flowchart.svg?rlkey=16zxs3lnqvlrw137974jbsoj7&dl=1)
  *
  * | Field | Description |
  * |-------|-------------|
  * | {@link policy} | Selects which filtering policy to apply. See {@link LocationFilterPolicy}. |
- * | {@link useKalman} | Enables Kalman filtering of speed and position (default: `true`). |
- * | {@link kalmanDebug} | Enables verbose Kalman diagnostic logs (default: `false`). |
- * | {@link kalmanProfile} | Selects a Kalman tuning profile (see {@link KalmanProfile}). |
+ * | {@link useKalman} | Has no effect on delivered locations (default: `true`). |
+ * | {@link kalmanDebug} | Logs the odometer filter's values for each location (default: `false`). |
+ * | {@link kalmanProfile} | Selects how strongly the odometer smooths the path at slow speeds (see {@link KalmanProfile}). |
  * | {@link rollingWindow} | Number of samples for rolling burst averaging. Larger values increase smoothness but reduce responsiveness. Default: `5`. |
  * | {@link burstWindow} | Duration of each averaging burst (seconds). Default: `10`. |
  * | {@link maxBurstDistance} | Maximum distance (meters) for samples included in the same burst window. Default: `300`. |
  * | {@link trackingAccuracyThreshold} | Maximum GPS horizontal accuracy (meters) required to accept a location. Default: `100`. |
  * | {@link maxImpliedSpeed} | Maximum implied speed (m/s) before rejecting a sample as unrealistic. Default: `60` (≈ 216 km/h). |
  * | {@link filterDebug} | Enables verbose logging of filter decisions (default: `false`). |
- * | {@link odometerUseKalmanFilter} | Applies Kalman smoothing to odometer calculations (default: `true`). |
+ * | {@link odometerUseKalmanFilter} | Switches the odometer's position filter (default: `true`). |
  * | {@link odometerAccuracyThreshold} | Maximum accuracy (meters) allowed for a sample to affect the odometer. Default: `20`. |
  * | {@link odometerPolicy} | Filtering policy for odometer samples — use `Conservative` to reject GPS teleports entirely. Default: `Adjust`. |
  *
@@ -71,7 +71,7 @@ import { KalmanProfile } from '../../enums/KalmanProfile';
  * | Field | Governed by `policy`? | Behaviour |
  * |-------|:---------------------:|-----------|
  * | {@link trackingAccuracyThreshold} | No | Accuracy gate. A fix whose accuracy is worse than this is **rejected before** the policy runs — under *every* policy, including `PassThrough`. Set to `0` to disable the gate. |
- * | {@link useKalman}, {@link kalmanProfile} | No | Kalman smoothing runs before the policy phase whenever `useKalman` is `true`. |
+ * | {@link useKalman}, {@link kalmanProfile} | — | Neither affects the tracking `policy`: `useKalman` has no effect on delivered locations, and `kalmanProfile` governs the odometer's filter. |
  * | {@link maxBurstDistance}, {@link burstWindow} | Yes | Define a GPS "spike" (a large jump in a short window). `Conservative` rejects it, `Adjust` caps it, `PassThrough` lets it through. |
  * | {@link maxImpliedSpeed} | Partly | Flags an implausible-speed spike (rejected only under `Conservative`), and also applies a final per-step speed clamp under *every* policy. |
  * | {@link rollingWindow} | Yes | Feeds the kinematic / outlier cap used by `Adjust` and `Conservative`; `PassThrough` ignores it. |
@@ -117,7 +117,7 @@ export interface LocationFilter {
    *
    * The filtering policy determines how aggressively the SDK removes noisy,
    * inaccurate, or redundant location updates. It is the first stage in the
-   * data-quality pipeline — before Kalman smoothing, burst averaging, or other
+   * data-quality pipeline — before burst averaging or other
    * denoising steps are applied.
    *
    * | Policy | Description | Use case |
@@ -179,30 +179,54 @@ export interface LocationFilter {
   policy?: LocationFilterPolicy;
 
   /**
-   * Enables the Kalman filter to smooth incoming location speed and position.
-   * Defaults to `true`.
+   * Has no effect on delivered locations. Defaults to `true`.
    *
-   * When enabled, the SDK applies a Kalman filter to reduce noise and stabilize
-   * velocity and distance calculations.
+   * The SDK records and delivers every accepted location with its original
+   * coordinates. This flag switches a smoothing stage on the tracking path whose
+   * output changes neither the locations the SDK records nor the filter's
+   * decisions; it is kept so existing configurations stay valid. The odometer's
+   * own filter is switched by `odometerUseKalmanFilter`.
    */
   useKalman?: boolean;
 
   /**
-   * Enables verbose Kalman debug output in logs. Defaults to `false`.
+   * Logs the odometer filter's values for each location. Defaults to `false`.
    *
-   * When enabled, the SDK logs additional diagnostic data about the Kalman
-   * filter's internal state (for example, variance and innovation) for each
-   * incoming sample.
+   * When enabled, each location the odometer sees adds one line to the SDK log at
+   * the `Debug` level: the filter's status, the distance added, the profile and
+   * gain in force, the speed that set the gain, the prediction and update terms,
+   * the distance to the anchor and the hold radius, and the filtered position's
+   * own accuracy. Keep it off in production: it is one line per location.
    */
   kalmanDebug?: boolean;
 
   /**
-   * Selects a preset tuning profile for the Kalman filter. Defaults to
-   * `KalmanProfile.Default`.
+   * Selects how strongly the odometer smooths the path while the device moves
+   * slowly. Defaults to `KalmanProfile.Default`.
    *
-   * **Reserved:** in the current SDK the three profiles apply the same tuning on
-   * both iOS and Android, so changing this value has no effect. The value is
-   * accepted and stored.
+   * The odometer integrates a filtered position rather than the raw fixes. The
+   * profile sets how closely that position follows each fix: `Aggressive` follows
+   * the fixes most, `Conservative` smooths most and cuts the most corners,
+   * `Default` sits between.
+   *
+   * - At riding and driving speed the three profiles agree. They differ at walking
+   *   pace, between about 1 and 3 m/s, mostly with `distanceFilter: 0`, where every
+   *   fix reaches the odometer. Below about 1 m/s the SDK's stationary detection
+   *   decides and the three read the same.
+   * - `Conservative` can read 20 to 50 % short on short back-and-forth paths such
+   *   as store aisles and corridors.
+   * - How much a profile smooths depends on the accuracy each device reports, so
+   *   the same profile smooths two devices differently.
+   * - When parked, the profiles do not differ in the expected order:
+   *   `Conservative` can add the most distance at a stop.
+   * - When the device reports no speed, the three read the same, and
+   *   back-and-forth movement within a few tens of meters (about 45 m at a
+   *   reported accuracy of 10 m) is not counted.
+   * - Under the default `distanceFilter` the difference between profiles is a
+   *   fraction of a percent.
+   *
+   * The profile applies only to the odometer. It changes neither which locations
+   * are recorded nor their coordinates.
    */
   kalmanProfile?: KalmanProfile;
 
@@ -265,19 +289,17 @@ export interface LocationFilter {
   filterDebug?: boolean;
 
   /**
-   * Applies a Kalman filter to odometer calculations, independent of
-   * {@link LocationFilter.useKalman}. Defaults to `true`.
+   * Switches the odometer's position filter. Defaults to `true`.
    *
-   * When enabled, the odometer's internal distance-accumulation logic applies a
-   * Kalman filter to smooth incoming samples, reducing jitter and noise without
-   * modifying the recorded track points.
+   * `true`: the odometer integrates filtered positions. Every fix the tracking
+   * filter accepts goes through a position filter whose gain follows the fix's own
+   * speed, selected by `kalmanProfile`, and the odometer adds the distance between
+   * the positions it last added to. `false`: the odometer integrates the fixes
+   * themselves, with the same accuracy gate, gaps and stops.
    *
-   * This is useful when smoother odometer readings are needed while preserving
-   * the raw location stream for mapping, analysis, or debugging.
-   *
-   * If both {@link LocationFilter.useKalman} and
-   * {@link LocationFilter.odometerUseKalmanFilter} are `true`, the SDK maintains
-   * independent Kalman filter instances for tracking and odometer calculations.
+   * Neither setting changes the recorded locations, and neither reproduces the
+   * odometer of earlier versions. {@link LocationFilter.useKalman} is independent
+   * of this flag and has no effect on delivered locations.
    */
   odometerUseKalmanFilter?: boolean;
 
